@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #0ea5e9;
+  --color-primary-dark: #0284c7;
+  --color-accent: #8b5cf6;
+  --color-background: #ffffff;
+  --color-background-alt: #f8fafc;
+  --color-foreground: #0f172a;
+  --color-muted: #64748b;
+  --color-border: #e2e8f0;
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  .dark {
+    color-scheme: dark;
+    --color-background: #0f172a;
+    --color-background-alt: #1e293b;
+    --color-foreground: #f1f5f9;
+    --color-muted: #94a3b8;
+    --color-border: #334155;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    transition: background-color 0.3s, color 0.3s;
+  }
+}
+
+@layer components {
+  .section-container {
+    @apply mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8;
+  }
+
+  .glass-card {
+    @apply rounded-xl border border-border bg-background-alt/80 p-6 shadow-lg backdrop-blur-sm;
+  }
+}
+
+/* Highlight.js theme override for dark mode */
+.dark pre code.hljs {
+  background: #1e293b;
+}

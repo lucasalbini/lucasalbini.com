@@ -1,0 +1,68 @@
+{
+  "nav": {
+    "about": "About",
+    "skills": "Skills",
+    "experience": "Experience",
+    "education": "Education",
+    "projects": "Projects",
+    "publications": "Publications",
+    "blog": "Blog"
+  },
+  "hero": {
+    "scrollDown": "Scroll down"
+  },
+  "about": {
+    "title": "About Me",
+    "subtitle": "Learn a bit about my journey",
+    "downloadCV": "Download CV",
+    "certifications": "Certifications",
+    "softSkills": "Soft Skills"
+  },
+  "skills": {
+    "title": "Skills",
+    "subtitle": "Technologies and tools I use",
+    "all": "All",
+    "language": "Languages",
+    "framework": "Frameworks",
+    "cloud": "Cloud",
+    "ai_ml": "AI/ML",
+    "devops": "DevOps",
+    "tools": "Tools"
+  },
+  "experience": {
+    "title": "Experience",
+    "subtitle": "My professional journey",
+    "present": "Present"
+  },
+  "education": {
+    "title": "Education",
+    "subtitle": "My academic background"
+  },
+  "projects": {
+    "title": "Projects",
+    "subtitle": "Main projects developed",
+    "all": "All",
+    "professional": "Professional",
+    "academic": "Academic",
+    "hobby": "Hobby",
+    "viewAll": "View all projects"
+  },
+  "publications": {
+    "title": "Publications",
+    "subtitle": "Academic articles and publications",
+    "view": "View publication"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Latest articles and publications",
+    "viewAll": "View all posts",
+    "backToBlog": "Back to blog",
+    "readingTime": "min read",
+    "notFound": "Post not found"
+  },
+  "footer": {
+    "madeWith": "Made with",
+    "by": "by Lucas Albini",
+    "rights": "All rights reserved."
+  }
+}

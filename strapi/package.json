@@ -1,0 +1,26 @@
+{
+  "name": "lucasalbini-strapi",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Strapi CMS for lucasalbini.com",
+  "scripts": {
+    "develop": "strapi develop",
+    "start": "strapi start",
+    "build": "strapi build",
+    "strapi": "strapi"
+  },
+  "dependencies": {
+    "@strapi/plugin-users-permissions": "^5.36.0",
+    "@strapi/strapi": "^5.36.0",
+    "esbuild": "^0.24.0",
+    "pg": "^8.13.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.30.3",
+    "styled-components": "^6.3.9"
+  },
+  "engines": {
+    "node": ">=18.0.0 <=22.x.x",
+    "npm": ">=6.0.0"
+  }
+}
