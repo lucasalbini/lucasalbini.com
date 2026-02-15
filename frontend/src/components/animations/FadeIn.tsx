@@ -7,9 +7,10 @@ interface FadeInProps {
   delay?: number;
   direction?: "up" | "down" | "left" | "right";
   className?: string;
+  style?: React.CSSProperties;
 }
 
-export function FadeIn({ children, delay = 0, direction = "up", className }: FadeInProps) {
+export function FadeIn({ children, delay = 0, direction = "up", className, style }: FadeInProps) {
   const directions = {
     up: { y: 40 },
     down: { y: -40 },
@@ -24,6 +25,7 @@ export function FadeIn({ children, delay = 0, direction = "up", className }: Fad
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.5, delay, ease: "easeOut" }}
       className={className}
+      style={style}
     >
       {children}
     </motion.div>

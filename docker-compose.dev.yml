@@ -82,6 +82,7 @@ services:
     environment:
       NEXT_PUBLIC_API_URL: http://fastapi:8000
       NEXT_PUBLIC_SITE_URL: http://localhost:3000
+      NEXT_PUBLIC_STRAPI_URL: http://strapi:1337
 
   nginx:
     build:

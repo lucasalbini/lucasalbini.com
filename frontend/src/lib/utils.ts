@@ -18,7 +18,8 @@ export function formatDate(dateString: string): string {
 export function getStrapiMediaUrl(url?: string): string {
   if (!url) return "";
   if (url.startsWith("http")) return url;
-  return `${process.env.NEXT_PUBLIC_SITE_URL || ""}${url}`;
+  const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+  return `${strapiUrl}${url}`;
 }
 
 export function getCategoryLabel(category: string): string {

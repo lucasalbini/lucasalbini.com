@@ -11,7 +11,7 @@ interface EducationSectionProps {
 
 export function EducationSection({ education }: EducationSectionProps) {
   return (
-    <section id="education" className="section-container bg-background-alt">
+    <section id="education" className="section-container">
       <SectionHeading title="Formação Acadêmica" subtitle="Minha formação educacional" />
 
       <div className="grid gap-6 md:grid-cols-2">

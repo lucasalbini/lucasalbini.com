@@ -1,16 +1,31 @@
 "use client";
 
+import { useState } from "react";
 import { FadeIn } from "@/components/animations/FadeIn";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import type { Experience } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
-import { FaBriefcase } from "react-icons/fa";
+import { FaBriefcase, FaChevronDown } from "react-icons/fa";
 
 interface ExperienceSectionProps {
   experiences: Experience[];
 }
 
 export function ExperienceSection({ experiences }: ExperienceSectionProps) {
+  const [expandedPositions, setExpandedPositions] = useState<Set<number>>(new Set());
+
+  const togglePosition = (positionId: number) => {
+    setExpandedPositions((prev) => {
+      const next = new Set(prev);
+      if (next.has(positionId)) {
+        next.delete(positionId);
+      } else {
+        next.add(positionId);
+      }
+      return next;
+    });
+  };
+
   return (
     <section id="experience" className="section-container">
       <SectionHeading title="Experiência" subtitle="Minha trajetória profissional" />
@@ -43,26 +58,55 @@ export function ExperienceSection({ experiences }: ExperienceSectionProps) {
                     </div>
                   </div>
 
-                  <div className="space-y-4">
-                    {exp.positions?.map((pos) => (
-                      <div key={pos.id} className="border-l-2 border-primary/30 pl-4">
-                        <h4 className="font-semibold">{pos.designation}</h4>
-                        <p className="text-sm text-muted">
-                          {formatDate(pos.start_date)} -{" "}
-                          {pos.is_current ? "Presente" : pos.end_date ? formatDate(pos.end_date) : ""}
-                        </p>
-                        {pos.responsibilities?.length > 0 && (
-                          <ul className="mt-2 space-y-1 text-sm text-muted">
-                            {pos.responsibilities.map((r) => (
-                              <li key={r.id} className="flex gap-2">
-                                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                                {r.description}
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </div>
-                    ))}
+                  <div className="space-y-3">
+                    {exp.positions?.map((pos) => {
+                      const isExpanded = expandedPositions.has(pos.id);
+                      const hasResponsibilities = pos.responsibilities?.length > 0;
+
+                      return (
+                        <div key={pos.id} className="border-l-2 border-primary/30 pl-4">
+                          <button
+                            type="button"
+                            onClick={() => hasResponsibilities && togglePosition(pos.id)}
+                            className={`w-full text-left ${hasResponsibilities ? "cursor-pointer" : "cursor-default"}`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <h4 className="font-semibold">{pos.designation}</h4>
+                                <p className="text-sm text-muted">
+                                  {formatDate(pos.start_date)} -{" "}
+                                  {pos.is_current ? "Presente" : pos.end_date ? formatDate(pos.end_date) : ""}
+                                </p>
+                              </div>
+                              {hasResponsibilities && (
+                                <FaChevronDown
+                                  className={`shrink-0 text-xs text-muted transition-transform duration-300 ${
+                                    isExpanded ? "rotate-180" : ""
+                                  }`}
+                                />
+                              )}
+                            </div>
+                          </button>
+
+                          <div
+                            className={`grid transition-all duration-300 ease-in-out ${
+                              isExpanded ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0"
+                            }`}
+                          >
+                            <div className="overflow-hidden">
+                              <ul className="space-y-1 text-sm text-muted">
+                                {pos.responsibilities?.map((r) => (
+                                  <li key={r.id} className="flex gap-2">
+                                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                                    {r.description}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>

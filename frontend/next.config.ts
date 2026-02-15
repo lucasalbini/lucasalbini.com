@@ -11,6 +11,11 @@ const nextConfig: NextConfig = {
         protocol: "http",
         hostname: "strapi",
       },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "1337",
+      },
     ],
   },
 };

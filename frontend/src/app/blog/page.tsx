@@ -12,7 +12,7 @@ export const metadata = {
 export default async function BlogPage() {
   let posts;
   try {
-    posts = await getPosts("pt", 1, 50);
+    posts = await getPosts("pt-BR", 1, 50);
   } catch {
     posts = { data: [] };
   }
@@ -23,8 +23,6 @@ export default async function BlogPage() {
       <main className="pt-16">
         <BlogSection
           posts={posts?.data || []}
-          title="Blog"
-          subtitle="Todos os artigos"
           showAll
         />
       </main>

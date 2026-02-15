@@ -6,7 +6,6 @@ import { AboutSection } from "@/components/sections/AboutSection";
 import { SkillsSection } from "@/components/sections/SkillsSection";
 import { ExperienceSection } from "@/components/sections/ExperienceSection";
 import { EducationSection } from "@/components/sections/EducationSection";
-import { ProjectsSection } from "@/components/sections/ProjectsSection";
 import { PublicationsSection } from "@/components/sections/PublicationsSection";
 import { BlogSection } from "@/components/sections/BlogSection";
 import {
@@ -15,23 +14,21 @@ import {
   getEducation,
   getSkills,
   getCertifications,
-  getProjects,
   getPosts,
   getPublications,
 } from "@/lib/api";
 
 export default async function HomePage() {
-  let profile, experiences, education, skills, certifications, projects, posts, publications;
+  let profile, experiences, education, skills, certifications, posts, publications;
 
   try {
-    [profile, experiences, education, skills, certifications, projects, posts, publications] =
+    [profile, experiences, education, skills, certifications, posts, publications] =
       await Promise.all([
         getProfile(),
         getExperiences(),
         getEducation(),
         getSkills(),
         getCertifications(),
-        getProjects(),
         getPosts("pt", 1, 6),
         getPublications(),
       ]);
@@ -42,7 +39,6 @@ export default async function HomePage() {
     education = { data: [] };
     skills = { data: [] };
     certifications = { data: [] };
-    projects = { data: [] };
     posts = { data: [] };
     publications = { data: [] };
   }
@@ -80,7 +76,6 @@ export default async function HomePage() {
         <SkillsSection skills={skills?.data || []} />
         <ExperienceSection experiences={experiences?.data || []} />
         <EducationSection education={education?.data || []} />
-        <ProjectsSection projects={projects?.data || []} />
         <PublicationsSection publications={publications?.data || []} />
         <BlogSection posts={posts?.data || []} />
       </main>
