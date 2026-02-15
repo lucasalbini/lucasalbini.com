@@ -1,4 +1,4 @@
-{
+export default {
   "collectionName": "components_shared_soft_skills",
   "info": {
     "displayName": "Soft Skill",
@@ -15,4 +15,4 @@
       "max": 5
     }
   }
-}
+} as const;

@@ -5,7 +5,7 @@ router = APIRouter()
 
 
 @router.get("/profile")
-async def get_profile(locale: str = Query("pt")):
+async def get_profile(locale: str = Query("pt-BR")):
     params = {
         "locale": locale,
         "populate": "photo,background,resume,social_links,soft_skills",

@@ -5,11 +5,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatDate(dateString: string, locale = "pt-BR"): string {
-  return new Date(dateString).toLocaleDateString(locale, {
-    year: "numeric",
-    month: "long",
-  });
+const MONTHS_PT = [
+  "janeiro", "fevereiro", "março", "abril", "maio", "junho",
+  "julho", "agosto", "setembro", "outubro", "novembro", "dezembro",
+];
+
+export function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  return `${MONTHS_PT[date.getUTCMonth()]} de ${date.getUTCFullYear()}`;
 }
 
 export function getStrapiMediaUrl(url?: string): string {

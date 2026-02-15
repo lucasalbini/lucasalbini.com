@@ -6,7 +6,7 @@ router = APIRouter()
 
 @router.get("/posts")
 async def get_posts(
-    locale: str = Query("pt"),
+    locale: str = Query("pt-BR"),
     page: int = Query(1),
     pageSize: int = Query(10),
     featured: bool | None = None,
@@ -25,7 +25,7 @@ async def get_posts(
 
 
 @router.get("/posts/{slug}")
-async def get_post_by_slug(slug: str, locale: str = Query("pt")):
+async def get_post_by_slug(slug: str, locale: str = Query("pt-BR")):
     params = {
         "locale": locale,
         "filters[slug][$eq]": slug,

@@ -1,4 +1,4 @@
-{
+export default {
   "collectionName": "components_shared_social_links",
   "info": {
     "displayName": "Social Link",
@@ -17,4 +17,4 @@
       "type": "string"
     }
   }
-}
+} as const;

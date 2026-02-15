@@ -4,7 +4,7 @@ import { FadeIn } from "@/components/animations/FadeIn";
 import { StaggerChildren, StaggerItem } from "@/components/animations/StaggerChildren";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import type { Post } from "@/lib/types";
-import { getStrapiMediaUrl } from "@/lib/utils";
+import { getStrapiMediaUrl, formatDate } from "@/lib/utils";
 import Image from "next/image";
 import { FaClock, FaCalendar } from "react-icons/fa";
 
@@ -50,7 +50,7 @@ export function BlogSection({
                   <div className="flex items-center gap-4 text-xs text-muted">
                     <span className="flex items-center gap-1">
                       <FaCalendar />
-                      {new Date(post.createdAt).toLocaleDateString("pt-BR")}
+                      {formatDate(post.createdAt)}
                     </span>
                     {post.reading_time && (
                       <span className="flex items-center gap-1">

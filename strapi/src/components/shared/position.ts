@@ -1,4 +1,4 @@
-{
+export default {
   "collectionName": "components_shared_positions",
   "info": {
     "displayName": "Position",
@@ -26,4 +26,4 @@
       "component": "shared.responsibility"
     }
   }
-}
+} as const;

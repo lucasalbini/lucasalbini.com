@@ -10,14 +10,15 @@ import { getCategoryLabel } from "@/lib/utils";
 import {
   SiPython, SiTypescript, SiGo, SiReact, SiNextdotjs, SiFastapi, SiDocker,
   SiKubernetes, SiTensorflow, SiPytorch, SiOpencv, SiAmazonwebservices,
-  SiMicrosoftazure, SiGooglecloud,
+  SiGooglecloud,
 } from "react-icons/si";
+import { VscAzure } from "react-icons/vsc";
 import { FaCode } from "react-icons/fa";
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   SiPython, SiTypescript, SiGo, SiReact, SiNextdotjs, SiFastapi,
   SiDocker, SiKubernetes, SiTensorflow, SiPytorch, SiOpencv,
-  SiAmazonwebservices, SiMicrosoftazure, SiGooglecloud,
+  SiAmazonwebservices, SiGooglecloud, SiMicrosoftazure: VscAzure, VscAzure,
 };
 
 const categories = ["all", "language", "framework", "cloud", "ai_ml", "devops", "tools"] as const;

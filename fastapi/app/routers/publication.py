@@ -5,7 +5,7 @@ router = APIRouter()
 
 
 @router.get("/publications")
-async def get_publications(locale: str = Query("pt")):
+async def get_publications(locale: str = Query("pt-BR")):
     params = {
         "locale": locale,
         "sort": "date:desc",

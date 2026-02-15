@@ -5,7 +5,7 @@ router = APIRouter()
 
 
 @router.get("/skills")
-async def get_skills(locale: str = Query("pt"), category: str | None = None):
+async def get_skills(locale: str = Query("pt-BR"), category: str | None = None):
     params: dict = {
         "locale": locale,
         "populate": "icon",

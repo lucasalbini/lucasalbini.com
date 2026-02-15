@@ -1,4 +1,4 @@
-{
+export default {
   "collectionName": "components_shared_responsibilities",
   "info": {
     "displayName": "Responsibility",
@@ -10,4 +10,4 @@
       "required": true
     }
   }
-}
+} as const;

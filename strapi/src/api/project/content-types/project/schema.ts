@@ -1,4 +1,4 @@
-{
+export default {
   "kind": "collectionType",
   "collectionName": "projects",
   "info": {
@@ -18,7 +18,11 @@
     "name": {
       "type": "string",
       "required": true,
-      "pluginOptions": { "i18n": { "localized": false } }
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
     },
     "slug": {
       "type": "uid",
@@ -26,15 +30,27 @@
     },
     "description": {
       "type": "richtext",
-      "pluginOptions": { "i18n": { "localized": true } }
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "role": {
       "type": "string",
-      "pluginOptions": { "i18n": { "localized": true } }
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "timeline": {
       "type": "string",
-      "pluginOptions": { "i18n": { "localized": false } }
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
     },
     "repo_url": {
       "type": "string"
@@ -45,14 +61,20 @@
     "logo": {
       "type": "media",
       "multiple": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": [
+        "images"
+      ]
     },
     "tags": {
       "type": "json"
     },
     "category": {
       "type": "enumeration",
-      "enum": ["professional", "academic", "hobby"],
+      "enum": [
+        "professional",
+        "academic",
+        "hobby"
+      ],
       "required": true
     },
     "featured": {
@@ -60,4 +82,4 @@
       "default": false
     }
   }
-}
+} as const;

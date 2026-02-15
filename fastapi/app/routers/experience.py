@@ -5,7 +5,7 @@ router = APIRouter()
 
 
 @router.get("/experiences")
-async def get_experiences(locale: str = Query("pt")):
+async def get_experiences(locale: str = Query("pt-BR")):
     params = {
         "locale": locale,
         "populate": "company_logo,positions.responsibilities",

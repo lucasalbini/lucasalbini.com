@@ -5,7 +5,7 @@ router = APIRouter()
 
 
 @router.get("/education")
-async def get_education(locale: str = Query("pt")):
+async def get_education(locale: str = Query("pt-BR")):
     params = {
         "locale": locale,
         "populate": "logo",
