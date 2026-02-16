@@ -16,7 +16,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   let postData;
   try {
     const response = await getPostBySlug(slug);
-    const data = (response as { data: unknown[] })?.data;
+    const data = response?.data;
     postData = Array.isArray(data) ? data[0] : data;
   } catch {
     postData = null;

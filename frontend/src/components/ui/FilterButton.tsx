@@ -14,8 +14,8 @@ export function FilterButton({ label, active, onClick }: FilterButtonProps) {
       className={cn(
         "rounded-full px-4 py-2 text-sm font-medium transition-colors",
         active
-          ? "bg-primary text-white"
-          : "bg-background-alt text-muted hover:text-foreground"
+          ? "bg-primary text-background"
+          : "bg-neutral text-muted hover:text-foreground"
       )}
     >
       {label}

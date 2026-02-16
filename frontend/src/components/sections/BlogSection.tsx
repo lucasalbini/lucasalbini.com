@@ -180,7 +180,7 @@ export function BlogSection({
           <div className="mt-8 text-center">
             <a
               href="/blog"
-              className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-white transition-colors hover:bg-primary-dark"
+              className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-background transition-colors hover:bg-primary-dark"
             >
               Ver todos os posts
             </a>
@@ -194,7 +194,7 @@ export function BlogSection({
   return (
     <div className="flex min-h-[calc(100vh-4rem)]">
       {/* ── Sidebar ── */}
-      <aside className="hidden lg:block w-80 shrink-0 border-r border-border bg-background-alt">
+      <aside className="hidden lg:block w-80 shrink-0 border-r border-border bg-background/80 backdrop-blur-md">
         <div
           className="sticky top-16 overflow-y-auto px-4 py-6"
           style={{ maxHeight: "calc(100vh - 4rem)" }}
@@ -205,7 +205,7 @@ export function BlogSection({
             placeholder="Search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded border border-border bg-background px-3 py-1.5 text-sm outline-none placeholder:text-muted focus:border-primary mb-4"
+            className="w-full rounded border border-border bg-neutral px-3 py-1.5 text-sm outline-none placeholder:text-muted focus:border-primary mb-4"
           />
 
           {/* Sidebar tree */}
@@ -237,18 +237,18 @@ export function BlogSection({
       </aside>
 
       {/* ── Content ── */}
-      <div className="flex-1 bg-background-alt/40">
+      <div className="flex-1 bg-background-deep">
         <div className="px-6 py-8 lg:px-10">
           {/* Post card grid */}
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {displayed.map((post) => (
               <article
                 key={post.id}
-                className="flex flex-col overflow-hidden rounded-md border border-border bg-background shadow-sm transition-shadow hover:shadow-lg"
+                className="flex flex-col overflow-hidden rounded-md border border-border bg-surface/50 backdrop-blur-sm shadow-sm transition-shadow hover:shadow-lg hover:border-primary/30"
               >
                 {/* Card image */}
                 <a href={`/blog/${post.slug}`} className="block">
-                  <div className="relative aspect-[16/9] w-full overflow-hidden bg-background-alt">
+                  <div className="relative aspect-[16/9] w-full overflow-hidden bg-neutral">
                     {post.featured_image ? (
                       <Image
                         src={getStrapiMediaUrl(post.featured_image.url)}
@@ -282,7 +282,7 @@ export function BlogSection({
                   </span>
                   <a
                     href={`/blog/${post.slug}`}
-                    className="shrink-0 rounded border border-primary px-3 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary hover:text-white"
+                    className="shrink-0 rounded border border-primary px-3 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary hover:text-background"
                   >
                     Ler
                   </a>

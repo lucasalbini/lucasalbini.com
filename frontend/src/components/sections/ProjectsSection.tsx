@@ -95,7 +95,7 @@ export function ProjectsSection({ projects, showAll = false }: ProjectsSectionPr
         <div className="mt-8 text-center">
           <a
             href="/projects"
-            className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-white transition-colors hover:bg-primary-dark"
+            className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-background transition-colors hover:bg-primary-dark"
           >
             Ver todos os projetos
           </a>

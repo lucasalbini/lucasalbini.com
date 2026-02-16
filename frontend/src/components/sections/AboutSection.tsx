@@ -34,7 +34,7 @@ export function AboutSection({ profile, certifications }: AboutSectionProps) {
                   href={cert.credential_url || "#"}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 rounded-lg border border-border bg-background/50 p-3 transition-transform hover:scale-[1.02]"
+                  className="flex items-center gap-3 rounded-lg border border-border bg-neutral/50 p-3 transition-transform hover:scale-[1.02]"
                 >
                   <FaAward className="shrink-0 text-xl text-primary" />
                   <div>

@@ -1,14 +1,24 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #0ea5e9;
-  --color-primary-dark: #0284c7;
-  --color-accent: #8b5cf6;
-  --color-background: #ffffff;
-  --color-background-alt: #f8fafc;
-  --color-foreground: #0f172a;
-  --color-muted: #64748b;
-  --color-border: #e2e8f0;
+  /* Base - Light (Cream & Sand) */
+  --color-background: #FAF6EF;
+  --color-background-alt: #EFF3E8;
+  --color-foreground: #1A2E22;
+  --color-muted: #5E7058;
+  --color-border: #C8D4BC;
+  --color-surface: #E4EBD9;
+  --color-neutral: #F2EFE8;
+
+  --color-background-deep: #F0ECE3;
+
+  /* Accent Tech (Jade) */
+  --color-primary: #00D4AA;
+  --color-primary-dark: #00B892;
+
+  /* Warm CTA (Terracotta) */
+  --color-accent: #D4734A;
+  --color-accent-dark: #B85A35;
 }
 
 @layer base {
@@ -18,11 +28,15 @@
 
   .dark {
     color-scheme: dark;
-    --color-background: #0f172a;
-    --color-background-alt: #1e293b;
-    --color-foreground: #f1f5f9;
-    --color-muted: #94a3b8;
-    --color-border: #334155;
+    /* Base - Forest & Clay */
+    --color-background-deep: #080F0B;
+    --color-background: #0F1E17;
+    --color-background-alt: #1A3328;
+    --color-foreground: #EDE4D3;
+    --color-muted: #8B9B80;
+    --color-border: #2A3E32;
+    --color-surface: #162E24;
+    --color-neutral: #141F19;
   }
 
   html {
@@ -42,11 +56,18 @@
   }
 
   .glass-card {
-    @apply rounded-xl border border-border bg-background-alt/80 p-6 shadow-lg backdrop-blur-sm;
+    @apply rounded-xl border border-border bg-surface/50 p-6 shadow-lg backdrop-blur-sm;
   }
+}
+
+/* Focus glow for interactive elements */
+.dark *:focus-visible {
+  outline: 2px solid #00D4AA;
+  outline-offset: 2px;
+  box-shadow: 0 0 12px rgba(0, 212, 170, 0.4);
 }
 
 /* Highlight.js theme override for dark mode */
 .dark pre code.hljs {
-  background: #1e293b;
+  background: #141F19;
 }
