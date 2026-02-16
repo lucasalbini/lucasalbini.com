@@ -19,6 +19,8 @@ services:
       context: ./strapi
       dockerfile: Dockerfile
     restart: unless-stopped
+    ports:
+      - "8421:1337"
     depends_on:
       postgres:
         condition: service_healthy
