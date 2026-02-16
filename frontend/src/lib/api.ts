@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_URL = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function fetchAPI<T = any>(endpoint: string, params?: Record<string, string>): Promise<T> {

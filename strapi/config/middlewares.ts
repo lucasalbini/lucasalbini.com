@@ -18,7 +18,9 @@ export default [
   {
     name: "strapi::cors",
     config: {
-      origin: ["http://localhost", "http://localhost:3000", "http://localhost:8000"],
+      origin: process.env.STRAPI_CORS_ORIGINS
+        ? process.env.STRAPI_CORS_ORIGINS.split(",")
+        : ["http://localhost", "http://localhost:3000", "http://localhost:8000"],
     },
   },
   "strapi::poweredBy",
