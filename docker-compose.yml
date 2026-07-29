@@ -23,11 +23,15 @@ services:
       context: ./strapi
       dockerfile: Dockerfile
     restart: unless-stopped
-    ports:
-      - "8421:1337"
+    # No host port. Externally, admin is reached at /admin via nginx.
+    # Direct 1337 access is intentionally blocked from the public internet.
+    expose:
+      - "1337"
     depends_on:
       postgres:
         condition: service_healthy
+    volumes:
+      - strapi_uploads:/opt/app/public/uploads
     environment:
       DATABASE_CLIENT: postgres
       DATABASE_HOST: postgres
@@ -98,6 +102,9 @@ services:
       - frontend
       - fastapi
       - strapi
+    volumes:
+      - strapi_uploads:/var/www/uploads:ro
 
 volumes:
   postgres_data:
+  strapi_uploads:

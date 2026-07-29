@@ -31,6 +31,7 @@ services:
     volumes:
       - ./strapi:/opt/app
       - /opt/app/node_modules
+      - strapi_uploads:/opt/app/public/uploads
     environment:
       DATABASE_CLIENT: postgres
       DATABASE_HOST: postgres
@@ -91,8 +92,8 @@ services:
       # Client-side (browser) hits the same URLs via nginx.
       NEXT_PUBLIC_API_URL: http://localhost/api
       NEXT_PUBLIC_SITE_URL: http://localhost
-      # Strapi uploads: the browser resolves these directly on port 1337 in dev.
-      NEXT_PUBLIC_STRAPI_URL: http://localhost:1337
+      # Strapi uploads: browser resolves /uploads/* directly via nginx (served from volume).
+      NEXT_PUBLIC_STRAPI_URL: http://localhost
       REVALIDATE_SECRET: ${REVALIDATE_SECRET:-}
 
   nginx:
@@ -106,6 +107,9 @@ services:
       - frontend
       - fastapi
       - strapi
+    volumes:
+      - strapi_uploads:/var/www/uploads:ro
 
 volumes:
   postgres_data:
+  strapi_uploads:
