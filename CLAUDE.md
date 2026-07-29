@@ -42,7 +42,8 @@ Todos os content-types e DTOs usam **inglês** consistentemente. `title`, `body`
 ### Frontend
 - Data fetching **sempre** em Server Components com `fetch` + `next.revalidate` + cache tags que incluem o locale.
 - Nada de `useEffect` buscando dado no cliente.
-- `AutorBio` e `PostsRelacionados` são **obrigatórios** no rodapé de `blog/[slug]`.
+- `AuthorBio` e `RelatedPosts` são **obrigatórios** no rodapé de `blog/[slug]`.
+- No `blog/[slug]` e `projects/[slug]`, a página emite `<script id="__locale_alternates__" type="application/json">{"pt":"...","en":"..."}</script>` com os slugs traduzidos. O `LocaleSwitcher` client lê isso no mount e usa pra navegar pro slug correto no outro locale.
 - Todo card de projeto tem imagem. Jogos usam GIF de gameplay, não screenshot estático.
 
 ### Direção visual
@@ -59,8 +60,8 @@ Todos os content-types e DTOs usam **inglês** consistentemente. `title`, `body`
 # subir stack de dev
 docker compose -f docker-compose.dev.yml up -d --build
 
-# gerar tipos TS a partir do OpenAPI do FastAPI (após rodar)
-cd frontend && npx openapi-typescript http://localhost:8000/openapi.json -o src/lib/api/types.ts
+# gerar tipos TS a partir do OpenAPI do FastAPI (após stack rodando)
+cd frontend && npm run gen:api
 
 # rodar migration do Strapi manualmente (dentro do container)
 docker compose -f docker-compose.dev.yml exec strapi npm run strapi -- database:migrate
@@ -91,3 +92,6 @@ Ver `.env.example`. As chaves críticas do Strapi (APP_KEYS, JWT_SECRET, ADMIN_J
 - **Não** fazer proxy do `/uploads` pro Strapi — nginx serve direto do volume.
 - **Não** expor a API `/api/*` interna do Strapi pro mundo externo — só o FastAPI acessa, pela rede do compose.
 - **Não** transliterar slugs — vêm do Strapi.
+
+## Decisões
+Ver `docs/adr/0001-i18n-e-arquitetura-do-hub.md` para o racional macro (i18n, cache com locale, home hub, agregação FastAPI, pgvector). Toda decisão arquitetural nova entra como ADR novo (consultar `~/.claude/CLAUDE.md` seção "ADRs" e template).
