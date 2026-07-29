@@ -4,7 +4,8 @@ export default {
   "info": {
     "singularName": "profile",
     "pluralName": "profiles",
-    "displayName": "Profile"
+    "displayName": "Profile",
+    "description": "Personal profile. short_bio is 2-3 lines for the hero; long_bio is used on the /about page."
   },
   "options": {
     "draftAndPublish": true
@@ -24,7 +25,7 @@ export default {
         }
       }
     },
-    "designation": {
+    "role": {
       "type": "string",
       "pluginOptions": {
         "i18n": {
@@ -48,53 +49,46 @@ export default {
         }
       }
     },
-    "summary": {
-      "type": "richtext",
+    "short_bio": {
+      "type": "text",
+      "maxLength": 300,
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       }
     },
-    "typing_titles": {
-      "type": "json",
+    "long_bio": {
+      "type": "blocks",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       }
     },
-    "photo": {
+    "avatar": {
       "type": "media",
       "multiple": false,
       "allowedTypes": [
         "images"
       ]
     },
-    "background": {
-      "type": "media",
-      "multiple": false,
-      "allowedTypes": [
-        "images",
-        "files"
-      ]
-    },
-    "resume": {
+    "cv_pdf": {
       "type": "media",
       "multiple": false,
       "allowedTypes": [
         "files"
-      ]
+      ],
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "social_links": {
       "type": "component",
       "repeatable": true,
       "component": "shared.social-link"
-    },
-    "soft_skills": {
-      "type": "component",
-      "repeatable": true,
-      "component": "shared.soft-skill"
     }
   }
 } as const;

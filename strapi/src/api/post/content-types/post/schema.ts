@@ -4,7 +4,8 @@ export default {
   "info": {
     "singularName": "post",
     "pluralName": "posts",
-    "displayName": "Post"
+    "displayName": "Post",
+    "description": "Editorial posts. Localized per locale (title/slug/summary/body). Cover, tags, featured are shared."
   },
   "options": {
     "draftAndPublish": true
@@ -26,46 +27,53 @@ export default {
     },
     "slug": {
       "type": "uid",
-      "targetField": "title"
-    },
-    "content": {
-      "type": "richtext",
+      "targetField": "title",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       }
     },
-    "excerpt": {
+    "summary": {
       "type": "text",
+      "required": true,
+      "maxLength": 200,
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       }
     },
-    "featured_image": {
+    "body": {
+      "type": "blocks",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "cover": {
       "type": "media",
       "multiple": false,
+      "required": true,
       "allowedTypes": [
         "images"
       ]
     },
-    "author": {
-      "type": "string"
-    },
-    "categories": {
-      "type": "json"
-    },
     "tags": {
-      "type": "json"
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "posts"
     },
     "featured": {
       "type": "boolean",
       "default": false
     },
-    "reading_time": {
-      "type": "integer"
+    "featured_order": {
+      "type": "integer",
+      "default": 0
     }
   }
 } as const;
