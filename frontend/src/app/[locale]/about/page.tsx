@@ -4,7 +4,7 @@ import type { Locale } from "@/lib/i18n/routing";
 import { Container } from "@/components/layout/Container";
 import { PostBody } from "@/components/post/PostBody";
 import { SocialLinks } from "@/components/ui/SocialLinks";
-import { getCV } from "@/lib/api";
+import { getCV, listPublications } from "@/lib/api";
 import { mediaUrl, formatDate } from "@/lib/format";
 import { pageMetadata } from "@/lib/metadata";
 
@@ -26,9 +26,11 @@ const SKILL_LABELS: Record<string, { pt: string; en: string }> = {
 export default async function AboutPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const [cv, t] = await Promise.all([
+  const [cv, publications, t, tPub] = await Promise.all([
     getCV(locale),
+    listPublications(locale),
     getTranslations({ locale, namespace: "about" }),
+    getTranslations({ locale, namespace: "publications" }),
   ]);
   const { profile, experiences, education, certifications, skills } = cv;
 
@@ -221,6 +223,47 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           )}
         </aside>
       </div>
+
+      {/* Publications — full-width section anchored so /publicacoes redirect lands here. */}
+      {publications.length > 0 && (
+        <section id="publications" className="mt-20 scroll-mt-24">
+          <div className="mb-6 flex items-baseline justify-between">
+            <h2 className="text-xs font-semibold uppercase tracking-[0.25em] text-[color:var(--color-muted)]">
+              {tPub("title")}
+            </h2>
+            <span className="font-mono text-xs text-[color:var(--color-muted)]">
+              {publications.length}
+            </span>
+          </div>
+          <ul className="grid gap-4 md:grid-cols-2">
+            {publications.map((p) => (
+              <li
+                key={p.document_id}
+                className="flex flex-col rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-bg)]/85 p-5 backdrop-blur-sm transition-colors hover:border-[color:var(--color-primary)]"
+              >
+                <h3 className="text-base font-semibold leading-snug text-[color:var(--color-fg)]">
+                  {p.url ? <a href={p.url}>{p.title}</a> : p.title}
+                </h3>
+                {(p.journal || p.date) && (
+                  <p className="mt-1.5 text-xs text-[color:var(--color-muted)]">
+                    {p.journal}
+                    {p.date ? ` · ${formatDate(p.date, locale, { year: "numeric" })}` : ""}
+                  </p>
+                )}
+                {p.authors && (
+                  <p className="mt-1 text-[11px] italic text-[color:var(--color-muted)]">{p.authors}</p>
+                )}
+                {p.abstract && (
+                  <p className="mt-3 flex-1 text-sm text-[color:var(--color-fg)]/85">{p.abstract}</p>
+                )}
+                {p.doi && (
+                  <p className="mt-3 font-mono text-[10px] text-[color:var(--color-muted)]">DOI: {p.doi}</p>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </Container>
   );
 }

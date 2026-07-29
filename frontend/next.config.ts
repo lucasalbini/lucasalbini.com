@@ -21,6 +21,10 @@ const nextConfig: NextConfig = {
       { source: "/blog/:slug", destination: "/pt/blog/:slug", permanent: true },
       { source: "/projects", destination: "/pt/projetos", permanent: true },
       { source: "/projects/:slug", destination: "/pt/projetos/:slug", permanent: true },
+      // Publications now live inside the About page.
+      { source: "/publications", destination: "/pt/sobre#publications", permanent: true },
+      { source: "/pt/publicacoes", destination: "/pt/sobre#publications", permanent: true },
+      { source: "/en/publications", destination: "/en/about#publications", permanent: true },
     ];
   },
 };

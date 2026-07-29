@@ -19,7 +19,6 @@ export async function Header({ locale }: { locale: Locale }) {
           <Link href="/blog" className="no-underline hover:text-[color:var(--color-fg)]">{t("blog")}</Link>
           <Link href="/projects" className="no-underline hover:text-[color:var(--color-fg)]">{t("projects")}</Link>
           <Link href="/lab" className="no-underline hover:text-[color:var(--color-fg)]">{t("lab")}</Link>
-          <Link href="/publications" className="no-underline hover:text-[color:var(--color-fg)]">{t("publications")}</Link>
         </nav>
         <div className="flex items-center gap-4">
           <LocaleSwitcher />

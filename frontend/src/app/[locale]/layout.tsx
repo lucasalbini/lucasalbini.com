@@ -6,6 +6,7 @@ import type { Locale } from "@/lib/i18n/routing";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Providers } from "@/providers/Providers";
+import { NeuralBackground } from "@/components/backgrounds/NeuralBackground";
 import type { Metadata } from "next";
 
 export function generateStaticParams() {
@@ -40,7 +41,6 @@ export default async function LocaleLayout({
 
   return (
     <>
-      {/* Root layout gives us <html> + <body>. We only manage locale-scoped chrome here. */}
       <script
         dangerouslySetInnerHTML={{
           __html: `document.documentElement.setAttribute('lang','${htmlLang}');document.documentElement.setAttribute('dir','ltr');`,
@@ -48,9 +48,15 @@ export default async function LocaleLayout({
       />
       <NextIntlClientProvider>
         <Providers>
-          <Header locale={locale as Locale} />
-          <main className="min-h-[60vh] pb-16">{children}</main>
-          <Footer locale={locale as Locale} />
+          {/* Page-wide neural backdrop. Fixed so it stays on scroll, sits behind
+              everything else, but keeps pointer events so the cursor still pulls
+              on the network anywhere on the page. */}
+          <NeuralBackground className="fixed inset-0 z-0 opacity-60 dark:opacity-90" />
+          <div className="relative z-10 flex min-h-screen flex-col">
+            <Header locale={locale as Locale} />
+            <main className="flex-1 pb-16">{children}</main>
+            <Footer locale={locale as Locale} />
+          </div>
         </Providers>
       </NextIntlClientProvider>
     </>
