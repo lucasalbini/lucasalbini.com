@@ -66,12 +66,6 @@ export default {
       "allowedTypes": [
         "images"
       ]
-    },
-    "projects": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::project.project",
-      "mappedBy": "stack"
     }
   }
 } as const;

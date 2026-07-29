@@ -1,4 +1,5 @@
 import type { Core } from "@strapi/strapi";
+import { importLegacyDump } from "./scripts/import-legacy";
 
 export default {
   register(/* { strapi }: { strapi: Core.Strapi } */) {},
@@ -6,6 +7,14 @@ export default {
   async bootstrap({ strapi }: { strapi: Core.Strapi }) {
     await ensureLocales(strapi);
     await grantPublicReadPermissions(strapi);
+    if (process.env.IMPORT_LEGACY === "1") {
+      try {
+        await importLegacyDump(strapi);
+      } catch (e) {
+        strapi.log.error(`[bootstrap] legacy import failed: ${(e as Error).message}`);
+        if ((e as Error).stack) strapi.log.error((e as Error).stack);
+      }
+    }
   },
 };
 

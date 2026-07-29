@@ -56,7 +56,7 @@ export async function GET(
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", fontSize: 22, color: "#9ca3af" }}>
           <span>Lucas Albini</span>
-          <span style={{ color: "#fb923c" }}>{loc === "pt" ? "PT-BR" : "EN"}</span>
+          <span style={{ color: "#00D4AA" }}>{loc === "pt" ? "PT-BR" : "EN"}</span>
         </div>
       </div>
     ),

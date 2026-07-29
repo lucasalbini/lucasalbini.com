@@ -47,6 +47,7 @@ services:
       TRANSFER_TOKEN_SALT: ${STRAPI_TRANSFER_TOKEN_SALT}
       JWT_SECRET: ${STRAPI_JWT_SECRET}
       NODE_ENV: development
+      IMPORT_LEGACY: ${IMPORT_LEGACY:-0}
 
   fastapi:
     build:

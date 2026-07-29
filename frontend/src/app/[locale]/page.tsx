@@ -32,7 +32,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
 
   // The home hub deliberately shows *featured* items, not most-recent. Curation
   // is a manual signal (featured + featured_order) set in Strapi admin.
-  const [profile, posts, projects, lab, tHome, tNotFound] = await Promise.all([
+  const [profile, featuredPosts, featuredProjects, lab, tHome, tNotFound] = await Promise.all([
     getProfile(locale),
     listPosts(locale, { featured: true, pageSize: 5 }),
     listProjects(locale, { featured: true, pageSize: 3 }),
@@ -40,6 +40,11 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
     getTranslations({ locale, namespace: "home" }),
     getTranslations({ locale, namespace: "meta" }),
   ]);
+
+  // Fallback to most-recent when the curator hasn't marked featured yet — otherwise the
+  // home would be empty on a fresh install.
+  const posts = featuredPosts.data.length > 0 ? featuredPosts : await listPosts(locale, { pageSize: 5 });
+  const projects = featuredProjects.data.length > 0 ? featuredProjects : await listProjects(locale, { pageSize: 3 });
 
   return (
     <Container size="wide" className="py-12">

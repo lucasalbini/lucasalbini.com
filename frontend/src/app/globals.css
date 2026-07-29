@@ -1,15 +1,23 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
 
-  --color-bg: #ffffff;
-  --color-fg: #171717;
-  --color-muted: #6b7280;
-  --color-border: #e5e7eb;
-  --color-accent: #ea580c;
-  --color-accent-hover: #c2410c;
+  /* Cream & Sand palette (light) — carried over from the previous design */
+  --color-bg: #FAF6EF;
+  --color-bg-alt: #EFF3E8;
+  --color-bg-deep: #F0ECE3;
+  --color-surface: #E4EBD9;
+  --color-fg: #1A2E22;
+  --color-muted: #5E7058;
+  --color-border: #C8D4BC;
+
+  /* Jade (primary tech accent) + Terracotta (warm CTA / links) */
+  --color-primary: #00D4AA;
+  --color-primary-dark: #00B892;
+  --color-accent: #D4734A;
+  --color-accent-hover: #B85A35;
 }
 
 @variant dark (&:where(.dark, .dark *));
@@ -17,34 +25,47 @@
 @layer base {
   :root {
     color-scheme: light;
-    --color-bg: #ffffff;
-    --color-fg: #171717;
-    --color-muted: #6b7280;
-    --color-border: #e5e7eb;
-    --color-accent: #ea580c;
-    --color-accent-hover: #c2410c;
+    --color-bg: #FAF6EF;
+    --color-bg-alt: #EFF3E8;
+    --color-bg-deep: #F0ECE3;
+    --color-surface: #E4EBD9;
+    --color-fg: #1A2E22;
+    --color-muted: #5E7058;
+    --color-border: #C8D4BC;
+    --color-primary: #00D4AA;
+    --color-primary-dark: #00B892;
+    --color-accent: #D4734A;
+    --color-accent-hover: #B85A35;
   }
 
   .dark {
     color-scheme: dark;
-    --color-bg: #0a0a0a;
-    --color-fg: #ededed;
-    --color-muted: #9ca3af;
-    --color-border: #262626;
-    --color-accent: #fb923c;
-    --color-accent-hover: #fdba74;
+    /* Forest & Clay (dark) */
+    --color-bg-deep: #080F0B;
+    --color-bg: #0F1E17;
+    --color-bg-alt: #1A3328;
+    --color-surface: #162E24;
+    --color-fg: #EDE4D3;
+    --color-muted: #8B9B80;
+    --color-border: #2A3E32;
+    /* Slightly brighter jade + terracotta on dark for contrast */
+    --color-primary: #16E5BB;
+    --color-primary-dark: #00D4AA;
+    --color-accent: #E58A66;
+    --color-accent-hover: #D4734A;
   }
 
   html {
     -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
   }
 
   body {
     background-color: var(--color-bg);
     color: var(--color-fg);
     font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-feature-settings: "ss01", "cv02";
     -webkit-font-smoothing: antialiased;
+    transition: background-color 0.3s, color 0.3s;
   }
 
   code, kbd, pre, samp {
@@ -54,6 +75,7 @@
   a {
     color: var(--color-accent);
     text-decoration: none;
+    transition: color 0.15s;
   }
   a:hover {
     color: var(--color-accent-hover);
@@ -62,14 +84,17 @@
   }
 
   ::selection {
-    background: var(--color-accent);
-    color: #ffffff;
+    background: var(--color-primary);
+    color: #0F1E17;
   }
 
   *:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-primary);
     outline-offset: 3px;
     border-radius: 2px;
+  }
+  .dark *:focus-visible {
+    box-shadow: 0 0 12px color-mix(in oklab, var(--color-primary) 40%, transparent);
   }
 }
 
@@ -81,6 +106,7 @@
   .prose-reading h1, .prose-reading h2, .prose-reading h3 {
     line-height: 1.2;
     letter-spacing: -0.015em;
+    color: var(--color-fg);
   }
   .prose-reading h2 { font-size: 1.5rem; font-weight: 600; margin-top: 2.5rem; margin-bottom: 1rem; }
   .prose-reading h3 { font-size: 1.25rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; }
@@ -91,22 +117,25 @@
   .prose-reading li { margin-bottom: 0.375rem; }
   .prose-reading code:not(pre code) {
     padding: 0.125rem 0.35rem;
-    background: color-mix(in oklab, var(--color-fg) 8%, transparent);
+    background: color-mix(in oklab, var(--color-primary) 15%, transparent);
+    color: var(--color-fg);
     border-radius: 4px;
     font-size: 0.9em;
   }
   .prose-reading pre {
     padding: 1rem;
     border-radius: 6px;
-    background: color-mix(in oklab, var(--color-fg) 6%, transparent);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
     overflow-x: auto;
     margin-bottom: 1.5rem;
   }
   .prose-reading blockquote {
-    border-left: 3px solid var(--color-accent);
+    border-left: 3px solid var(--color-primary);
     padding-left: 1rem;
     color: var(--color-muted);
     margin: 1.25rem 0;
+    font-style: italic;
   }
   .prose-reading hr {
     border: none;
