@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { setRequestLocale, getTranslations } from "next-intl/server";
+import { FaLocationDot } from "react-icons/fa6";
 import type { Locale } from "@/lib/i18n/routing";
 import { Container } from "@/components/layout/Container";
 import { PostBody } from "@/components/post/PostBody";
@@ -64,7 +65,10 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
               </p>
             )}
             {profile.location && (
-              <p className="mt-1 text-sm text-[color:var(--color-muted)]">📍 {profile.location}</p>
+              <p className="mt-1 inline-flex items-center gap-1.5 text-sm text-[color:var(--color-muted)]">
+                <FaLocationDot aria-hidden />
+                {profile.location}
+              </p>
             )}
             <div className="mt-5 flex flex-wrap items-center gap-4">
               {profile.social_links?.length > 0 && (

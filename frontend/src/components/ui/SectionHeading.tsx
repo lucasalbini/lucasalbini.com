@@ -6,14 +6,18 @@ interface Props {
   linkLabel?: string;
 }
 
+/** Mono label + hairline + optional "see all" link. The rule is what separates
+ *  sections now that cards no longer carry borders. */
 export function SectionHeading({ title, linkHref, linkLabel }: Props) {
   return (
-    <div className="mb-4 flex items-baseline justify-between">
-      <h2 className="text-sm font-semibold uppercase tracking-widest text-[color:var(--color-muted)]">
-        {title}
-      </h2>
+    <div className="mb-8 flex items-center gap-4">
+      <h2 className="label-mono shrink-0">{title}</h2>
+      <span className="rule flex-1" aria-hidden />
       {linkHref && linkLabel && (
-        <Link href={linkHref} className="text-xs uppercase tracking-wide">
+        <Link
+          href={linkHref}
+          className="shrink-0 font-mono text-[11px] uppercase tracking-[0.12em] no-underline hover:underline"
+        >
           {linkLabel} →
         </Link>
       )}

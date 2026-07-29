@@ -7,16 +7,23 @@ import { useTheme } from "next-themes";
 
 /**
  * Neural-network style particle field that reacts to the cursor.
- * Sits absolutely behind the hero. Zero interactivity outside its container.
+ * Fixed behind the whole page. Dense enough to read as a network rather than
+ * scattered dots — which means it has to move slowly, or the page shimmers.
  */
 export function NeuralBackground({ className = "" }: { className?: string }) {
   const [ready, setReady] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
   const { resolvedTheme } = useTheme();
 
   useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => setReducedMotion(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
     initParticlesEngine(async (engine) => {
       await loadSlim(engine);
     }).then(() => setReady(true));
+    return () => mq.removeEventListener("change", sync);
   }, []);
 
   if (!ready) return <div className={className} aria-hidden />;
@@ -25,7 +32,7 @@ export function NeuralBackground({ className = "" }: { className?: string }) {
   const nodeColors = isDark ? ["#00D4AA", "#16E5BB", "#D4734A"] : ["#00B892", "#0D8B72", "#B85A35"];
   const linkColor = isDark ? "#00D4AA" : "#5E7058";
   const grabColor = isDark ? "#E58A66" : "#B85A35";
-  const linkOpacity = isDark ? 0.22 : 0.32;
+  const linkOpacity = isDark ? 0.3 : 0.34;
 
   return (
     <div className={className} aria-hidden>
@@ -37,24 +44,24 @@ export function NeuralBackground({ className = "" }: { className?: string }) {
           background: { color: { value: "transparent" } },
           fpsLimit: 60,
           particles: {
-            number: { value: 55, density: { enable: true } },
+            number: { value: 120, density: { enable: true } },
             color: { value: nodeColors },
             shape: { type: "circle" },
             opacity: {
-              value: { min: 0.35, max: 0.75 },
-              animation: { enable: true, speed: 0.4, sync: false },
+              value: { min: 0.3, max: 0.65 },
+              animation: { enable: !reducedMotion, speed: 0.4, sync: false },
             },
-            size: { value: { min: 1, max: 3 } },
+            size: { value: { min: 1, max: 2.5 } },
             links: {
               enable: true,
-              distance: 150,
+              distance: 130,
               color: linkColor,
               opacity: linkOpacity,
               width: 1,
             },
             move: {
-              enable: true,
-              speed: 0.7,
+              enable: !reducedMotion,
+              speed: 0.35,
               direction: "none",
               random: true,
               straight: false,
@@ -63,7 +70,7 @@ export function NeuralBackground({ className = "" }: { className?: string }) {
           },
           interactivity: {
             events: {
-              onHover: { enable: true, mode: "grab" },
+              onHover: { enable: !reducedMotion, mode: "grab" },
             },
             modes: {
               grab: {

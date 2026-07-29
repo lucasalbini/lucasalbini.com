@@ -60,6 +60,13 @@
     scroll-behavior: smooth;
   }
 
+  h1, h2, h3, h4 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+
   body {
     background-color: var(--color-bg);
     color: var(--color-fg);
@@ -98,7 +105,74 @@
   }
 }
 
+@layer utilities {
+  /* Fluid display size for the home h1. Caps below the 70ch reading measure so
+     the name never wraps awkwardly on a laptop. */
+  .text-display {
+    font-size: clamp(2.5rem, 6vw, 4.25rem);
+    line-height: 1.03;
+    letter-spacing: -0.035em;
+  }
+
+  /* Hairline used by SectionHeading in place of card borders. */
+  .rule {
+    height: 1px;
+    background: var(--color-border);
+  }
+
+  /* Mono eyebrow/meta label. Repeated verbatim in six places before. */
+  .label-mono {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 @layer components {
+  /* Solid CTA. Terracotta is light enough that white-on-accent fails WCAG AA
+     (3.3:1 light, 2.1:1 dark), so each theme picks the readable pairing:
+     the darker terracotta with white text on light, the lighter one with
+     near-black text on dark. */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 9999px;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    background: #b85a35;
+    color: #ffffff;
+    text-decoration: none;
+    transition: background-color 0.15s;
+  }
+  .btn-primary:hover {
+    background: #9c4529;
+    color: #ffffff;
+    text-decoration: none;
+  }
+  .dark .btn-primary {
+    background: #e58a66;
+    color: #0f1e17;
+  }
+  .dark .btn-primary:hover {
+    background: #f0a183;
+    color: #0f1e17;
+  }
+
   .prose-reading {
     max-width: 70ch;
     line-height: 1.7;

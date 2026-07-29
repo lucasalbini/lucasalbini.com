@@ -1,7 +1,7 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import type { Locale } from "@/lib/i18n/routing";
 import { Container } from "@/components/layout/Container";
-import { PostCard } from "@/components/cards/PostCard";
+import { PostCard, FeaturedPostCard } from "@/components/cards/PostCard";
 import { listPosts } from "@/lib/api";
 import { pageMetadata } from "@/lib/metadata";
 
@@ -19,23 +19,32 @@ export default async function BlogIndex({ params }: { params: Promise<{ locale: 
     getTranslations({ locale, namespace: "blog" }),
   ]);
 
+  const total = posts.pagination?.total ?? posts.data.length;
+  const [lead, ...rest] = posts.data;
+
   return (
-    <Container size="full" className="py-12">
-      <header className="mb-10">
-        <h1 className="text-3xl font-semibold text-[color:var(--color-fg)]">{t("title")}</h1>
-        <p className="mt-2 text-sm text-[color:var(--color-muted)]">
-          {posts.pagination?.total ?? posts.data.length}{" "}
-          {(posts.pagination?.total ?? posts.data.length) === 1 ? "post" : "posts"}
+    <Container size="wide" className="py-16 sm:py-20">
+      <header className="mb-12">
+        <h1 className="text-4xl font-bold tracking-tight text-[color:var(--color-fg)] sm:text-5xl">
+          {t("title")}
+        </h1>
+        <p className="label-mono mt-3">
+          {total} {total === 1 ? "post" : "posts"}
         </p>
       </header>
       {posts.data.length === 0 ? (
         <p className="text-[color:var(--color-muted)]">{t("empty")}</p>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {posts.data.map((p) => (
-            <PostCard key={p.document_id} post={p} locale={locale} />
-          ))}
-        </div>
+        <>
+          <FeaturedPostCard post={lead} locale={locale} />
+          {rest.length > 0 && (
+            <div className="mt-16 grid gap-12 border-t border-[color:var(--color-border)] pt-12 sm:grid-cols-2 sm:gap-x-10">
+              {rest.map((p) => (
+                <PostCard key={p.document_id} post={p} locale={locale} />
+              ))}
+            </div>
+          )}
+        </>
       )}
     </Container>
   );

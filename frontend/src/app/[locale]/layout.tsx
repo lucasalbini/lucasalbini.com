@@ -51,10 +51,23 @@ export default async function LocaleLayout({
           {/* Page-wide neural backdrop. Fixed so it stays on scroll, sits behind
               everything else, but keeps pointer events so the cursor still pulls
               on the network anywhere on the page. */}
-          <NeuralBackground className="fixed inset-0 z-0 opacity-60 dark:opacity-90" />
+          <NeuralBackground className="fixed inset-0 z-0 opacity-50 dark:opacity-75" />
+          {/* Legibility veil: the field is dense now, and content sits directly on
+              it with no card backgrounds. This washes it out under the centre
+              column (where text lives) while leaving the edges fully visible. */}
+          <div
+            aria-hidden
+            className="pointer-events-none fixed inset-0 z-[1]"
+            style={{
+              background:
+                "radial-gradient(ellipse 60% 70% at 50% 40%, var(--color-bg) 0%, color-mix(in oklab, var(--color-bg) 72%, transparent) 45%, transparent 78%)",
+            }}
+          />
           <div className="relative z-10 flex min-h-screen flex-col">
             <Header locale={locale as Locale} />
-            <main className="flex-1 pb-16">{children}</main>
+            {/* Pages own their own vertical padding — a blanket pb here stacked
+                on top of it and left dead space above the footer. */}
+            <main className="flex-1">{children}</main>
             <Footer locale={locale as Locale} />
           </div>
         </Providers>

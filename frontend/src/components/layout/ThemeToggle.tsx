@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { useTranslations } from "next-intl";
+import { FaMoon, FaSun } from "react-icons/fa6";
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -18,9 +19,10 @@ export function ThemeToggle() {
       type="button"
       aria-label={t("toggle")}
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="text-xs uppercase tracking-wide text-[color:var(--color-muted)] hover:text-[color:var(--color-fg)]"
+      className="flex h-8 w-8 items-center justify-center rounded-full text-sm text-[color:var(--color-muted)] transition-colors hover:bg-[color:var(--color-surface)] hover:text-[color:var(--color-fg)]"
     >
-      {mounted ? (isDark ? "light" : "dark") : " "}
+      {/* Placeholder keeps the button from resizing between SSR and hydration. */}
+      {mounted ? isDark ? <FaSun aria-hidden /> : <FaMoon aria-hidden /> : <span className="block h-4 w-4" />}
     </button>
   );
 }

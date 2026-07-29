@@ -13,7 +13,12 @@
     "building": "Building",
     "building_all": "See all projects",
     "testing": "Currently testing",
-    "testing_all": "Open the lab"
+    "testing_all": "Open the lab",
+    "cta_cv": "Download CV",
+    "cta_projects": "See projects",
+    "cta_contact": "Get in touch",
+    "contact_headline": "Working on AI? Let's talk.",
+    "contact_body": "Open to conversations about LLM system architecture, RAG and computer vision."
   },
   "blog": {
     "title": "Blog",

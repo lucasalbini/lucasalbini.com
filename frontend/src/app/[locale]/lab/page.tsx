@@ -20,10 +20,14 @@ export default async function LabIndex({ params }: { params: Promise<{ locale: L
   ]);
 
   return (
-    <Container size="reading" className="py-12">
-      <h1 className="text-2xl font-semibold">{t("title")}</h1>
-      <p className="mt-2 max-w-[65ch] text-sm text-[color:var(--color-muted)]">{t("description")}</p>
-      <div className="mt-8">
+    <Container size="reading" className="py-16 sm:py-20">
+      <h1 className="text-4xl font-bold tracking-tight text-[color:var(--color-fg)] sm:text-5xl">
+        {t("title")}
+      </h1>
+      <p className="mt-4 max-w-[60ch] leading-relaxed text-[color:var(--color-muted)]">
+        {t("description")}
+      </p>
+      <div className="mt-12 border-t border-[color:var(--color-border)]">
         {lab.data.length === 0 ? (
           <p className="text-[color:var(--color-muted)]">{t("empty")}</p>
         ) : (

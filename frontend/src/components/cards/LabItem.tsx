@@ -33,3 +33,34 @@ export function LabItem({ item, locale }: { item: Lab; locale: Locale }) {
     </article>
   );
 }
+
+/**
+ * Changelog-style row for the home: date pinned in a fixed mono column, title
+ * and one-line excerpt to the right. Denser than LabItem, which renders the
+ * whole note body.
+ */
+export function LabRow({ item, locale }: { item: Lab; locale: Locale }) {
+  return (
+    <li className="flex flex-col gap-1 py-3.5 sm:flex-row sm:gap-6">
+      <time
+        dateTime={item.date}
+        className="shrink-0 font-mono text-xs leading-6 text-[color:var(--color-muted)] sm:w-24"
+      >
+        {formatShortDate(item.date, locale)}
+      </time>
+      <div className="min-w-0">
+        <div className="flex flex-wrap items-center gap-2">
+          <h3 className="font-medium leading-6 text-[color:var(--color-fg)]">{item.title}</h3>
+          {item.language !== locale && (
+            <LanguageBadge currentLocale={locale} contentLocale={item.language} />
+          )}
+        </div>
+        {item.external_link && (
+          <a href={item.external_link} className="mt-1 block truncate font-mono text-xs">
+            {item.external_link} ↗
+          </a>
+        )}
+      </div>
+    </li>
+  );
+}

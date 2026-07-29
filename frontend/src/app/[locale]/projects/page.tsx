@@ -19,21 +19,22 @@ export default async function ProjectsIndex({ params }: { params: Promise<{ loca
     getTranslations({ locale, namespace: "projects" }),
   ]);
 
+  const total = projects.pagination?.total ?? projects.data.length;
+
   return (
-    <Container size="full" className="py-12">
-      <header className="mb-10">
-        <h1 className="text-3xl font-semibold text-[color:var(--color-fg)]">{t("title")}</h1>
-        <p className="mt-2 text-sm text-[color:var(--color-muted)]">
-          {projects.pagination?.total ?? projects.data.length}{" "}
-          {(projects.pagination?.total ?? projects.data.length) === 1 ? "project" : "projects"}
+    <Container size="wide" className="py-16 sm:py-20">
+      <header className="mb-12">
+        <h1 className="text-4xl font-bold tracking-tight text-[color:var(--color-fg)] sm:text-5xl">
+          {t("title")}
+        </h1>
+        <p className="label-mono mt-3">
+          {total} {total === 1 ? "project" : "projects"}
         </p>
       </header>
       {projects.data.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-[color:var(--color-border)] p-12 text-center text-[color:var(--color-muted)]">
-          {t("empty")}
-        </div>
+        <p className="text-[color:var(--color-muted)]">{t("empty")}</p>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-12 sm:grid-cols-2 sm:gap-x-10">
           {projects.data.map((p) => (
             <ProjectCard key={p.document_id} project={p} locale={locale} />
           ))}

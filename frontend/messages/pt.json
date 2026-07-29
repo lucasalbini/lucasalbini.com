@@ -13,7 +13,12 @@
     "building": "Construindo",
     "building_all": "Ver todos os projetos",
     "testing": "Testando agora",
-    "testing_all": "Ver o lab"
+    "testing_all": "Ver o lab",
+    "cta_cv": "Baixar CV",
+    "cta_projects": "Ver projetos",
+    "cta_contact": "Contato",
+    "contact_headline": "Trabalhando com IA? Vamos conversar.",
+    "contact_body": "Aberto a conversas sobre arquitetura de sistemas com LLM, RAG e visão computacional."
   },
   "blog": {
     "title": "Blog",

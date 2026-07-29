@@ -1,15 +1,14 @@
-import Image from "next/image";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import type { Locale } from "@/lib/i18n/routing";
 import { Container } from "@/components/layout/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { PostCard } from "@/components/cards/PostCard";
+import { Hero } from "@/components/home/Hero";
+import { FeaturedPostCard, PostRow } from "@/components/cards/PostCard";
 import { ProjectCard } from "@/components/cards/ProjectCard";
-import { LabItem } from "@/components/cards/LabItem";
-import { SocialLinks } from "@/components/ui/SocialLinks";
+import { LabRow } from "@/components/cards/LabItem";
 import { getProfile, listPosts, listProjects, listLab } from "@/lib/api";
-import { mediaUrl } from "@/lib/format";
 import { pageMetadata } from "@/lib/metadata";
+import { CONTACT_EMAIL } from "@/lib/social";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
@@ -26,116 +25,82 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const [profile, featuredPosts, featuredProjects, lab, tHome, tMeta] = await Promise.all([
+  const [profile, featuredPosts, featuredProjects, lab, tHome] = await Promise.all([
     getProfile(locale),
     listPosts(locale, { featured: true, pageSize: 6 }),
     listProjects(locale, { featured: true, pageSize: 3 }),
-    listLab(locale, { pageSize: 3 }),
+    listLab(locale, { pageSize: 4 }),
     getTranslations({ locale, namespace: "home" }),
-    getTranslations({ locale, namespace: "meta" }),
   ]);
 
   const posts = featuredPosts.data.length > 0 ? featuredPosts : await listPosts(locale, { pageSize: 6 });
-  const projects = featuredProjects.data.length > 0 ? featuredProjects : await listProjects(locale, { pageSize: 3 });
+  const projects =
+    featuredProjects.data.length > 0 ? featuredProjects : await listProjects(locale, { pageSize: 3 });
+
+  const [leadPost, ...restPosts] = posts.data;
+  const [leadProject, ...restProjects] = projects.data;
 
   return (
-    <Container size="full" className="py-16">
-      {/* Hero — sits on the page-wide neural bg. Compact card so text stays readable. */}
-      <section className="mb-16 rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-bg)]/85 p-6 backdrop-blur-sm sm:p-10">
-        <div className="grid gap-6 md:grid-cols-[auto_1fr] md:items-center">
-          {profile?.avatar?.url ? (
-            <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-full border-4 border-[color:var(--color-primary)] shadow sm:h-32 sm:w-32">
-              <Image
-                src={mediaUrl(profile.avatar.url)}
-                alt={profile?.name ?? ""}
-                fill
-                unoptimized
-                sizes="128px"
-                className="object-cover"
-                priority
-              />
-            </div>
-          ) : (
-            <div className="relative h-24 w-24 shrink-0 rounded-full border-4 border-[color:var(--color-primary)] bg-[color:var(--color-surface)] sm:h-32 sm:w-32" />
+    <Container size="wide">
+      <Hero profile={profile} locale={locale} />
+
+      {leadPost && (
+        <section className="pb-20 sm:pb-24">
+          <SectionHeading title={tHome("writing")} linkHref="/blog" linkLabel={tHome("writing_all")} />
+          <FeaturedPostCard post={leadPost} locale={locale} />
+          {restPosts.length > 0 && (
+            <ul className="mt-10 divide-y divide-[color:var(--color-border)] border-t border-[color:var(--color-border)]">
+              {restPosts.slice(0, 5).map((p) => (
+                <PostRow key={p.document_id} post={p} locale={locale} />
+              ))}
+            </ul>
           )}
-          <div>
-            <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-[color:var(--color-primary-dark)]">
-              {tMeta("site_title")}
-            </p>
-            <h1 className="mt-1 text-3xl font-bold leading-tight text-[color:var(--color-fg)] sm:text-4xl">
-              {profile?.name ?? "Lucas Albini"}
-            </h1>
-            {profile?.role && (
-              <p className="mt-2 text-base text-[color:var(--color-fg)]/85 sm:text-lg">
-                {profile.role}
-                {profile.company ? <span className="text-[color:var(--color-muted)]"> · {profile.company}</span> : null}
-              </p>
-            )}
-            {profile?.short_bio && (
-              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[color:var(--color-fg)]/80">
-                {profile.short_bio}
-              </p>
-            )}
-            <div className="mt-4 flex flex-wrap items-center gap-4 text-sm">
-              {profile?.location && (
-                <span className="text-[color:var(--color-muted)]">📍 {profile.location}</span>
-              )}
-              {profile?.social_links && profile.social_links.length > 0 && (
-                <SocialLinks links={profile.social_links} size="md" />
-              )}
+        </section>
+      )}
+
+      {leadProject && (
+        <section className="pb-20 sm:pb-24">
+          <SectionHeading title={tHome("building")} linkHref="/projects" linkLabel={tHome("building_all")} />
+          {/* Lead project spans the full width; the rest sit side by side under
+              it. Side-by-side columns of unequal card counts left a dead gap. */}
+          <ProjectCard project={leadProject} locale={locale} size="lg" />
+          {restProjects.length > 0 && (
+            <div className="mt-12 grid gap-12 sm:grid-cols-2 sm:gap-x-10">
+              {restProjects.slice(0, 2).map((p) => (
+                <ProjectCard key={p.document_id} project={p} locale={locale} />
+              ))}
             </div>
-          </div>
-        </div>
-      </section>
+          )}
+        </section>
+      )}
 
-      {/* Writing */}
-      <section className="mb-16">
-        <SectionHeading title={tHome("writing")} linkHref="/blog" linkLabel={tHome("writing_all")} />
-        {posts.data.length > 0 ? (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {posts.data.map((p) => (
-              <PostCard key={p.document_id} post={p} locale={locale} variant="compact" />
-            ))}
-          </div>
-        ) : (
-          <EmptyHint />
-        )}
-      </section>
-
-      {/* Building */}
-      <section className="mb-16">
-        <SectionHeading title={tHome("building")} linkHref="/projects" linkLabel={tHome("building_all")} />
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.data.length > 0
-            ? projects.data.map((p) => <ProjectCard key={p.document_id} project={p} locale={locale} variant="compact" />)
-            : null}
-        </div>
-      </section>
-
-      {/* Currently testing */}
-      <section>
-        <SectionHeading title={tHome("testing")} linkHref="/lab" linkLabel={tHome("testing_all")} />
-        {lab.data.length > 0 ? (
-          <div className="grid gap-4 md:grid-cols-2">
+      {/* Rendered only when the lab has notes — an empty section used to leave a
+          large gap above the footer. */}
+      {lab.data.length > 0 && (
+        <section className="pb-20 sm:pb-24">
+          <SectionHeading title={tHome("testing")} linkHref="/lab" linkLabel={tHome("testing_all")} />
+          <ul className="divide-y divide-[color:var(--color-border)] border-t border-[color:var(--color-border)]">
             {lab.data.map((n) => (
-              <div
-                key={n.document_id}
-                className="rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-bg)]/85 p-5 backdrop-blur-sm"
-              >
-                <LabItem item={n} locale={locale} />
-              </div>
+              <LabRow key={n.document_id} item={n} locale={locale} />
             ))}
-          </div>
-        ) : (
-          <EmptyHint />
-        )}
+          </ul>
+        </section>
+      )}
+
+      <section className="border-t border-[color:var(--color-border)] py-16 sm:py-20">
+        <h2 className="max-w-[24ch] text-2xl font-semibold leading-tight text-[color:var(--color-fg)] sm:text-3xl">
+          {tHome("contact_headline")}
+        </h2>
+        <p className="mt-4 max-w-[56ch] text-[color:var(--color-muted)]">{tHome("contact_body")}</p>
+        <a
+          href={`mailto:${CONTACT_EMAIL}`}
+          className="mt-6 inline-block font-mono text-sm underline underline-offset-4"
+        >
+          {CONTACT_EMAIL}
+        </a>
       </section>
     </Container>
   );
-}
-
-function EmptyHint() {
-  return <p className="text-sm text-[color:var(--color-muted)]">—</p>;
 }
 
 export const revalidate = 300;
