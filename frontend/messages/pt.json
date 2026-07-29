@@ -1,0 +1,96 @@
+{
+  "nav": {
+    "home": "Início",
+    "about": "Sobre",
+    "blog": "Blog",
+    "projects": "Projetos",
+    "lab": "Lab",
+    "publications": "Publicações"
+  },
+  "home": {
+    "writing": "Escrevendo",
+    "writing_all": "Ver todos os posts",
+    "building": "Construindo",
+    "building_all": "Ver todos os projetos",
+    "testing": "Testando agora",
+    "testing_all": "Ver o lab"
+  },
+  "blog": {
+    "title": "Blog",
+    "empty": "Nenhum post publicado por enquanto.",
+    "reading_time": "{minutes} min de leitura",
+    "published_on": "Publicado em {date}",
+    "back": "← Voltar para o blog",
+    "related": "Posts relacionados",
+    "translation_only": "Este post ainda não foi traduzido para português.",
+    "translation_action": "Você pode usar a tradução automática do seu navegador."
+  },
+  "projects": {
+    "title": "Projetos",
+    "empty": "Nenhum projeto publicado por enquanto.",
+    "back": "← Voltar para projetos",
+    "status": {
+      "active": "Ativo",
+      "paused": "Em pausa",
+      "archived": "Arquivado",
+      "experiment": "Experimento"
+    },
+    "kind": {
+      "game": "Jogo",
+      "ai": "IA",
+      "tool": "Ferramenta",
+      "tutorial": "Tutorial"
+    },
+    "stack": "Stack",
+    "code": "Código",
+    "demo": "Demo",
+    "play": "Jogar"
+  },
+  "lab": {
+    "title": "Lab",
+    "description": "Anotações rápidas, esboços e coisas que estou testando. Formato livre; conteúdo em português ou inglês, sem tradução.",
+    "empty": "Nada por aqui ainda."
+  },
+  "publications": {
+    "title": "Publicações",
+    "empty": "Nenhuma publicação disponível.",
+    "read": "Ler publicação"
+  },
+  "about": {
+    "title": "Sobre",
+    "experience": "Experiência",
+    "education": "Formação",
+    "certifications": "Certificações",
+    "download_cv": "Baixar CV",
+    "present": "Presente"
+  },
+  "tags": {
+    "title": "Tag",
+    "empty": "Nada com essa tag por enquanto.",
+    "posts": "Posts",
+    "projects": "Projetos",
+    "lab": "Lab"
+  },
+  "footer": {
+    "rights": "Feito com atenção por Lucas Albini."
+  },
+  "locale": {
+    "switch_to_pt": "Trocar para português",
+    "switch_to_en": "Switch to English",
+    "not_available": "Sem tradução para {locale}",
+    "badge_only_en": "Disponível apenas em inglês",
+    "badge_only_pt": "Only in Portuguese"
+  },
+  "theme": {
+    "toggle": "Alternar tema"
+  },
+  "meta": {
+    "site_title": "Lucas Albini",
+    "site_description": "Tech Lead em IA. Escrevo sobre IA aplicada, engenharia e desenvolvimento de jogos."
+  },
+  "not_found": {
+    "title": "Página não encontrada",
+    "description": "O que você procura não está aqui.",
+    "home": "Voltar para o início"
+  }
+}

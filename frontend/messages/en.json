@@ -1,0 +1,96 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "blog": "Blog",
+    "projects": "Projects",
+    "lab": "Lab",
+    "publications": "Publications"
+  },
+  "home": {
+    "writing": "Writing",
+    "writing_all": "See all posts",
+    "building": "Building",
+    "building_all": "See all projects",
+    "testing": "Currently testing",
+    "testing_all": "Open the lab"
+  },
+  "blog": {
+    "title": "Blog",
+    "empty": "No posts published yet.",
+    "reading_time": "{minutes} min read",
+    "published_on": "Published on {date}",
+    "back": "← Back to blog",
+    "related": "Related posts",
+    "translation_only": "This post has not been translated to English yet.",
+    "translation_action": "You can use your browser's automatic translation."
+  },
+  "projects": {
+    "title": "Projects",
+    "empty": "No projects published yet.",
+    "back": "← Back to projects",
+    "status": {
+      "active": "Active",
+      "paused": "Paused",
+      "archived": "Archived",
+      "experiment": "Experiment"
+    },
+    "kind": {
+      "game": "Game",
+      "ai": "AI",
+      "tool": "Tool",
+      "tutorial": "Tutorial"
+    },
+    "stack": "Stack",
+    "code": "Code",
+    "demo": "Demo",
+    "play": "Play"
+  },
+  "lab": {
+    "title": "Lab",
+    "description": "Quick notes, sketches, and things I'm currently testing. Free-form, in Portuguese or English, no translation.",
+    "empty": "Nothing here yet."
+  },
+  "publications": {
+    "title": "Publications",
+    "empty": "No publications yet.",
+    "read": "Read publication"
+  },
+  "about": {
+    "title": "About",
+    "experience": "Experience",
+    "education": "Education",
+    "certifications": "Certifications",
+    "download_cv": "Download CV",
+    "present": "Present"
+  },
+  "tags": {
+    "title": "Tag",
+    "empty": "Nothing tagged with this yet.",
+    "posts": "Posts",
+    "projects": "Projects",
+    "lab": "Lab"
+  },
+  "footer": {
+    "rights": "Crafted with care by Lucas Albini."
+  },
+  "locale": {
+    "switch_to_pt": "Trocar para português",
+    "switch_to_en": "Switch to English",
+    "not_available": "No translation available for {locale}",
+    "badge_only_en": "Only in English",
+    "badge_only_pt": "Only in Portuguese"
+  },
+  "theme": {
+    "toggle": "Toggle theme"
+  },
+  "meta": {
+    "site_title": "Lucas Albini",
+    "site_description": "AI Tech Lead. I write about applied AI, engineering and game development."
+  },
+  "not_found": {
+    "title": "Page not found",
+    "description": "What you're looking for isn't here.",
+    "home": "Back to home"
+  }
+}

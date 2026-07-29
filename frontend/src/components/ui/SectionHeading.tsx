@@ -1,14 +1,22 @@
-interface SectionHeadingProps {
+import { Link } from "@/lib/i18n/routing";
+
+interface Props {
   title: string;
-  subtitle?: string;
+  linkHref?: React.ComponentProps<typeof Link>["href"];
+  linkLabel?: string;
 }
 
-export function SectionHeading({ title, subtitle }: SectionHeadingProps) {
+export function SectionHeading({ title, linkHref, linkLabel }: Props) {
   return (
-    <div className="mb-12 text-center">
-      <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">{title}</h2>
-      {subtitle && <p className="mt-3 text-muted">{subtitle}</p>}
-      <div className="mx-auto mt-4 h-1 w-20 rounded bg-primary" />
+    <div className="mb-4 flex items-baseline justify-between">
+      <h2 className="text-sm font-semibold uppercase tracking-widest text-[color:var(--color-muted)]">
+        {title}
+      </h2>
+      {linkHref && linkLabel && (
+        <Link href={linkHref} className="text-xs uppercase tracking-wide">
+          {linkLabel} →
+        </Link>
+      )}
     </div>
   );
 }

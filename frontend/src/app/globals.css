@@ -1,73 +1,116 @@
 @import "tailwindcss";
 
 @theme {
-  /* Base - Light (Cream & Sand) */
-  --color-background: #FAF6EF;
-  --color-background-alt: #EFF3E8;
-  --color-foreground: #1A2E22;
-  --color-muted: #5E7058;
-  --color-border: #C8D4BC;
-  --color-surface: #E4EBD9;
-  --color-neutral: #F2EFE8;
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
 
-  --color-background-deep: #F0ECE3;
-
-  /* Accent Tech (Jade) */
-  --color-primary: #00D4AA;
-  --color-primary-dark: #00B892;
-
-  /* Warm CTA (Terracotta) */
-  --color-accent: #D4734A;
-  --color-accent-dark: #B85A35;
+  --color-bg: #ffffff;
+  --color-fg: #171717;
+  --color-muted: #6b7280;
+  --color-border: #e5e7eb;
+  --color-accent: #ea580c;
+  --color-accent-hover: #c2410c;
 }
+
+@variant dark (&:where(.dark, .dark *));
 
 @layer base {
   :root {
     color-scheme: light;
+    --color-bg: #ffffff;
+    --color-fg: #171717;
+    --color-muted: #6b7280;
+    --color-border: #e5e7eb;
+    --color-accent: #ea580c;
+    --color-accent-hover: #c2410c;
   }
 
   .dark {
     color-scheme: dark;
-    /* Base - Forest & Clay */
-    --color-background-deep: #080F0B;
-    --color-background: #0F1E17;
-    --color-background-alt: #1A3328;
-    --color-foreground: #EDE4D3;
-    --color-muted: #8B9B80;
-    --color-border: #2A3E32;
-    --color-surface: #162E24;
-    --color-neutral: #141F19;
+    --color-bg: #0a0a0a;
+    --color-fg: #ededed;
+    --color-muted: #9ca3af;
+    --color-border: #262626;
+    --color-accent: #fb923c;
+    --color-accent-hover: #fdba74;
   }
 
   html {
-    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
-    transition: background-color 0.3s, color 0.3s;
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-feature-settings: "ss01", "cv02";
+    -webkit-font-smoothing: antialiased;
+  }
+
+  code, kbd, pre, samp {
+    font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  a {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+  a:hover {
+    color: var(--color-accent-hover);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: #ffffff;
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
   }
 }
 
 @layer components {
-  .section-container {
-    @apply mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8;
+  .prose-reading {
+    max-width: 70ch;
+    line-height: 1.7;
   }
-
-  .glass-card {
-    @apply rounded-xl border border-border bg-surface/50 p-6 shadow-lg backdrop-blur-sm;
+  .prose-reading h1, .prose-reading h2, .prose-reading h3 {
+    line-height: 1.2;
+    letter-spacing: -0.015em;
   }
-}
-
-/* Focus glow for interactive elements */
-.dark *:focus-visible {
-  outline: 2px solid #00D4AA;
-  outline-offset: 2px;
-  box-shadow: 0 0 12px rgba(0, 212, 170, 0.4);
-}
-
-/* Highlight.js theme override for dark mode */
-.dark pre code.hljs {
-  background: #141F19;
+  .prose-reading h2 { font-size: 1.5rem; font-weight: 600; margin-top: 2.5rem; margin-bottom: 1rem; }
+  .prose-reading h3 { font-size: 1.25rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; }
+  .prose-reading p { margin-bottom: 1.25rem; }
+  .prose-reading ul, .prose-reading ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .prose-reading ul { list-style: disc; }
+  .prose-reading ol { list-style: decimal; }
+  .prose-reading li { margin-bottom: 0.375rem; }
+  .prose-reading code:not(pre code) {
+    padding: 0.125rem 0.35rem;
+    background: color-mix(in oklab, var(--color-fg) 8%, transparent);
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  .prose-reading pre {
+    padding: 1rem;
+    border-radius: 6px;
+    background: color-mix(in oklab, var(--color-fg) 6%, transparent);
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+  }
+  .prose-reading blockquote {
+    border-left: 3px solid var(--color-accent);
+    padding-left: 1rem;
+    color: var(--color-muted);
+    margin: 1.25rem 0;
+  }
+  .prose-reading hr {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: 2.5rem 0;
+  }
 }
