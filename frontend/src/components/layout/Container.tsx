@@ -1,5 +1,12 @@
 import clsx from "clsx";
 
+/**
+ * Container widths (tuned for the new denser hub layout):
+ *  - reading  → 70ch  (long-form: /blog/[slug], /projects/[slug], /about right column)
+ *  - default  → 3xl   (narrow single-column sections)
+ *  - wide     → 6xl   (grids on /blog, /projects, /publications)
+ *  - full     → 7xl   (home hero, side-by-side layouts)
+ */
 export function Container({
   children,
   className,
@@ -9,10 +16,16 @@ export function Container({
   children: React.ReactNode;
   className?: string;
   as?: keyof React.JSX.IntrinsicElements;
-  size?: "default" | "reading" | "wide";
+  size?: "default" | "reading" | "wide" | "full";
 }) {
   const sizeClass =
-    size === "reading" ? "max-w-[70ch]" : size === "wide" ? "max-w-5xl" : "max-w-3xl";
+    size === "reading"
+      ? "max-w-[70ch]"
+      : size === "wide"
+      ? "max-w-6xl"
+      : size === "full"
+      ? "max-w-7xl"
+      : "max-w-3xl";
   const El = Tag as React.ElementType;
   return (
     <El className={clsx("mx-auto w-full px-5 sm:px-6", sizeClass, className)}>{children}</El>

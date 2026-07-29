@@ -20,26 +20,38 @@ export default async function PublicationsPage({ params }: { params: Promise<{ l
   ]);
 
   return (
-    <Container size="reading" className="py-12">
-      <h1 className="mb-8 text-2xl font-semibold">{t("title")}</h1>
+    <Container size="wide" className="py-12">
+      <header className="mb-10">
+        <h1 className="text-3xl font-semibold text-[color:var(--color-fg)]">{t("title")}</h1>
+        <p className="mt-2 text-sm text-[color:var(--color-muted)]">
+          {publications.length} {publications.length === 1 ? "publication" : "publications"}
+        </p>
+      </header>
       {publications.length === 0 ? (
         <p className="text-[color:var(--color-muted)]">{t("empty")}</p>
       ) : (
-        <ul className="space-y-6">
+        <ul className="grid gap-6 md:grid-cols-2">
           {publications.map((p) => (
-            <li key={p.document_id} className="border-b border-[color:var(--color-border)] pb-6 last:border-b-0">
-              <h2 className="font-semibold">
+            <li
+              key={p.document_id}
+              className="flex flex-col rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)]/40 p-6 transition-colors hover:border-[color:var(--color-primary)]"
+            >
+              <h2 className="text-lg font-semibold leading-tight text-[color:var(--color-fg)]">
                 {p.url ? <a href={p.url}>{p.title}</a> : p.title}
               </h2>
               {(p.journal || p.date) && (
-                <p className="mt-1 text-sm text-[color:var(--color-muted)]">
+                <p className="mt-2 text-sm text-[color:var(--color-muted)]">
                   {p.journal}
                   {p.date ? ` · ${formatDate(p.date, locale, { year: "numeric" })}` : ""}
                 </p>
               )}
-              {p.authors && <p className="mt-1 text-xs text-[color:var(--color-muted)]">{p.authors}</p>}
-              {p.abstract && <p className="mt-3 text-sm">{p.abstract}</p>}
-              {p.doi && <p className="mt-2 font-mono text-xs text-[color:var(--color-muted)]">DOI: {p.doi}</p>}
+              {p.authors && (
+                <p className="mt-1 text-xs italic text-[color:var(--color-muted)]">{p.authors}</p>
+              )}
+              {p.abstract && <p className="mt-4 flex-1 text-sm text-[color:var(--color-fg)]/90">{p.abstract}</p>}
+              {p.doi && (
+                <p className="mt-4 font-mono text-[11px] text-[color:var(--color-muted)]">DOI: {p.doi}</p>
+              )}
             </li>
           ))}
         </ul>

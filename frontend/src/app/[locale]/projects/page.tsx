@@ -20,10 +20,18 @@ export default async function ProjectsIndex({ params }: { params: Promise<{ loca
   ]);
 
   return (
-    <Container size="wide" className="py-12">
-      <h1 className="mb-8 text-2xl font-semibold">{t("title")}</h1>
+    <Container size="full" className="py-12">
+      <header className="mb-10">
+        <h1 className="text-3xl font-semibold text-[color:var(--color-fg)]">{t("title")}</h1>
+        <p className="mt-2 text-sm text-[color:var(--color-muted)]">
+          {projects.pagination?.total ?? projects.data.length}{" "}
+          {(projects.pagination?.total ?? projects.data.length) === 1 ? "project" : "projects"}
+        </p>
+      </header>
       {projects.data.length === 0 ? (
-        <p className="text-[color:var(--color-muted)]">{t("empty")}</p>
+        <div className="rounded-xl border border-dashed border-[color:var(--color-border)] p-12 text-center text-[color:var(--color-muted)]">
+          {t("empty")}
+        </div>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {projects.data.map((p) => (

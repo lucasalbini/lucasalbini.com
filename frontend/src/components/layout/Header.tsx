@@ -10,7 +10,7 @@ export async function Header({ locale }: { locale: Locale }) {
 
   return (
     <header className="border-b border-[color:var(--color-border)]">
-      <Container size="wide" className="flex items-center justify-between py-4">
+      <Container size="full" className="flex items-center justify-between py-4">
         <Link href="/" className="text-[color:var(--color-fg)] font-semibold no-underline hover:no-underline">
           lucasalbini<span className="text-[color:var(--color-muted)]">.com</span>
         </Link>

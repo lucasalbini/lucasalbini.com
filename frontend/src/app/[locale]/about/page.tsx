@@ -3,6 +3,7 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import type { Locale } from "@/lib/i18n/routing";
 import { Container } from "@/components/layout/Container";
 import { PostBody } from "@/components/post/PostBody";
+import { SocialLinks } from "@/components/ui/SocialLinks";
 import { getCV } from "@/lib/api";
 import { mediaUrl, formatDate } from "@/lib/format";
 import { pageMetadata } from "@/lib/metadata";
@@ -13,6 +14,15 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
   return pageMetadata({ locale, title: t("title"), href: { pathname: "/about" } });
 }
 
+const SKILL_LABELS: Record<string, { pt: string; en: string }> = {
+  language: { pt: "Linguagens", en: "Languages" },
+  framework: { pt: "Frameworks", en: "Frameworks" },
+  cloud: { pt: "Cloud", en: "Cloud" },
+  ai_ml: { pt: "IA / ML", en: "AI / ML" },
+  devops: { pt: "DevOps", en: "DevOps" },
+  tools: { pt: "Ferramentas", en: "Tools" },
+};
+
 export default async function AboutPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
@@ -20,129 +30,197 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
     getCV(locale),
     getTranslations({ locale, namespace: "about" }),
   ]);
-  const { profile, experiences, education, certifications } = cv;
+  const { profile, experiences, education, certifications, skills } = cv;
+
+  const skillsByCategory = skills.reduce<Record<string, typeof skills>>((acc, s) => {
+    (acc[s.category] ||= []).push(s);
+    return acc;
+  }, {});
 
   return (
-    <Container size="reading" className="py-12">
+    <Container size="full" className="py-12">
       {profile && (
-        <header className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start">
+        <header className="mb-16 grid gap-8 md:grid-cols-[auto_1fr] md:items-start">
           {profile.avatar?.url && (
-            <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-full">
+            <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-full border-4 border-[color:var(--color-primary)] shadow-md sm:h-36 sm:w-36">
               <Image
                 src={mediaUrl(profile.avatar.url)}
                 alt={profile.name}
                 fill
                 unoptimized
                 className="object-cover"
-                sizes="96px"
+                sizes="144px"
               />
             </div>
           )}
           <div>
-            <h1 className="text-2xl font-semibold">{profile.name}</h1>
+            <h1 className="text-3xl font-bold text-[color:var(--color-fg)] sm:text-4xl">{profile.name}</h1>
             {profile.role && (
-              <p className="mt-1 text-sm text-[color:var(--color-muted)]">
+              <p className="mt-2 text-lg text-[color:var(--color-muted)]">
                 {profile.role}
                 {profile.company ? ` · ${profile.company}` : ""}
-                {profile.location ? ` · ${profile.location}` : ""}
               </p>
             )}
-            {profile.cv_pdf?.url && (
-              <p className="mt-3 font-mono text-xs">
-                <a href={mediaUrl(profile.cv_pdf.url)} download>
+            {profile.location && (
+              <p className="mt-1 text-sm text-[color:var(--color-muted)]">📍 {profile.location}</p>
+            )}
+            <div className="mt-5 flex flex-wrap items-center gap-4">
+              {profile.social_links?.length > 0 && (
+                <SocialLinks links={profile.social_links} size="md" />
+              )}
+              {profile.cv_pdf?.url && (
+                <a
+                  href={mediaUrl(profile.cv_pdf.url)}
+                  download
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-[color:var(--color-primary)] px-3 py-1.5 font-mono text-xs text-[color:var(--color-primary)] no-underline transition-colors hover:bg-[color:var(--color-primary)] hover:text-white"
+                >
                   {t("download_cv")} (PDF) ↓
                 </a>
-              </p>
-            )}
+              )}
+            </div>
           </div>
         </header>
       )}
 
-      {profile?.long_bio && profile.long_bio.length > 0 && (
-        <section className="prose-reading mb-12">
-          <PostBody blocks={profile.long_bio} />
-        </section>
-      )}
+      <div className="grid gap-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+        {/* Left column: bio + experience + education */}
+        <div className="min-w-0">
+          {profile?.long_bio && profile.long_bio.length > 0 && (
+            <section className="prose-reading mb-16 max-w-none">
+              <PostBody blocks={profile.long_bio} />
+            </section>
+          )}
 
-      {experiences.length > 0 && (
-        <section className="mb-12">
-          <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-[color:var(--color-muted)]">
-            {t("experience")}
-          </h2>
-          <div className="space-y-6">
-            {experiences.map((e) => (
-              <article key={e.document_id}>
-                <h3 className="font-semibold">
-                  {e.company_name}
-                  {e.company_location ? <span className="ml-2 text-sm font-normal text-[color:var(--color-muted)]">— {e.company_location}</span> : null}
-                </h3>
-                <ul className="mt-2 space-y-2">
-                  {e.positions.map((p, i) => (
-                    <li key={i} className="text-sm">
-                      <div className="flex items-baseline gap-3">
-                        <span className="font-mono text-xs text-[color:var(--color-muted)]">
-                          {formatDate(p.start_date, locale, { month: "short", year: "numeric" })} —{" "}
-                          {p.is_current ? t("present") : formatDate(p.end_date ?? "", locale, { month: "short", year: "numeric" })}
-                        </span>
-                        <span>{p.designation}</span>
+          {experiences.length > 0 && (
+            <section className="mb-16">
+              <h2 className="mb-6 text-xs font-semibold uppercase tracking-[0.25em] text-[color:var(--color-muted)]">
+                {t("experience")}
+              </h2>
+              <div className="relative space-y-8 border-l-2 border-[color:var(--color-border)] pl-6">
+                {experiences.map((e) => (
+                  <article key={e.document_id} className="relative">
+                    <span className="absolute -left-[31px] top-1 h-3.5 w-3.5 rounded-full border-2 border-[color:var(--color-primary)] bg-[color:var(--color-bg)]" />
+                    <h3 className="text-lg font-semibold text-[color:var(--color-fg)]">{e.company_name}</h3>
+                    {e.company_location && (
+                      <p className="text-xs text-[color:var(--color-muted)]">{e.company_location}</p>
+                    )}
+                    <ul className="mt-3 space-y-3">
+                      {e.positions.map((p, i) => (
+                        <li key={i}>
+                          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                            <span className="text-sm font-medium text-[color:var(--color-fg)]">
+                              {p.designation}
+                            </span>
+                            <span className="font-mono text-xs text-[color:var(--color-muted)]">
+                              {formatDate(p.start_date, locale, { month: "short", year: "numeric" })} —{" "}
+                              {p.is_current
+                                ? t("present")
+                                : formatDate(p.end_date ?? "", locale, { month: "short", year: "numeric" })}
+                            </span>
+                          </div>
+                          {p.responsibilities.length > 0 && (
+                            <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-[color:var(--color-muted)]">
+                              {p.responsibilities.map((r, j) => (
+                                <li key={j}>{r.description}</li>
+                              ))}
+                            </ul>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </article>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {education.length > 0 && (
+            <section>
+              <h2 className="mb-6 text-xs font-semibold uppercase tracking-[0.25em] text-[color:var(--color-muted)]">
+                {t("education")}
+              </h2>
+              <ul className="space-y-4">
+                {education.map((ed) => (
+                  <li
+                    key={ed.document_id}
+                    className="rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)]/40 p-4"
+                  >
+                    <div className="font-semibold text-[color:var(--color-fg)]">{ed.institution}</div>
+                    <div className="mt-1 text-sm text-[color:var(--color-muted)]">
+                      {ed.degree}
+                      {ed.field_of_study ? ` · ${ed.field_of_study}` : ""}
+                    </div>
+                    {ed.start_date && (
+                      <div className="mt-1 font-mono text-xs text-[color:var(--color-muted)]">
+                        {formatDate(ed.start_date, locale, { year: "numeric" })} —{" "}
+                        {ed.end_date ? formatDate(ed.end_date, locale, { year: "numeric" }) : t("present")}
                       </div>
-                      {p.responsibilities.length > 0 && (
-                        <ul className="mt-1 list-disc pl-6 text-[color:var(--color-muted)]">
-                          {p.responsibilities.map((r, j) => (
-                            <li key={j}>{r.description}</li>
-                          ))}
-                        </ul>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </article>
-            ))}
-          </div>
-        </section>
-      )}
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+        </div>
 
-      {education.length > 0 && (
-        <section className="mb-12">
-          <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-[color:var(--color-muted)]">
-            {t("education")}
-          </h2>
-          <ul className="space-y-3 text-sm">
-            {education.map((ed) => (
-              <li key={ed.document_id}>
-                <div className="font-semibold">{ed.institution}</div>
-                <div className="text-[color:var(--color-muted)]">
-                  {ed.degree}{ed.field_of_study ? ` · ${ed.field_of_study}` : ""}
-                  {ed.start_date && <span> · {formatDate(ed.start_date, locale, { year: "numeric" })} — {ed.end_date ? formatDate(ed.end_date, locale, { year: "numeric" }) : t("present")}</span>}
-                </div>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+        {/* Right column: skills + certifications */}
+        <aside className="min-w-0 space-y-12">
+          {Object.keys(skillsByCategory).length > 0 && (
+            <section>
+              <h2 className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[color:var(--color-muted)]">
+                Skills
+              </h2>
+              <div className="space-y-4">
+                {Object.entries(skillsByCategory).map(([category, list]) => (
+                  <div key={category}>
+                    <p className="mb-2 font-mono text-[11px] uppercase tracking-widest text-[color:var(--color-muted)]">
+                      {SKILL_LABELS[category]?.[locale] ?? category}
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {list.map((s) => (
+                        <span
+                          key={s.document_id}
+                          className="rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-surface)]/60 px-2 py-1 text-xs text-[color:var(--color-fg)]"
+                        >
+                          {s.name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
 
-      {certifications.length > 0 && (
-        <section>
-          <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-[color:var(--color-muted)]">
-            {t("certifications")}
-          </h2>
-          <ul className="space-y-2 text-sm">
-            {certifications.map((c) => (
-              <li key={c.document_id} className="flex items-baseline justify-between gap-4">
-                <span>
-                  {c.credential_url ? <a href={c.credential_url}>{c.name}</a> : c.name}
-                  {c.issuer ? <span className="ml-2 text-[color:var(--color-muted)]">— {c.issuer}</span> : null}
-                </span>
-                {c.issue_date && (
-                  <time className="shrink-0 font-mono text-xs text-[color:var(--color-muted)]">
-                    {formatDate(c.issue_date, locale, { month: "short", year: "numeric" })}
-                  </time>
-                )}
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+          {certifications.length > 0 && (
+            <section>
+              <h2 className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[color:var(--color-muted)]">
+                {t("certifications")}
+              </h2>
+              <ul className="space-y-3">
+                {certifications.map((c) => (
+                  <li
+                    key={c.document_id}
+                    className="rounded-lg border border-[color:var(--color-border)] p-3 text-sm"
+                  >
+                    <div className="font-medium text-[color:var(--color-fg)]">
+                      {c.credential_url ? <a href={c.credential_url}>{c.name}</a> : c.name}
+                    </div>
+                    {c.issuer && (
+                      <div className="mt-0.5 text-xs text-[color:var(--color-muted)]">{c.issuer}</div>
+                    )}
+                    {c.issue_date && (
+                      <div className="mt-1 font-mono text-[11px] text-[color:var(--color-muted)]">
+                        {formatDate(c.issue_date, locale, { month: "short", year: "numeric" })}
+                      </div>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+        </aside>
+      </div>
     </Container>
   );
 }

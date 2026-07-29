@@ -10,7 +10,7 @@ export async function Footer({ locale }: { locale: Locale }) {
 
   return (
     <footer className="mt-24 border-t border-[color:var(--color-border)] py-8 text-sm text-[color:var(--color-muted)]">
-      <Container size="wide" className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <Container size="full" className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <p>© {year} · {t("rights")}</p>
         <div className="flex items-center gap-4">
           <a href="https://github.com/lucasalbini" aria-label="GitHub" className="text-[color:var(--color-muted)] hover:text-[color:var(--color-fg)]"><FaGithub /></a>
