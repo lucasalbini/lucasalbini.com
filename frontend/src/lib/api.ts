@@ -9,7 +9,7 @@ async function fetchAPI<T = any>(endpoint: string, params?: Record<string, strin
     });
   }
 
-  const res = await fetch(url.toString(), { next: { revalidate: 300 } });
+  const res = await fetch(url.toString(), { cache: "no-store" });
   if (!res.ok) {
     throw new Error(`API error: ${res.status} ${res.statusText}`);
   }

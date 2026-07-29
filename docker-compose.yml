@@ -51,10 +51,11 @@ services:
     depends_on:
       - strapi
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/')"]
-      interval: 15s
-      timeout: 5s
-      retries: 3
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health')\" || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
     environment:
       STRAPI_BASE_URL: ${STRAPI_BASE_URL}
       STRAPI_API_TOKEN: ${STRAPI_API_TOKEN}
