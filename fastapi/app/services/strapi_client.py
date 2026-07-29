@@ -1,100 +1,153 @@
+"""Low-level HTTP client for Strapi v5, with a locale-aware in-memory cache.
+
+Design notes:
+- Cache key includes every query param (so locale is always part of it).
+- `invalidate(prefix=...)` lets webhooks drop just the affected slice.
+- Populate is expressed as a Python dict following the Strapi v5 populate object syntax;
+  it's flattened into `populate[field][populate][sub]` params on the fly. Callers should
+  not craft populate strings — pass the dict shape and let the client flatten it.
+"""
+
+from __future__ import annotations
+
+from typing import Any
 import httpx
 from cachetools import TTLCache
+
 from app.config import settings
 
-_cache = TTLCache(maxsize=128, ttl=settings.cache_ttl)
+_cache: TTLCache[str, dict] = TTLCache(maxsize=512, ttl=settings.cache_ttl)
 
 
-def _headers() -> dict:
+def _headers() -> dict[str, str]:
+    if not settings.strapi_api_token:
+        return {}
     return {"Authorization": f"Bearer {settings.strapi_api_token}"}
 
 
-def _build_populate_params(populate_value: str) -> dict:
-    """Convert a comma-separated populate string into Strapi v5 indexed format.
+def _flatten_populate(populate: Any, prefix: str = "populate") -> dict[str, str]:
+    """Turn a nested populate dict into flat Strapi v5 params.
 
-    Flat fields like "photo,logo" become:
-        {"populate[0]": "photo", "populate[1]": "logo"}
-
-    Nested fields like "positions.responsibilities" become:
-        {"populate[positions][populate][0]": "responsibilities"}
-
-    Mixed values like "company_logo,positions.responsibilities" are handled
-    by combining both strategies with a shared top-level index counter.
+    Examples:
+        _flatten_populate(True) -> {"populate": "true"}  # populate=* usage
+        _flatten_populate({"cover": True, "tags": True}) ->
+            {"populate[cover]": "true", "populate[tags]": "true"}
+        _flatten_populate({"tags": {"fields": ["label", "slug"]}}) ->
+            {"populate[tags][fields][0]": "label",
+             "populate[tags][fields][1]": "slug"}
     """
-    fields = [f.strip() for f in populate_value.split(",") if f.strip()]
-    result: dict[str, str] = {}
-    flat_index = 0
-    # Track nested children grouped by their top-level relation
-    nested: dict[str, list[str]] = {}
-
-    for field in fields:
-        if "." in field:
-            parts = field.split(".", 1)
-            parent = parts[0]
-            child = parts[1]
-            nested.setdefault(parent, []).append(child)
-        else:
-            result[f"populate[{flat_index}]"] = field
-            flat_index += 1
-
-    for parent, children in nested.items():
-        # Ensure the parent relation itself is populated
-        result[f"populate[{flat_index}]"] = parent
-        flat_index += 1
-        for child_idx, child in enumerate(children):
-            if "." in child:
-                # Handle deeper nesting recursively by flattening one more level
-                sub_parts = child.split(".", 1)
-                sub_parent = sub_parts[0]
-                sub_child = sub_parts[1]
-                result[
-                    f"populate[{parent}][populate][{sub_parent}]"
-                    f"[populate][0]"
-                ] = sub_child
-                result[
-                    f"populate[{parent}][populate][{child_idx}]"
-                ] = sub_parent
+    out: dict[str, str] = {}
+    if populate is True:
+        out[prefix] = "*"
+        return out
+    if isinstance(populate, list):
+        for i, v in enumerate(populate):
+            out[f"{prefix}[{i}]"] = str(v)
+        return out
+    if isinstance(populate, dict):
+        for k, v in populate.items():
+            key = f"{prefix}[{k}]"
+            if v is True:
+                out[f"{key}[populate]"] = "*"
+            elif isinstance(v, (dict, list)):
+                nested = _flatten_populate(v, key)
+                out.update(nested)
             else:
-                result[
-                    f"populate[{parent}][populate][{child_idx}]"
-                ] = child
-
-    return result
+                out[key] = str(v)
+        return out
+    return out
 
 
-def _process_params(params: dict | None) -> dict | None:
-    """Pre-process params to convert populate strings into Strapi v5 format."""
-    if params is None or "populate" not in params:
-        return params
+def _build_query(
+    locale: str | None,
+    populate: Any = None,
+    filters: dict[str, str] | None = None,
+    sort: list[str] | str | None = None,
+    pagination: dict[str, int] | None = None,
+    fields: list[str] | None = None,
+    publication_state: str = "live",
+) -> dict[str, str]:
+    params: dict[str, str] = {}
+    if locale:
+        params["locale"] = locale
+    if publication_state:
+        params["publicationState"] = publication_state
+    if populate is not None:
+        if populate is True:
+            params["populate"] = "*"
+        else:
+            params.update(_flatten_populate(populate))
+    if filters:
+        params.update(filters)
+    if sort:
+        if isinstance(sort, str):
+            params["sort"] = sort
+        else:
+            for i, s in enumerate(sort):
+                params[f"sort[{i}]"] = s
+    if pagination:
+        for k, v in pagination.items():
+            params[f"pagination[{k}]"] = str(v)
+    if fields:
+        for i, f in enumerate(fields):
+            params[f"fields[{i}]"] = f
+    return params
 
-    populate_value = params["populate"]
 
-    # Already in v5 format (e.g. populate=*) or not a string — leave as-is
-    if not isinstance(populate_value, str) or populate_value == "*":
-        return params
-
-    # Build new params dict without the original populate key
-    new_params = {k: v for k, v in params.items() if k != "populate"}
-    new_params.update(_build_populate_params(populate_value))
-    return new_params
+def _cache_key(endpoint: str, params: dict[str, str]) -> str:
+    sorted_params = tuple(sorted(params.items()))
+    return f"{endpoint}::{sorted_params}"
 
 
-def _cache_key(endpoint: str, params: dict | None) -> str:
-    sorted_params = sorted((params or {}).items())
-    return f"{endpoint}:{sorted_params}"
-
-
-async def fetch(endpoint: str, params: dict | None = None) -> dict:
-    params = _process_params(params)
+async def fetch(
+    endpoint: str,
+    *,
+    locale: str | None = None,
+    populate: Any = None,
+    filters: dict[str, str] | None = None,
+    sort: list[str] | str | None = None,
+    pagination: dict[str, int] | None = None,
+    fields: list[str] | None = None,
+    publication_state: str = "live",
+    use_cache: bool = True,
+    allow_missing: bool = False,
+) -> dict:
+    """Fetch from Strapi. If allow_missing=True, a 404 returns {"data": None} instead of raising —
+    useful for single types that may not have been created yet."""
+    params = _build_query(
+        locale=locale,
+        populate=populate,
+        filters=filters,
+        sort=sort,
+        pagination=pagination,
+        fields=fields,
+        publication_state=publication_state,
+    )
     key = _cache_key(endpoint, params)
-    if key in _cache:
+    if use_cache and key in _cache:
         return _cache[key]
 
     url = f"{settings.strapi_base_url}/api/{endpoint}"
     async with httpx.AsyncClient(timeout=30) as client:
-        resp = await client.get(url, headers=_headers(), params=params)
-        resp.raise_for_status()
-        data = resp.json()
+        r = await client.get(url, headers=_headers(), params=params)
+        if allow_missing and r.status_code == 404:
+            data: dict = {"data": None, "meta": {}}
+        else:
+            r.raise_for_status()
+            data = r.json()
 
-    _cache[key] = data
+    if use_cache:
+        _cache[key] = data
     return data
+
+
+def invalidate(prefix: str | None = None) -> int:
+    """Drop cache entries whose key starts with `prefix::` (or all if None). Returns count dropped."""
+    if prefix is None:
+        n = len(_cache)
+        _cache.clear()
+        return n
+    keys = [k for k in list(_cache.keys()) if k.startswith(f"{prefix}::")]
+    for k in keys:
+        del _cache[k]
+    return len(keys)

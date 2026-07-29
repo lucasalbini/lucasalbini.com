@@ -1,8 +1,32 @@
+import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import profile, experience, education, skill, certification, project, post, publication
 
-app = FastAPI(title="Lucas Albini API", version="1.0.0")
+from app.routers import (
+    profile,
+    posts,
+    projects,
+    lab,
+    tags,
+    cv,
+    translations,
+    publications,
+    search,
+    contact,
+    webhooks,
+    chat,
+)
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
+
+app = FastAPI(
+    title="lucasalbini.com API",
+    version="2.0.0",
+    description=(
+        "Aggregation and normalization layer between Strapi v5 and the Next frontend. "
+        "All read endpoints accept ?locale=pt-BR|en. Cache keys always include the locale."
+    ),
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -12,16 +36,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(profile.router)
-app.include_router(experience.router)
-app.include_router(education.router)
-app.include_router(skill.router)
-app.include_router(certification.router)
-app.include_router(project.router)
-app.include_router(post.router)
-app.include_router(publication.router)
+for r in (
+    profile.router,
+    posts.router,
+    projects.router,
+    lab.router,
+    tags.router,
+    cv.router,
+    translations.router,
+    publications.router,
+    search.router,
+    contact.router,
+    webhooks.router,
+    chat.router,
+):
+    app.include_router(r)
 
 
-@app.get("/health")
+@app.get("/health", tags=["meta"])
 async def health():
     return {"status": "ok"}
