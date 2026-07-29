@@ -7,7 +7,9 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "8422:5432"
+      # Loopback only. The VPS has no firewall (ufw inactive), so "8422:5432"
+      # would publish the database to the whole internet.
+      - "127.0.0.1:8422:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./backups:/backups
@@ -19,9 +21,13 @@ services:
       retries: 5
 
   strapi:
+    # Images are built off-VPS and pulled. The VPS has 1 vCPU / 3.8 GB and runs
+    # a live game server — building there risks the OOM killer picking it.
+    image: ghcr.io/lucasalbini/lucasalbini-com-strapi:${IMAGE_TAG:-latest}
     build:
       context: ./strapi
       dockerfile: Dockerfile
+      target: production
     restart: unless-stopped
     # No host port. Externally, admin is reached at /admin via nginx.
     # Direct 1337 access is intentionally blocked from the public internet.
@@ -49,6 +55,7 @@ services:
       NODE_ENV: production
 
   fastapi:
+    image: ghcr.io/lucasalbini/lucasalbini-com-fastapi:${IMAGE_TAG:-latest}
     build:
       context: ./fastapi
       dockerfile: Dockerfile
@@ -74,9 +81,16 @@ services:
       DEFAULT_LOCALE: ${DEFAULT_LOCALE:-pt-BR}
 
   frontend:
+    image: ghcr.io/lucasalbini/lucasalbini-com-frontend:${IMAGE_TAG:-latest}
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      target: production
+      args:
+        # Baked into the client bundle — must be the real public URL at build
+        # time, not at run time. See frontend/Dockerfile.
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     restart: unless-stopped
     depends_on:
       - fastapi
@@ -92,12 +106,19 @@ services:
       NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}
 
   nginx:
+    image: ghcr.io/lucasalbini/lucasalbini-com-nginx:${IMAGE_TAG:-latest}
     build:
       context: ./nginx
       dockerfile: Dockerfile
     restart: unless-stopped
-    ports:
-      - "8419:80"
+    # No published port at all. Caddy owns 80/443 on this host (for the game) and
+    # reaches this container by name over the shared `edge` network, so nothing
+    # here is exposed to the internet directly.
+    networks:
+      default:
+      edge:
+        aliases:
+          - lucasalbini-web
     depends_on:
       - frontend
       - fastapi
@@ -108,3 +129,11 @@ services:
 volumes:
   postgres_data:
   strapi_uploads:
+
+networks:
+  default:
+  # The game stack's network, where Caddy lives. Declared external so this
+  # compose never creates or removes it.
+  edge:
+    external: true
+    name: infra_default
