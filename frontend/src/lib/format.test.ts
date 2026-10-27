@@ -14,8 +14,10 @@ describe("formatDate", () => {
     expect(formatDate(ISO, "pt")).toBe("15 de março de 2024");
   });
 
-  it("writes the long US date for the en locale", () => {
-    expect(formatDate(ISO, "en")).toBe("March 15, 2024");
+  it("keeps a calendar day on that day for readers west of UTC", () => {
+    vi.stubEnv("TZ", "America/Sao_Paulo");
+
+    expect(formatDate("2026-10-10", "pt")).toBe("10 de outubro de 2026");
   });
 
   it("returns an empty string when there is no date", () => {
@@ -29,7 +31,7 @@ describe("formatDate", () => {
 
 describe("formatShortDate", () => {
   it("uses a two-digit day and abbreviated month", () => {
-    expect(formatShortDate(ISO, "en")).toBe("Mar 15, 2024");
+    expect(formatShortDate(ISO, "pt")).toBe("15 de mar. de 2024");
   });
 });
 

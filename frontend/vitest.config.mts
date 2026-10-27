@@ -5,8 +5,11 @@ export default defineConfig({
   resolve: {
     alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
   },
+  esbuild: { jsx: "automatic" },
   test: {
     environment: "node",
+    // next-intl imports `next/navigation` without an extension; inlining lets Vite resolve it.
+    server: { deps: { inline: ["next-intl"] } },
     include: ["src/**/*.test.{ts,tsx}"],
     coverage: {
       provider: "v8",

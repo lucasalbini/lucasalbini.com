@@ -73,7 +73,7 @@ function BlockRenderer({ block }: { block: Block }) {
         <div className="my-6">
           <Image
             src={mediaUrl(img.url)}
-            alt={img.alternative_text ?? ""}
+            alt={img.alternativeText ?? ""}
             width={img.width ?? 1200}
             height={img.height ?? 800}
             unoptimized

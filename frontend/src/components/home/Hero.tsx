@@ -2,7 +2,6 @@ import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { FaLocationDot, FaArrowDown } from "react-icons/fa6";
 import { Link } from "@/lib/i18n/routing";
-import type { Locale } from "@/lib/i18n/routing";
 import type { Profile } from "@/lib/types";
 import { mediaUrl } from "@/lib/format";
 import { SocialLinks } from "@/components/ui/SocialLinks";
@@ -27,8 +26,8 @@ function initials(name: string): string {
  * layout's radial veil keeps readable. Leads with the name, closes with the
  * three actions a first-time visitor actually needs.
  */
-export async function Hero({ profile, locale }: { profile: Profile | null; locale: Locale }) {
-  const t = await getTranslations({ locale, namespace: "home" });
+export async function Hero({ profile }: { profile: Profile | null }) {
+  const t = await getTranslations("home");
   const name = profile?.name ?? "Lucas Albini";
   const links = socialLinksOf(profile?.social_links);
   const cvUrl = profile?.cv_pdf?.url ? mediaUrl(profile.cv_pdf.url) : null;
@@ -97,8 +96,8 @@ export async function Hero({ profile, locale }: { profile: Profile | null; local
                 {t("cta_contact")}
               </a>
             )}
-            <Link href="/projects" className={SECONDARY_CTA}>
-              {t("cta_projects")}
+            <Link href="/archive" className={SECONDARY_CTA}>
+              {t("cta_archive")}
             </Link>
             <SocialLinks links={links} size="md" />
           </div>

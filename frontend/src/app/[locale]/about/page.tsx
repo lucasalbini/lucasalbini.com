@@ -9,10 +9,9 @@ import { getCV, listPublications } from "@/lib/api";
 import { mediaUrl, formatDate } from "@/lib/format";
 import { pageMetadata } from "@/lib/metadata";
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }) {
-  const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "about" });
-  return pageMetadata({ locale, title: t("title"), href: { pathname: "/about" } });
+export async function generateMetadata() {
+  const t = await getTranslations("about");
+  return pageMetadata({ title: t("title"), href: "/about" });
 }
 
 const SKILL_LABELS: Record<string, { pt: string; en: string }> = {
@@ -28,10 +27,10 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   const { locale } = await params;
   setRequestLocale(locale);
   const [cv, publications, t, tPub] = await Promise.all([
-    getCV(locale),
-    listPublications(locale),
-    getTranslations({ locale, namespace: "about" }),
-    getTranslations({ locale, namespace: "publications" }),
+    getCV(),
+    listPublications(),
+    getTranslations("about"),
+    getTranslations("publications"),
   ]);
   const { profile, experiences, education, certifications, skills } = cv;
 
@@ -180,7 +179,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                 {Object.entries(skillsByCategory).map(([category, list]) => (
                   <div key={category}>
                     <p className="mb-2 font-mono text-[11px] uppercase tracking-widest text-[color:var(--color-muted)]">
-                      {SKILL_LABELS[category]?.[locale] ?? category}
+                      {SKILL_LABELS[category]?.pt ?? category}
                     </p>
                     <div className="flex flex-wrap gap-1.5">
                       {list.map((s) => (

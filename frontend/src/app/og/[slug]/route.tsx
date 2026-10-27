@@ -1,32 +1,16 @@
 import { ImageResponse } from "next/og";
-import type { Locale } from "@/lib/i18n/routing";
-import { getPost, getProject } from "@/lib/api";
+import { getPost } from "@/lib/api";
+import { formatDate } from "@/lib/format";
 
 export const runtime = "nodejs";
 export const revalidate = 3600;
 
-export async function GET(
-  _req: Request,
-  { params }: { params: Promise<{ locale: string; type: string; slug: string }> },
-) {
-  const { locale, type, slug } = await params;
-  const loc = (locale === "pt" ? "pt" : "en") as Locale;
-
-  let title = "Lucas Albini";
-  let summary = "";
-  if (type === "post") {
-    const post = await getPost(loc, slug);
-    if (post) {
-      title = post.title;
-      summary = post.summary;
-    }
-  } else if (type === "project") {
-    const project = await getProject(loc, slug);
-    if (project) {
-      title = project.title;
-      summary = project.summary;
-    }
-  }
+export async function GET(_req: Request, { params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const post = await getPost(slug);
+  const title = post?.title ?? "Lucas Albini";
+  const summary = post?.summary ?? "";
+  const date = formatDate(post?.date, "pt");
 
   return new ImageResponse(
     (
@@ -46,8 +30,8 @@ export async function GET(
         <div style={{ fontSize: 28, color: "#9ca3af", letterSpacing: 2, textTransform: "uppercase" }}>
           lucasalbini.com
         </div>
-        <div>
-          <div style={{ fontSize: 72, fontWeight: 700, lineHeight: 1.1 }}>{title}</div>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <div style={{ display: "flex", fontSize: 72, fontWeight: 700, lineHeight: 1.1 }}>{title}</div>
           {summary && (
             <div style={{ marginTop: 24, fontSize: 30, color: "#9ca3af", lineHeight: 1.4 }}>
               {summary}
@@ -56,7 +40,7 @@ export async function GET(
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", fontSize: 22, color: "#9ca3af" }}>
           <span>Lucas Albini</span>
-          <span style={{ color: "#00D4AA" }}>{loc === "pt" ? "PT-BR" : "EN"}</span>
+          <span style={{ color: "#00D4AA" }}>{date}</span>
         </div>
       </div>
     ),

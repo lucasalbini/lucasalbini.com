@@ -1,16 +1,15 @@
 import Image from "next/image";
-import { getTranslations } from "next-intl/server";
+import { useTranslations } from "next-intl";
 import { Link } from "@/lib/i18n/routing";
-import type { Locale } from "@/lib/i18n/routing";
 import type { Profile } from "@/lib/types";
 import { mediaUrl } from "@/lib/format";
 
 /**
- * Required at the bottom of every blog/[slug] page. Someone landing from Google
+ * Required at the bottom of every post page. Someone landing from Google
  * needs to know who wrote what they just read, and how to reach them.
  */
-export async function AuthorBio({ profile, locale }: { profile: Profile | null; locale: Locale }) {
-  const t = await getTranslations({ locale, namespace: "nav" });
+export function AuthorBio({ profile }: { profile: Profile | null }) {
+  const t = useTranslations("nav");
   if (!profile) return null;
   return (
     <aside className="mt-16 flex gap-4 border-t border-[color:var(--color-border)] pt-8">

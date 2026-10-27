@@ -1,47 +1,31 @@
 import type { Metadata } from "next";
-import type { Locale } from "@/lib/i18n/routing";
-import { getPathname, routing } from "@/lib/i18n/routing";
+import { getPathname } from "@/lib/i18n/routing";
 
-interface AlternatesInput {
-  href: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    pathname: any;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    params?: any;
-  };
-}
+type Href = Parameters<typeof getPathname>[0]["href"];
 
-/**
- * Build hreflang alternates for a page. Always includes both locales and x-default (→ en).
- * Use in generateMetadata() so search engines see the equivalent URL in each language.
- */
-export function alternates({ href }: AlternatesInput): Metadata["alternates"] {
-  const languages: Record<string, string> = {};
-  for (const locale of routing.locales) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    languages[locale === "pt" ? "pt-BR" : locale] = getPathname({ locale, href } as any);
-  }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  languages["x-default"] = getPathname({ locale: "en", href } as any);
-  return { languages };
+/** Public (Portuguese) path for an internal href, e.g. `/archive` → `/arquivo`. */
+export function publicPath(href: Href): string {
+  return getPathname({ locale: "pt", href });
 }
 
 export function pageMetadata(input: {
-  locale: Locale;
   title: string;
   description?: string;
   ogImage?: string;
-  href: AlternatesInput["href"];
+  href: Href;
+  /** Unlisted posts: reachable by link, kept out of search engines (ADR-0002 §3.4). */
+  noindex?: boolean;
 }): Metadata {
-  const { locale, title, description, ogImage, href } = input;
+  const { title, description, ogImage, href, noindex } = input;
   return {
     title,
     description,
-    alternates: alternates({ href }),
+    alternates: { canonical: publicPath(href) },
+    robots: noindex ? { index: false, follow: false } : undefined,
     openGraph: {
       title,
       description,
-      locale: locale === "pt" ? "pt_BR" : "en_US",
+      locale: "pt_BR",
       images: ogImage ? [{ url: ogImage }] : undefined,
     },
     twitter: {

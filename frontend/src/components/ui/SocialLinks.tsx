@@ -1,4 +1,4 @@
-import { FaGithub, FaLinkedin, FaEnvelope, FaXTwitter, FaItchIo } from "react-icons/fa6";
+import { FaGithub, FaLinkedin, FaEnvelope, FaXTwitter, FaItchIo, FaInstagram, FaYoutube, FaTiktok } from "react-icons/fa6";
 import clsx from "clsx";
 import type { SocialLink } from "@/lib/types";
 
@@ -10,6 +10,9 @@ const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   x: FaXTwitter,
   itch: FaItchIo,
   "itch.io": FaItchIo,
+  instagram: FaInstagram,
+  youtube: FaYoutube,
+  tiktok: FaTiktok,
 };
 
 export function SocialLinks({
