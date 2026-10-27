@@ -47,7 +47,16 @@
   },
   "post": {
     "reading_time": "{minutes} min de leitura",
-    "related": "Leia também"
+    "related": "Leia também",
+    "view_on_instagram": "Ver no Instagram",
+    "watch_on_youtube": "Ver no YouTube",
+    "youtube_video": "Vídeo do YouTube",
+    "download": "Baixar",
+    "callout": {
+      "note": "Nota",
+      "tip": "Dica",
+      "warning": "Atenção"
+    }
   },
   "categories": {
     "travel": "Viagem",
@@ -72,5 +81,19 @@
   "collection": {
     "label": "Coleção",
     "empty": "Esta coleção ainda não tem posts públicos."
+  },
+  "places": {
+    "directions": "Como chegar",
+    "website": "Site",
+    "kind": {
+      "restaurant": "Restaurante",
+      "bar": "Bar",
+      "cafe": "Café",
+      "lodging": "Hospedagem",
+      "attraction": "Atração",
+      "nature": "Natureza",
+      "city": "Cidade",
+      "other": "Lugar"
+    }
   }
 }

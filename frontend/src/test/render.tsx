@@ -11,9 +11,21 @@ export function render(ui: React.ReactElement): string {
   );
 }
 
-/** Parse rendered markup so tests can query it like a page. */
-export function dom(html: string): Document {
-  return new DOMParser().parseFromString(html, "text/html");
+export interface ParsedMarkup {
+  body: DocumentFragment;
+  querySelector: DocumentFragment["querySelector"];
+  querySelectorAll: DocumentFragment["querySelectorAll"];
+}
+
+/**
+ * Parse rendered markup so tests can query it like a page. A <template> keeps the
+ * content inert: iframes and scripts in it never try to load anything.
+ */
+export function dom(html: string): ParsedMarkup {
+  const template = document.createElement("template");
+  template.innerHTML = html;
+  const body = template.content;
+  return { body, querySelector: body.querySelector.bind(body), querySelectorAll: body.querySelectorAll.bind(body) };
 }
 
 /**

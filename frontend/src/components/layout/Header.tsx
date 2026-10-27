@@ -15,14 +15,15 @@ export async function Header() {
 
   return (
     <header className="sticky top-0 z-20 border-b border-[color:var(--color-border)]/60 bg-[color:var(--color-bg)]/80 backdrop-blur-md">
-      <Container size="wide" className="flex items-center justify-between gap-4 py-4">
+      <Container size="wide" className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 py-4">
         <Link
           href="/"
           className="font-mono text-sm font-semibold text-[color:var(--color-fg)] no-underline hover:no-underline"
         >
           lucasalbini<span className="text-[color:var(--color-muted)]">.com</span>
         </Link>
-        <nav className="flex gap-4 text-sm text-[color:var(--color-muted)] sm:gap-7">
+        {/* Second row on phones: four links plus the logo do not fit in 390px. */}
+        <nav className="order-last flex w-full gap-5 text-sm text-[color:var(--color-muted)] sm:order-none sm:w-auto sm:gap-7">
           {NAV.map((item) => (
             <Link
               key={item.key}

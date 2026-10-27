@@ -211,6 +211,17 @@
     margin: 1.25rem 0;
     font-style: italic;
   }
+  /* Blocks that break out of the 70ch reading column, centred on the viewport. */
+  .bleed-wide {
+    width: min(64rem, calc(100vw - 2.5rem));
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+  .bleed-full {
+    width: 100vw;
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
   .prose-reading hr {
     border: none;
     border-top: 1px solid var(--color-border);

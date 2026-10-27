@@ -63,7 +63,7 @@ export default async function LocaleLayout({
             <Header />
             {/* Pages own their own vertical padding — a blanket pb here stacked
                 on top of it and left dead space above the footer. */}
-            <main className="flex-1">{children}</main>
+            <main className="flex-1 overflow-x-clip">{children}</main>
             <Footer links={socialLinksOf(profile?.social_links)} year={new Date().getFullYear()} />
           </div>
         </Providers>
