@@ -52,6 +52,8 @@ services:
       ADMIN_JWT_SECRET: ${STRAPI_ADMIN_JWT_SECRET}
       TRANSFER_TOKEN_SALT: ${STRAPI_TRANSFER_TOKEN_SALT}
       JWT_SECRET: ${STRAPI_JWT_SECRET}
+      # Signs the revalidation webhook the bootstrap creates (strapi/src/index.ts).
+      STRAPI_WEBHOOK_SECRET: ${STRAPI_WEBHOOK_SECRET:-}
       NODE_ENV: production
 
   fastapi:
@@ -104,6 +106,8 @@ services:
       SITE_URL: ${NEXT_PUBLIC_SITE_URL}
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
       NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}
+      # /api/revalidate refuses every call without it (FastAPI → Next after a webhook).
+      REVALIDATE_SECRET: ${REVALIDATE_SECRET:-}
 
   nginx:
     image: ghcr.io/lucasalbini/lucasalbini-com-nginx:${IMAGE_TAG:-latest}

@@ -50,7 +50,9 @@ def revalidated(monkeypatch: pytest.MonkeyPatch) -> list[str]:
 async def test_editing_a_place_refreshes_cached_posts(api: httpx.AsyncClient, revalidated: list[str]) -> None:
     strapi_client._cache["posts::()"] = {"data": []}
 
-    response = await api.post("/hooks/strapi", json={"event": "entry.update", "model": "api::place.place"})
+    response = await api.post(
+        "/hooks/strapi", json={"event": "entry.update", "model": "place", "uid": "api::place.place"}
+    )
 
     assert response.status_code == 204
     assert "posts::()" not in strapi_client._cache
@@ -58,13 +60,13 @@ async def test_editing_a_place_refreshes_cached_posts(api: httpx.AsyncClient, re
 
 
 async def test_publishing_a_post_refreshes_posts_and_home(api: httpx.AsyncClient, revalidated: list[str]) -> None:
-    await api.post("/hooks/strapi", json={"event": "entry.publish", "model": "api::post.post"})
+    await api.post("/hooks/strapi", json={"event": "entry.publish", "model": "post", "uid": "api::post.post"})
 
     assert revalidated == ["posts", "home"]
 
 
 async def test_unknown_model_triggers_nothing(api: httpx.AsyncClient, revalidated: list[str]) -> None:
-    await api.post("/hooks/strapi", json={"event": "entry.update", "model": "plugin::upload.file"})
+    await api.post("/hooks/strapi", json={"event": "entry.update", "model": "file", "uid": "plugin::upload.file"})
 
     assert revalidated == []
 
@@ -75,3 +77,14 @@ async def test_webhook_with_wrong_secret_is_rejected(api: httpx.AsyncClient, mon
     response = await api.post("/hooks/strapi", json={}, headers={"X-Webhook-Secret": "errado"})
 
     assert response.status_code == 401
+
+
+async def test_strapi_v5_payload_is_matched_by_uid_not_by_model_name(
+    api: httpx.AsyncClient, revalidated: list[str]
+) -> None:
+    # Shape captured from a real Strapi 5.36 delivery: `model` is only the singular name.
+    payload = {"event": "entry.create", "model": "place", "uid": "api::place.place", "entry": {"id": 5}}
+
+    await api.post("/hooks/strapi", json=payload)
+
+    assert revalidated == ["posts"]

@@ -1,5 +1,6 @@
 import type { Core } from "@strapi/strapi";
 import { importLegacyDump } from "./scripts/import-legacy";
+import { revalidationWebhookSpec, webhookDiffers, WEBHOOK_NAME } from "./scripts/revalidation-webhook";
 
 export default {
   register(/* { strapi }: { strapi: Core.Strapi } */) {},
@@ -7,6 +8,7 @@ export default {
   async bootstrap({ strapi }: { strapi: Core.Strapi }) {
     await ensureLocales(strapi);
     await grantPublicReadPermissions(strapi);
+    await ensureRevalidationWebhook(strapi);
     if (process.env.IMPORT_LEGACY === "1") {
       try {
         await importLegacyDump(strapi);
@@ -82,5 +84,33 @@ async function grantPublicReadPermissions(strapi: Core.Strapi) {
       data: { action, role: publicRole.id },
     });
     strapi.log.info(`[bootstrap] granted public: ${action}`);
+  }
+}
+
+interface StoredWebhook {
+  id: string | number;
+  name: string;
+  url: string;
+  headers: Record<string, string>;
+  events: string[];
+  isEnabled: boolean;
+}
+
+/** Create or update the webhook from the environment, and hand it to the runner right away:
+ *  the runner only loads stored webhooks before this bootstrap runs. */
+async function ensureRevalidationWebhook(strapi: Core.Strapi) {
+  const spec = revalidationWebhookSpec(process.env);
+  const store = strapi.get("webhookStore");
+  const runner = strapi.get("webhookRunner");
+  const existing = ((await store.findWebhooks()) as StoredWebhook[]).find((w) => w.name === WEBHOOK_NAME);
+
+  if (!existing) {
+    runner.add(await store.createWebhook(spec));
+    strapi.log.info(`[bootstrap] created webhook ${WEBHOOK_NAME} -> ${spec.url}`);
+    return;
+  }
+  if (webhookDiffers(existing, spec)) {
+    runner.update(await store.updateWebhook(existing.id, { ...spec, isEnabled: true }));
+    strapi.log.info(`[bootstrap] updated webhook ${WEBHOOK_NAME} -> ${spec.url}`);
   }
 }

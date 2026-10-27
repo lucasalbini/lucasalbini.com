@@ -46,6 +46,8 @@ services:
       ADMIN_JWT_SECRET: ${STRAPI_ADMIN_JWT_SECRET}
       TRANSFER_TOKEN_SALT: ${STRAPI_TRANSFER_TOKEN_SALT}
       JWT_SECRET: ${STRAPI_JWT_SECRET}
+      # Signs the revalidation webhook the bootstrap creates (strapi/src/index.ts).
+      STRAPI_WEBHOOK_SECRET: ${STRAPI_WEBHOOK_SECRET:-}
       NODE_ENV: development
       IMPORT_LEGACY: ${IMPORT_LEGACY:-0}
 
