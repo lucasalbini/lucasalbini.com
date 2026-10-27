@@ -1,60 +1,17 @@
 {
   "nav": {
     "home": "Início",
-    "about": "Sobre",
-    "blog": "Blog",
+    "archive": "Arquivo",
+    "travel": "Viagens",
     "projects": "Projetos",
-    "lab": "Lab",
-    "publications": "Publicações"
+    "about": "Sobre"
   },
   "home": {
-    "writing": "Escrevendo",
-    "writing_all": "Ver todos os posts",
-    "building": "Construindo",
-    "building_all": "Ver todos os projetos",
-    "testing": "Testando agora",
-    "testing_all": "Ver o lab",
     "cta_cv": "Baixar CV",
-    "cta_projects": "Ver projetos",
     "cta_contact": "Contato",
-    "contact_headline": "Trabalhando com IA? Vamos conversar.",
-    "contact_body": "Aberto a conversas sobre arquitetura de sistemas com LLM, RAG e visão computacional."
-  },
-  "blog": {
-    "title": "Blog",
-    "empty": "Nenhum post publicado por enquanto.",
-    "reading_time": "{minutes} min de leitura",
-    "published_on": "Publicado em {date}",
-    "back": "← Voltar para o blog",
-    "related": "Posts relacionados",
-    "translation_only": "Este post ainda não foi traduzido para português.",
-    "translation_action": "Você pode usar a tradução automática do seu navegador."
-  },
-  "projects": {
-    "title": "Projetos",
-    "empty": "Nenhum projeto publicado por enquanto.",
-    "back": "← Voltar para projetos",
-    "status": {
-      "active": "Ativo",
-      "paused": "Em pausa",
-      "archived": "Arquivado",
-      "experiment": "Experimento"
-    },
-    "kind": {
-      "game": "Jogo",
-      "ai": "IA",
-      "tool": "Ferramenta",
-      "tutorial": "Tutorial"
-    },
-    "stack": "Stack",
-    "code": "Código",
-    "demo": "Demo",
-    "play": "Jogar"
-  },
-  "lab": {
-    "title": "Lab",
-    "description": "Anotações rápidas, esboços e coisas que estou testando. Formato livre; conteúdo em português ou inglês, sem tradução.",
-    "empty": "Nada por aqui ainda."
+    "recent": "Mais recentes",
+    "recent_all": "Ver o arquivo",
+    "cta_archive": "Ver o arquivo"
   },
   "publications": {
     "title": "Publicações",
@@ -71,31 +28,49 @@
   },
   "tags": {
     "title": "Tag",
-    "empty": "Nada com essa tag por enquanto.",
-    "posts": "Posts",
-    "projects": "Projetos",
-    "lab": "Lab"
+    "empty": "Nada com essa tag por enquanto."
   },
   "footer": {
     "rights": "Feito com atenção por Lucas Albini."
-  },
-  "locale": {
-    "switch_to_pt": "Trocar para português",
-    "switch_to_en": "Switch to English",
-    "not_available": "Sem tradução para {locale}",
-    "badge_only_en": "Disponível apenas em inglês",
-    "badge_only_pt": "Only in Portuguese"
   },
   "theme": {
     "toggle": "Alternar tema"
   },
   "meta": {
     "site_title": "Lucas Albini",
-    "site_description": "Tech Lead em IA. Escrevo sobre IA aplicada, engenharia e desenvolvimento de jogos."
+    "site_description": "Viagens, projetos, ideias e o que mais eu viver, na versão completa."
   },
   "not_found": {
     "title": "Página não encontrada",
     "description": "O que você procura não está aqui.",
     "home": "Voltar para o início"
+  },
+  "post": {
+    "reading_time": "{minutes} min de leitura",
+    "related": "Leia também"
+  },
+  "categories": {
+    "travel": "Viagem",
+    "project": "Projeto",
+    "idea": "Ideia",
+    "life": "Vida",
+    "work": "Trabalho"
+  },
+  "categories_plural": {
+    "travel": "Viagens",
+    "project": "Projetos",
+    "idea": "Ideias",
+    "life": "Vida",
+    "work": "Trabalho"
+  },
+  "archive": {
+    "title": "Arquivo",
+    "all": "Tudo",
+    "categories": "Categorias",
+    "empty": "Nada publicado aqui ainda."
+  },
+  "collection": {
+    "label": "Coleção",
+    "empty": "Esta coleção ainda não tem posts públicos."
   }
 }

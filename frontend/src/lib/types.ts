@@ -1,3 +1,5 @@
+import type { Category } from "@/lib/categories";
+
 // Handwritten DTO types that mirror the FastAPI schemas.
 // When `npm run gen:api` runs against a live FastAPI, it generates `api-types.ts`
 // from the live OpenAPI. We keep this file for the block editor shapes and small
@@ -7,10 +9,14 @@ export type ApiLocale = "pt-BR" | "en";
 
 export interface Media {
   url: string;
-  alternative_text?: string | null;
+  // The API serializes the Strapi name (pydantic alias), not snake_case.
+  alternativeText?: string | null;
   width?: number | null;
   height?: number | null;
   mime?: string | null;
+  name?: string | null;
+  ext?: string | null;
+  size?: number | null;
 }
 
 // --- Strapi block editor ---
@@ -33,7 +39,6 @@ export interface Tag {
   document_id: string;
   label: string;
   slug: string;
-  locale: string;
 }
 
 export interface Skill {
@@ -47,55 +52,93 @@ export interface Skill {
   locale: string;
 }
 
-export interface Post {
+export type Visibility = "public" | "unlisted" | "private";
+
+export interface CollectionRef {
+  title: string;
+  slug: string;
+}
+
+export interface PostSummary {
   document_id: string;
   title: string;
   slug: string;
   summary: string;
-  body: Block[];
   cover: Media | null;
+  category: Category;
+  visibility: Visibility;
+  date: string | null;
   tags: Tag[];
+  collection: CollectionRef | null;
   featured: boolean;
   featured_order: number;
-  reading_time_minutes: number | null;
   published_at: string | null;
-  locale: string;
-  available_locales: string[];
 }
 
-export type ProjectStatus = "active" | "paused" | "archived" | "experiment";
-export type ProjectKind = "game" | "ai" | "tool" | "tutorial";
+export type PlaceKind = "restaurant" | "bar" | "cafe" | "lodging" | "attraction" | "nature" | "city" | "other";
 
-export interface Project {
+export interface Place {
+  document_id: string;
+  name: string;
+  slug: string;
+  kind: PlaceKind;
+  latitude: number;
+  longitude: number;
+  address: string | null;
+  city: string | null;
+  country: string | null;
+  url: string | null;
+  note: string | null;
+  photo: Media | null;
+}
+
+// --- Post body blocks (mirror app/schemas/blocks.py) ---
+export interface TextBlock { type: "text"; body: Block[] }
+export interface ImageBlock { type: "image"; image: Media; caption: string | null; layout: "column" | "wide" | "full" }
+export interface GalleryBlock { type: "gallery"; images: Media[]; caption: string | null }
+export interface YoutubeBlock { type: "youtube"; url: string; caption: string | null }
+export interface InstagramBlock { type: "instagram"; url: string; caption: string | null }
+export interface PlacesBlock { type: "places"; title: string | null; places: Place[] }
+export interface DownloadBlock { type: "download"; file: Media; label: string; description: string | null }
+export interface LinkBlock { type: "link"; url: string; title: string; description: string | null }
+export interface CalloutBlock { type: "callout"; body: string; tone: "note" | "tip" | "warning" }
+
+export type PostBlock =
+  | TextBlock
+  | ImageBlock
+  | GalleryBlock
+  | YoutubeBlock
+  | InstagramBlock
+  | PlacesBlock
+  | DownloadBlock
+  | LinkBlock
+  | CalloutBlock;
+
+export interface Post extends PostSummary {
+  body: PostBlock[];
+  instagram_url: string | null;
+  youtube_url: string | null;
+  reading_time_minutes: number | null;
+}
+
+export interface Collection {
   document_id: string;
   title: string;
   slug: string;
-  summary: string;
-  body: Block[];
+  description: string | null;
   cover: Media | null;
-  status: ProjectStatus;
-  kind: ProjectKind;
-  stack: Skill[];
-  tags: Tag[];
-  repo_url: string | null;
-  demo_url: string | null;
-  itch_embed_url: string | null;
-  year: number | null;
-  featured: boolean;
-  featured_order: number;
-  locale: string;
-  available_locales: string[];
 }
 
-export interface Lab {
-  document_id: string;
+export interface CollectionDetail extends Collection {
+  posts: PostSummary[];
+}
+
+export interface YoutubeVideo {
+  video_id: string;
   title: string;
-  slug: string;
-  date: string;
-  body: Block[];
-  external_link: string | null;
-  language: "pt" | "en";
-  tags: Tag[];
+  url: string;
+  published_at: string;
+  thumbnail_url: string | null;
 }
 
 export interface SocialLink {
@@ -111,11 +154,10 @@ export interface Profile {
   location: string | null;
   short_bio: string | null;
   long_bio: Block[];
+  now: string | null;
   avatar: Media | null;
   cv_pdf: Media | null;
   social_links: SocialLink[];
-  locale: string;
-  available_locales: string[];
 }
 
 export interface Publication {
@@ -184,17 +226,7 @@ export interface Paginated<T> {
   pagination: { page: number; page_size: number; page_count: number; total: number };
 }
 
-export interface TranslationEntry { locale: string; slug: string }
-export interface TranslationLookup {
-  type: string;
-  source_locale: string;
-  source_slug: string;
-  translations: TranslationEntry[];
-}
-
 export interface TagAggregation {
   tag: Tag;
-  posts: Post[];
-  projects: Project[];
-  lab: Lab[];
+  posts: PostSummary[];
 }

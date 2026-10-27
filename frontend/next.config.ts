@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+import { LEGACY_REDIRECTS } from "./src/lib/redirects";
 
 const withNextIntl = createNextIntlPlugin("./src/lib/i18n/request.ts");
 
@@ -14,18 +15,7 @@ const nextConfig: NextConfig = {
     ],
   },
   async redirects() {
-    // Legacy URLs from the pre-i18n site. Keep them working so any incoming
-    // link still lands on the right page.
-    return [
-      { source: "/blog", destination: "/pt/blog", permanent: true },
-      { source: "/blog/:slug", destination: "/pt/blog/:slug", permanent: true },
-      { source: "/projects", destination: "/pt/projetos", permanent: true },
-      { source: "/projects/:slug", destination: "/pt/projetos/:slug", permanent: true },
-      // Publications now live inside the About page.
-      { source: "/publications", destination: "/pt/sobre#publications", permanent: true },
-      { source: "/pt/publicacoes", destination: "/pt/sobre#publications", permanent: true },
-      { source: "/en/publications", destination: "/en/about#publications", permanent: true },
-    ];
+    return LEGACY_REDIRECTS;
   },
 };
 

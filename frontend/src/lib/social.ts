@@ -2,13 +2,13 @@ import type { SocialLink } from "@/lib/types";
 
 /**
  * Fallback social links. The profile in Strapi owns these, but `social_links`
- * is often empty — without a fallback the hero renders no way to reach Lucas
- * at all, which is the one thing a recruiter landing on the home needs.
+ * can be empty — without a fallback the site renders no way to follow Lucas,
+ * which is the point of the site being a hub for the networks. Instagram and
+ * YouTube handles are not hardcoded: they come from `social_links` in Strapi.
  */
 export const FALLBACK_SOCIAL_LINKS: SocialLink[] = [
   { platform: "github", url: "https://github.com/lucasalbini" },
   { platform: "linkedin", url: "https://www.linkedin.com/in/lucasalbini" },
-  { platform: "itch", url: "https://lucasalbini.itch.io/" },
 ];
 
 export const CONTACT_EMAIL = "lucasalbini@gmail.com";
