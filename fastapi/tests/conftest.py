@@ -5,7 +5,7 @@ import httpx
 import pytest
 
 from app.main import app
-from app.services import strapi_client
+from app.services import strapi_client, youtube
 
 
 @pytest.fixture(autouse=True)
@@ -14,6 +14,14 @@ def empty_strapi_cache() -> Iterator[None]:
     strapi_client.invalidate()
     yield
     strapi_client.invalidate()
+
+
+@pytest.fixture(autouse=True)
+def empty_youtube_cache() -> Iterator[None]:
+    """Same as above for the per-channel YouTube feed cache."""
+    youtube.clear_cache()
+    yield
+    youtube.clear_cache()
 
 
 @pytest.fixture

@@ -10,6 +10,10 @@ class Settings(BaseSettings):
 
     cache_ttl: int = 300
 
+    # YouTube Atom feed, cached per channel id (the feed changes rarely).
+    youtube_cache_ttl: int = 900
+    youtube_timeout: float = 10.0
+
     # Used by webhooks to trigger Next revalidation. Both required for revalidation to fire.
     next_url: str = "http://frontend:3000"
     revalidate_secret: str = ""

@@ -16,6 +16,7 @@ from app.routers import (
     search,
     tags,
     webhooks,
+    youtube,
 )
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
@@ -50,6 +51,7 @@ for r in (
     contact.router,
     webhooks.router,
     chat.router,
+    youtube.router,
 ):
     app.include_router(r)
 
