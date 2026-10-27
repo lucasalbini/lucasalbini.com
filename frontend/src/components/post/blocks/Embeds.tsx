@@ -19,7 +19,7 @@ export function YouTube({ block }: { block: YoutubeBlock }) {
     );
   }
   return (
-    <figure className="bleed-wide my-10">
+    <figure className="my-10">
       <div className="relative aspect-video overflow-hidden rounded bg-black">
         <iframe
           src={youtubeEmbedUrl(id)}

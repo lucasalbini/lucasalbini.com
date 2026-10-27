@@ -59,6 +59,14 @@
       "note": "Nota",
       "tip": "Dica",
       "warning": "Atenção"
+    },
+    "meta": {
+      "category": "Categoria",
+      "date": "Data",
+      "reading": "Leitura",
+      "collection": "Coleção",
+      "elsewhere": "Também em",
+      "tags": "Tags"
     }
   },
   "categories": {

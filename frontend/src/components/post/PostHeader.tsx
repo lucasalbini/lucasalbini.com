@@ -5,7 +5,8 @@ import type { Post } from "@/lib/types";
 import { formatDate } from "@/lib/format";
 import { categorySegment } from "@/lib/categories";
 
-/** Category, title, date and the post's counterparts on the networks (ADR-0002 §3.1). */
+/** Category, title, date and the post's counterparts on the networks (ADR-0002 §3.1).
+ *  On desktop the category line and the facts row move to PostMeta, beside the post. */
 export function PostHeader({ post }: { post: Post }) {
   const t = useTranslations("post");
   const tCategories = useTranslations("categories");
@@ -16,7 +17,7 @@ export function PostHeader({ post }: { post: Post }) {
 
   return (
     <header className="mb-10">
-      <p className="label-mono">
+      <p className="label-mono lg:hidden">
         <Link
           href={{ pathname: "/archive/[category]", params: { category: categorySegment(post.category) } }}
           className="no-underline"
@@ -32,9 +33,9 @@ export function PostHeader({ post }: { post: Post }) {
           </>
         )}
       </p>
-      <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[color:var(--color-fg)] sm:text-4xl lg:text-5xl">{post.title}</h1>
+      <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[color:var(--color-fg)] sm:text-4xl lg:mt-0 lg:text-5xl">{post.title}</h1>
       <p className="mt-4 text-lg text-[color:var(--color-muted)] lg:text-xl">{post.summary}</p>
-      <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-xs text-[color:var(--color-muted)]">
+      <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-xs text-[color:var(--color-muted)] lg:hidden">
         {post.date && <time dateTime={post.date}>{formatDate(post.date, "pt")}</time>}
         {post.reading_time_minutes && <span>{t("reading_time", { minutes: post.reading_time_minutes })}</span>}
         {social.map((s) => (

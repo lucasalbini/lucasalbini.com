@@ -70,7 +70,7 @@ export function FeaturedPostCard({ post }: { post: PostSummary }) {
   return (
     <Link
       href={postHref(post)}
-      className="group grid gap-6 no-underline md:grid-cols-[minmax(0,340px)_1fr] md:items-center md:gap-8"
+      className="group grid gap-6 no-underline md:grid-cols-[minmax(0,340px)_1fr] md:items-center md:gap-8 lg:grid-cols-2 lg:gap-10"
     >
       <Cover post={post} aspect="aspect-[4/3]" sizes="(max-width: 768px) 100vw, 340px" />
       <div>

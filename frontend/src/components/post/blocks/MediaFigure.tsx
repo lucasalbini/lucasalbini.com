@@ -3,7 +3,7 @@ import clsx from "clsx";
 import type { Media } from "@/lib/types";
 import { mediaUrl } from "@/lib/format";
 
-/** One image with its caption. `layout` decides how far it breaks out of the reading column. */
+/** One image with its caption, as wide as the text column. `full` runs edge to edge on phones. */
 export function MediaFigure({
   media,
   caption,
@@ -16,7 +16,7 @@ export function MediaFigure({
   sizes?: string;
 }) {
   return (
-    <figure className={clsx("my-8", layout === "wide" && "bleed-wide", layout === "full" && "bleed-full")}>
+    <figure className={clsx("my-8", layout === "full" && "bleed-full")}>
       <Image
         src={mediaUrl(media.url)}
         alt={media.alternativeText ?? caption ?? ""}
@@ -24,7 +24,7 @@ export function MediaFigure({
         height={media.height ?? 1067}
         sizes={sizes}
         unoptimized
-        className={clsx("h-auto w-full", layout !== "full" && "rounded")}
+        className={clsx("h-auto w-full rounded", layout === "full" && "max-lg:rounded-none")}
       />
       {caption && <figcaption className="mt-2 font-mono text-xs text-[color:var(--color-muted)]">{caption}</figcaption>}
     </figure>

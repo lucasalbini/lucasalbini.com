@@ -9,7 +9,7 @@ export function PostList({ posts, empty }: { posts: PostSummary[]; empty: string
     <>
       <FeaturedPostCard post={lead} />
       {rest.length > 0 && (
-        <div className="mt-16 grid gap-12 border-t border-[color:var(--color-border)] pt-12 sm:grid-cols-2 sm:gap-x-10">
+        <div className="mt-16 grid gap-12 border-t border-[color:var(--color-border)] pt-12 sm:grid-cols-2 sm:gap-x-10 lg:grid-cols-3">
           {rest.map((p) => (
             <PostCard key={p.document_id} post={p} />
           ))}

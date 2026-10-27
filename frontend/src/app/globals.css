@@ -176,7 +176,7 @@
   /* Body text grows with the viewport (17px on phones, 20px on wide screens) so it holds its
      own next to wide images on desktop. */
   .prose-reading {
-    max-width: 70ch;
+    max-width: 100%;
     font-size: clamp(1.0625rem, 0.95rem + 0.35vw, 1.25rem);
     line-height: 1.7;
   }
@@ -214,16 +214,14 @@
     margin: 1.25rem 0;
     font-style: italic;
   }
-  /* Blocks that break out of the 70ch reading column, centred on the viewport. */
-  .bleed-wide {
-    width: min(56rem, calc(100vw - 2.5rem));
-    margin-left: 50%;
-    transform: translateX(-50%);
-  }
-  .bleed-full {
-    width: 100vw;
-    margin-left: 50%;
-    transform: translateX(-50%);
+  /* Media never gets wider than the text column. The one exception: `full` images run
+     edge to edge on phones, where the column already spans the screen minus the gutter. */
+  @media (max-width: 1023px) {
+    .bleed-full {
+      width: 100vw;
+      margin-left: 50%;
+      transform: translateX(-50%);
+    }
   }
   .prose-reading hr {
     border: none;

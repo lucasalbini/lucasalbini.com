@@ -6,7 +6,7 @@ import { PlacesMap } from "./PlacesMap";
 export function Places({ block }: { block: PlacesBlock }) {
   const t = useTranslations("places");
   return (
-    <section className="bleed-wide my-10">
+    <section className="my-10">
       {block.title && <h2 className="label-mono mb-4">{block.title}</h2>}
       <div className="h-72 overflow-hidden rounded bg-[color:var(--color-surface)] sm:h-96">
         <PlacesMap places={block.places} />
