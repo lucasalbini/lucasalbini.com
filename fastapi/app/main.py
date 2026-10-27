@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.routers import (
     chat,
+    collections,
     contact,
     cv,
     lab,
@@ -14,7 +15,6 @@ from app.routers import (
     publications,
     search,
     tags,
-    translations,
     webhooks,
 )
 
@@ -25,7 +25,7 @@ app = FastAPI(
     version="2.0.0",
     description=(
         "Aggregation and normalization layer between Strapi v5 and the Next frontend. "
-        "All read endpoints accept ?locale=pt-BR|en. Cache keys always include the locale."
+        "Portuguese only (ADR-0002): posts, profile and tags take no locale. Post visibility is enforced here."
     ),
 )
 
@@ -40,11 +40,11 @@ app.add_middleware(
 for r in (
     profile.router,
     posts.router,
+    collections.router,
     projects.router,
     lab.router,
     tags.router,
     cv.router,
-    translations.router,
     publications.router,
     search.router,
     contact.router,

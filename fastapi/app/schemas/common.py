@@ -24,6 +24,9 @@ class Media(BaseDTO):
     width: int | None = None
     height: int | None = None
     mime: str | None = None
+    name: str | None = None
+    ext: str | None = None
+    size: float | None = None  # kilobytes, as Strapi reports it
 
 
 class Pagination(BaseDTO):
@@ -59,3 +62,10 @@ def normalize_media(raw: Any) -> Media | None:
         if not raw:
             return None
     return Media.model_validate(raw)
+
+
+def normalize_media_list(raw: Any) -> list[Media]:
+    """Multiple-media fields (galleries). Entries without a URL are dropped."""
+    if not isinstance(raw, list):
+        return []
+    return [Media.model_validate(m) for m in raw if isinstance(m, dict) and m.get("url")]
