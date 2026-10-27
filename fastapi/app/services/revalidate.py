@@ -7,6 +7,7 @@ Silently no-ops if next_url or revalidate_secret is missing (useful in tests).
 from __future__ import annotations
 
 import logging
+
 import httpx
 
 from app.config import settings

@@ -1,6 +1,8 @@
 from __future__ import annotations
+
 from datetime import date
-from typing import Any, Optional
+from typing import Any
+
 from app.schemas.common import BaseDTO
 from app.schemas.tag import Tag, to_tag
 
@@ -11,7 +13,7 @@ class Lab(BaseDTO):
     slug: str
     date: date
     body: list = []
-    external_link: Optional[str] = None
+    external_link: str | None = None
     language: str  # "pt" | "en" — feeds the badge in both locale listings
     tags: list[Tag] = []
 

@@ -4,10 +4,12 @@ the equivalent URL — or know it doesn't exist and disable the switch.
 """
 
 from __future__ import annotations
+
 from fastapi import APIRouter, HTTPException, Query
-from app.services.strapi_client import fetch
-from app.schemas.common import BaseDTO
+
 from app.config import settings
+from app.schemas.common import BaseDTO
+from app.services.strapi_client import fetch
 
 router = APIRouter(prefix="/translations", tags=["translations"])
 
@@ -51,7 +53,7 @@ async def translations(
     translations: list[TranslationEntry] = [
         TranslationEntry(locale=entry.get("locale", locale), slug=entry.get("slug", slug))
     ]
-    for loc in (entry.get("localizations") or []):
+    for loc in entry.get("localizations") or []:
         if loc.get("locale") and loc.get("slug"):
             translations.append(TranslationEntry(locale=loc["locale"], slug=loc["slug"]))
 

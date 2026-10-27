@@ -6,11 +6,14 @@ contract stays the same.
 """
 
 from __future__ import annotations
+
 import asyncio
+
 from fastapi import APIRouter, Query
-from app.services.strapi_client import fetch
-from app.schemas.search import SearchHit, SearchResponse
+
 from app.config import settings
+from app.schemas.search import SearchHit, SearchResponse
+from app.services.strapi_client import fetch
 
 router = APIRouter(prefix="/search", tags=["search"])
 
@@ -88,7 +91,5 @@ async def search(
     q: str = Query(min_length=2, max_length=100),
     locale: str = Query(default=settings.default_locale),
 ):
-    posts, projects, lab = await asyncio.gather(
-        _search_posts(q, locale), _search_projects(q, locale), _search_lab(q)
-    )
+    posts, projects, lab = await asyncio.gather(_search_posts(q, locale), _search_projects(q, locale), _search_lab(q))
     return SearchResponse(query=q, locale=locale, hits=posts + projects + lab)

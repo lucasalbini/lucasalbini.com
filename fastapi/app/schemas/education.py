@@ -1,18 +1,20 @@
 from __future__ import annotations
+
 from datetime import date
-from typing import Any, Optional
+from typing import Any
+
 from app.schemas.common import BaseDTO, Media, normalize_media
 
 
 class Education(BaseDTO):
     document_id: str
     institution: str
-    degree: Optional[str] = None
-    field_of_study: Optional[str] = None
-    start_date: Optional[date] = None
-    end_date: Optional[date] = None
-    description: Optional[str] = None
-    logo: Optional[Media] = None
+    degree: str | None = None
+    field_of_study: str | None = None
+    start_date: date | None = None
+    end_date: date | None = None
+    description: str | None = None
+    logo: Media | None = None
     locale: str
 
 

@@ -1,6 +1,8 @@
 from __future__ import annotations
+
 from datetime import date
-from typing import Any, Optional
+from typing import Any
+
 from app.schemas.common import BaseDTO, Media, normalize_media
 
 
@@ -11,7 +13,7 @@ class Responsibility(BaseDTO):
 class Position(BaseDTO):
     designation: str
     start_date: date
-    end_date: Optional[date] = None
+    end_date: date | None = None
     is_current: bool = False
     responsibilities: list[Responsibility] = []
 
@@ -19,10 +21,10 @@ class Position(BaseDTO):
 class Experience(BaseDTO):
     document_id: str
     company_name: str
-    company_url: Optional[str] = None
-    company_location: Optional[str] = None
-    company_logo: Optional[Media] = None
-    order: Optional[int] = None
+    company_url: str | None = None
+    company_location: str | None = None
+    company_logo: Media | None = None
+    order: int | None = None
     positions: list[Position] = []
     locale: str
 

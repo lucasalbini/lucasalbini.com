@@ -3,6 +3,7 @@ computes or consumes embeddings yet.
 """
 
 from __future__ import annotations
+
 from fastapi import APIRouter, HTTPException
 
 router = APIRouter(prefix="/chat", tags=["chat"])

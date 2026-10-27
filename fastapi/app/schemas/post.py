@@ -1,6 +1,8 @@
 from __future__ import annotations
+
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
+
 from app.schemas.common import BaseDTO, Media, extract_available_locales, normalize_media
 from app.schemas.tag import Tag, to_tag
 
@@ -11,17 +13,17 @@ class Post(BaseDTO):
     slug: str
     summary: str
     body: list = []
-    cover: Optional[Media] = None
+    cover: Media | None = None
     tags: list[Tag] = []
     featured: bool = False
     featured_order: int = 0
-    reading_time_minutes: Optional[int] = None
-    published_at: Optional[datetime] = None
+    reading_time_minutes: int | None = None
+    published_at: datetime | None = None
     locale: str
     available_locales: list[str] = []
 
 
-def _estimate_reading_time(body: list) -> Optional[int]:
+def _estimate_reading_time(body: list) -> int | None:
     """Rough estimate from block editor content. Not stored server-side."""
     if not body:
         return None

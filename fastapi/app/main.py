@@ -1,20 +1,21 @@
 import logging
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.routers import (
-    profile,
-    posts,
-    projects,
-    lab,
-    tags,
+    chat,
+    contact,
     cv,
-    translations,
+    lab,
+    posts,
+    profile,
+    projects,
     publications,
     search,
-    contact,
+    tags,
+    translations,
     webhooks,
-    chat,
 )
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")

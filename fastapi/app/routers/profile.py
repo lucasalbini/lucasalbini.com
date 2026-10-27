@@ -1,8 +1,10 @@
 from __future__ import annotations
+
 from fastapi import APIRouter, HTTPException, Query
-from app.services.strapi_client import fetch
-from app.schemas.profile import Profile, to_profile
+
 from app.config import settings
+from app.schemas.profile import Profile, to_profile
+from app.services.strapi_client import fetch
 
 router = APIRouter(prefix="/profile", tags=["profile"])
 

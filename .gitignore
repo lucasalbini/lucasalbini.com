@@ -64,3 +64,12 @@ frontend/out/
 # Misc
 *.log
 .claude/
+
+# Test / coverage artifacts
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+frontend/coverage/

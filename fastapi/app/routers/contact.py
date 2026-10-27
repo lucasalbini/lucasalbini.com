@@ -1,9 +1,12 @@
 from __future__ import annotations
+
 import logging
+
 from fastapi import APIRouter, HTTPException, Request
-from app.schemas.contact import ContactMessage, ContactAck
-from app.services.rate_limit import RateLimiter
+
 from app.config import settings
+from app.schemas.contact import ContactAck, ContactMessage
+from app.services.rate_limit import RateLimiter
 
 router = APIRouter(prefix="/contact", tags=["contact"])
 log = logging.getLogger(__name__)

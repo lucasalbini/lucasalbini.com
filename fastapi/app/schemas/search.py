@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Optional
+
 from app.schemas.common import BaseDTO
 
 
@@ -8,8 +8,8 @@ class SearchHit(BaseDTO):
     document_id: str
     title: str
     slug: str
-    summary: Optional[str] = None
-    locale: Optional[str] = None
+    summary: str | None = None
+    locale: str | None = None
     score: float = 0.0
 
 

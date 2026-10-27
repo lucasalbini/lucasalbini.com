@@ -1,12 +1,14 @@
 from __future__ import annotations
+
 from fastapi import APIRouter, HTTPException, Query
-from app.services.strapi_client import fetch
-from app.schemas.tag import Tag, to_tag
+
+from app.config import settings
+from app.schemas.common import BaseDTO
+from app.schemas.lab import Lab, to_lab
 from app.schemas.post import Post, to_post
 from app.schemas.project import Project, to_project
-from app.schemas.lab import Lab, to_lab
-from app.schemas.common import BaseDTO
-from app.config import settings
+from app.schemas.tag import Tag, to_tag
+from app.services.strapi_client import fetch
 
 router = APIRouter(prefix="/tags", tags=["tags"])
 

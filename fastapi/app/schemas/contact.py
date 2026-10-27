@@ -1,5 +1,7 @@
 from __future__ import annotations
+
 from pydantic import EmailStr, Field
+
 from app.schemas.common import BaseDTO
 
 

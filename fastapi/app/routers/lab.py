@@ -3,10 +3,12 @@ the `language` field feeds the badge in each locale listing on the frontend.
 """
 
 from __future__ import annotations
+
 from fastapi import APIRouter, Query
-from app.services.strapi_client import fetch
+
 from app.schemas.common import Paginated, Pagination
 from app.schemas.lab import Lab, to_lab
+from app.services.strapi_client import fetch
 
 router = APIRouter(prefix="/lab", tags=["lab"])
 
