@@ -1,0 +1,39 @@
+# Setup: `pre-commit install` (uma vez). Rodar tudo: `pre-commit run --all-files`.
+# Lint/format/types do frontend rodam via `npm run lint` / `npm run typecheck` e no CI.
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.7.4 # manter igual ao ruff em fastapi/requirements-dev.txt
+    hooks:
+      - id: ruff
+        args: [--fix]
+        files: ^fastapi/
+      - id: ruff-format
+        files: ^fastapi/
+
+  - repo: local
+    hooks:
+      # Roda dentro de fastapi/ para que o pyproject.toml (plugin pydantic) e o pacote `app` sejam achados.
+      - id: mypy
+        name: mypy (fastapi)
+        language: python
+        entry: bash -c 'cd fastapi && mypy app tests'
+        files: ^fastapi/.*\.py$
+        pass_filenames: false
+        additional_dependencies:
+          - mypy==1.13.0
+          - types-cachetools==5.5.0.20240820
+          - fastapi==0.115.0
+          - httpx==0.27.2
+          - pydantic==2.9.0
+          - pydantic-settings==2.5.0
+          - cachetools==5.5.0
+          - email-validator==2.2.0
+          - pytest==8.3.3
+          - respx==0.21.1
+
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        args: [--baseline, .secrets.baseline]
+        exclude: (package-lock\.json$|^backups/|\.sql$)
