@@ -4,97 +4,59 @@ export default {
   "info": {
     "singularName": "profile",
     "pluralName": "profiles",
-    "displayName": "Profile"
+    "displayName": "Profile",
+    "description": "Personal profile. short_bio is 2-3 lines for the hero; long_bio is used on /sobre; now is what Lucas is living right now; youtube_channel_id feeds the latest-videos section."
   },
   "options": {
     "draftAndPublish": true
   },
-  "pluginOptions": {
-    "i18n": {
-      "localized": true
-    }
-  },
   "attributes": {
     "name": {
       "type": "string",
-      "required": true,
-      "pluginOptions": {
-        "i18n": {
-          "localized": false
-        }
-      }
+      "required": true
     },
-    "designation": {
-      "type": "string",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
+    "role": {
+      "type": "string"
     },
     "company": {
-      "type": "string",
-      "pluginOptions": {
-        "i18n": {
-          "localized": false
-        }
-      }
+      "type": "string"
     },
     "location": {
-      "type": "string",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
+      "type": "string"
     },
-    "summary": {
-      "type": "richtext",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
+    "short_bio": {
+      "type": "text",
+      "maxLength": 300
     },
-    "typing_titles": {
-      "type": "json",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
+    "long_bio": {
+      "type": "blocks"
     },
-    "photo": {
+    "avatar": {
       "type": "media",
       "multiple": false,
       "allowedTypes": [
         "images"
       ]
     },
-    "background": {
+    "cv_pdf": {
       "type": "media",
       "multiple": false,
       "allowedTypes": [
-        "images",
         "files"
       ]
     },
-    "resume": {
-      "type": "media",
-      "multiple": false,
-      "allowedTypes": [
-        "files"
-      ]
+    "now": {
+      "type": "text",
+      "maxLength": 500
+    },
+    "youtube_channel_id": {
+      "type": "string",
+      "regex": "^UC[\\w-]{22}$"
     },
     "social_links": {
       "type": "component",
       "repeatable": true,
       "component": "shared.social-link"
-    },
-    "soft_skills": {
-      "type": "component",
-      "repeatable": true,
-      "component": "shared.soft-skill"
     }
   }
 } as const;

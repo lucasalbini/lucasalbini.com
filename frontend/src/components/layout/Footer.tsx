@@ -1,14 +1,28 @@
-import { FaHeart } from "react-icons/fa";
+import { getTranslations } from "next-intl/server";
+import { FaRss } from "react-icons/fa6";
+import { Container } from "./Container";
+import { SocialLinks } from "@/components/ui/SocialLinks";
+import type { SocialLink } from "@/lib/types";
 
-export function Footer() {
+/** `year` comes from the caller so the footer stays a pure function of its props. */
+export async function Footer({ links, year }: { links: SocialLink[]; year: number }) {
+  const t = await getTranslations("footer");
+
   return (
-    <footer className="border-t border-border bg-background-alt py-8">
-      <div className="mx-auto max-w-6xl px-4 text-center text-sm text-muted">
-        <p className="flex items-center justify-center gap-1">
-          Feito com <FaHeart className="text-red-500" /> por Lucas Albini
-        </p>
-        <p className="mt-2">&copy; {new Date().getFullYear()} Todos os direitos reservados.</p>
-      </div>
+    <footer className="mt-8 border-t border-[color:var(--color-border)] py-10 text-sm text-[color:var(--color-muted)]">
+      <Container size="wide" className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <p>© {year} · {t("rights")}</p>
+        <div className="flex items-center gap-4">
+          <SocialLinks links={links} size="md" />
+          <a
+            href="/feed.xml"
+            aria-label="RSS"
+            className="text-lg text-[color:var(--color-muted)] no-underline transition-colors hover:text-[color:var(--color-accent)]"
+          >
+            <FaRss />
+          </a>
+        </div>
+      </Container>
     </footer>
   );
 }

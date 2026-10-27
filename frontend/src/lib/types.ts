@@ -1,141 +1,232 @@
-export interface StrapiImage {
+import type { Category } from "@/lib/categories";
+
+// Handwritten DTO types that mirror the FastAPI schemas.
+// When `npm run gen:api` runs against a live FastAPI, it generates `api-types.ts`
+// from the live OpenAPI. We keep this file for the block editor shapes and small
+// convenience types.
+
+export type ApiLocale = "pt-BR" | "en";
+
+export interface Media {
   url: string;
-  alternativeText?: string;
-  width?: number;
-  height?: number;
+  // The API serializes the Strapi name (pydantic alias), not snake_case.
+  alternativeText?: string | null;
+  width?: number | null;
+  height?: number | null;
+  mime?: string | null;
+  name?: string | null;
+  ext?: string | null;
+  size?: number | null;
 }
 
-export interface SocialLink {
-  id: number;
-  platform: string;
-  url: string;
-  icon_name?: string;
+// --- Strapi block editor ---
+export type BlockChild =
+  | { type: "text"; text: string; bold?: boolean; italic?: boolean; underline?: boolean; strikethrough?: boolean; code?: boolean }
+  | { type: "link"; url: string; children: BlockChild[] };
+
+export interface Block {
+  type: "paragraph" | "heading" | "list" | "quote" | "code" | "image" | string;
+  level?: number;
+  format?: "ordered" | "unordered";
+  language?: string;
+  image?: Media;
+  children?: BlockChild[];
+  [k: string]: unknown;
 }
 
-export interface SoftSkill {
-  id: number;
-  name: string;
-  level: number;
-}
-
-export interface Profile {
-  id: number;
-  name: string;
-  designation: string;
-  company: string;
-  location: string;
-  summary: string;
-  typing_titles: string[];
-  photo?: StrapiImage;
-  background?: StrapiImage;
-  resume?: { url: string };
-  social_links: SocialLink[];
-  soft_skills: SoftSkill[];
-}
-
-export interface Responsibility {
-  id: number;
-  description: string;
-}
-
-export interface Position {
-  id: number;
-  designation: string;
-  start_date: string;
-  end_date?: string;
-  is_current: boolean;
-  responsibilities: Responsibility[];
-}
-
-export interface Experience {
-  id: number;
-  company_name: string;
-  company_url?: string;
-  company_location: string;
-  company_logo?: StrapiImage;
-  order: number;
-  positions: Position[];
-}
-
-export interface Education {
-  id: number;
-  institution: string;
-  degree: string;
-  field_of_study: string;
-  start_date: string;
-  end_date?: string;
-  description?: string;
-  logo?: StrapiImage;
+// --- Content DTOs ---
+export interface Tag {
+  document_id: string;
+  label: string;
+  slug: string;
 }
 
 export interface Skill {
-  id: number;
+  document_id: string;
   name: string;
-  icon_name?: string;
-  summary?: string;
-  category: "language" | "framework" | "cloud" | "ai_ml" | "devops" | "tools";
-  url?: string;
-  icon?: StrapiImage;
+  icon_name?: string | null;
+  summary?: string | null;
+  category: string;
+  url?: string | null;
+  icon?: Media | null;
+  locale: string;
 }
 
-export interface Certification {
-  id: number;
-  name: string;
-  issuer: string;
-  issue_date?: string;
-  credential_url?: string;
-  badge_image?: StrapiImage;
-}
+export type Visibility = "public" | "unlisted" | "private";
 
-export interface Project {
-  id: number;
-  name: string;
-  slug: string;
-  description: string;
-  role?: string;
-  timeline?: string;
-  repo_url?: string;
-  demo_url?: string;
-  logo?: StrapiImage;
-  tags: string[];
-  category: "professional" | "academic" | "hobby";
-  featured: boolean;
-}
-
-export interface Post {
-  id: number;
+export interface CollectionRef {
   title: string;
   slug: string;
-  content: string;
-  excerpt: string;
-  featured_image?: StrapiImage;
-  author: string;
-  categories: string[];
-  tags: string[];
+}
+
+export interface PostSummary {
+  document_id: string;
+  title: string;
+  slug: string;
+  summary: string;
+  cover: Media | null;
+  category: Category;
+  visibility: Visibility;
+  date: string | null;
+  tags: Tag[];
+  collection: CollectionRef | null;
   featured: boolean;
-  reading_time: number;
-  createdAt: string;
+  featured_order: number;
+  published_at: string | null;
+}
+
+export type PlaceKind = "restaurant" | "bar" | "cafe" | "lodging" | "attraction" | "nature" | "city" | "other";
+
+export interface Place {
+  document_id: string;
+  name: string;
+  slug: string;
+  kind: PlaceKind;
+  latitude: number;
+  longitude: number;
+  address: string | null;
+  city: string | null;
+  country: string | null;
+  url: string | null;
+  note: string | null;
+  photo: Media | null;
+}
+
+// --- Post body blocks (mirror app/schemas/blocks.py) ---
+export interface TextBlock { type: "text"; body: Block[] }
+export interface ImageBlock { type: "image"; image: Media; caption: string | null; layout: "column" | "wide" | "full" }
+export interface GalleryBlock { type: "gallery"; images: Media[]; caption: string | null }
+export interface YoutubeBlock { type: "youtube"; url: string; caption: string | null }
+export interface InstagramBlock { type: "instagram"; url: string; caption: string | null }
+export interface PlacesBlock { type: "places"; title: string | null; places: Place[] }
+export interface DownloadBlock { type: "download"; file: Media; label: string; description: string | null }
+export interface LinkBlock { type: "link"; url: string; title: string; description: string | null }
+export interface CalloutBlock { type: "callout"; body: string; tone: "note" | "tip" | "warning" }
+
+export type PostBlock =
+  | TextBlock
+  | ImageBlock
+  | GalleryBlock
+  | YoutubeBlock
+  | InstagramBlock
+  | PlacesBlock
+  | DownloadBlock
+  | LinkBlock
+  | CalloutBlock;
+
+export interface Post extends PostSummary {
+  body: PostBlock[];
+  instagram_url: string | null;
+  youtube_url: string | null;
+  reading_time_minutes: number | null;
+}
+
+export interface Collection {
+  document_id: string;
+  title: string;
+  slug: string;
+  description: string | null;
+  cover: Media | null;
+}
+
+export interface CollectionDetail extends Collection {
+  posts: PostSummary[];
+}
+
+export interface YoutubeVideo {
+  video_id: string;
+  title: string;
+  url: string;
+  published_at: string;
+  thumbnail_url: string | null;
+}
+
+export interface SocialLink {
+  platform: string;
+  url: string;
+  icon_name?: string | null;
+}
+
+export interface Profile {
+  name: string;
+  role: string | null;
+  company: string | null;
+  location: string | null;
+  short_bio: string | null;
+  long_bio: Block[];
+  now: string | null;
+  avatar: Media | null;
+  cv_pdf: Media | null;
+  social_links: SocialLink[];
 }
 
 export interface Publication {
-  id: number;
+  document_id: string;
   title: string;
-  journal?: string;
-  authors: string;
-  date?: string;
-  url?: string;
-  doi?: string;
-  abstract?: string;
+  journal: string | null;
+  authors: string | null;
+  date: string | null;
+  url: string | null;
+  doi: string | null;
+  abstract: string | null;
+  locale: string;
+  available_locales: string[];
 }
 
-export interface StrapiResponse<T> {
-  data: T;
-  meta?: {
-    pagination?: {
-      page: number;
-      pageSize: number;
-      pageCount: number;
-      total: number;
-    };
-  };
+export interface Responsibility { description: string }
+export interface Position {
+  designation: string;
+  start_date: string;
+  end_date: string | null;
+  is_current: boolean;
+  responsibilities: Responsibility[];
+}
+export interface Experience {
+  document_id: string;
+  company_name: string;
+  company_url: string | null;
+  company_location: string | null;
+  company_logo: Media | null;
+  order: number | null;
+  positions: Position[];
+  locale: string;
+}
+
+export interface Education {
+  document_id: string;
+  institution: string;
+  degree: string | null;
+  field_of_study: string | null;
+  start_date: string | null;
+  end_date: string | null;
+  description: string | null;
+  logo: Media | null;
+  locale: string;
+}
+
+export interface Certification {
+  document_id: string;
+  name: string;
+  issuer: string | null;
+  issue_date: string | null;
+  credential_url: string | null;
+  badge_image: Media | null;
+}
+
+export interface CV {
+  profile: Profile | null;
+  experiences: Experience[];
+  education: Education[];
+  certifications: Certification[];
+  skills: Skill[];
+}
+
+export interface Paginated<T> {
+  data: T[];
+  pagination: { page: number; page_size: number; page_count: number; total: number };
+}
+
+export interface TagAggregation {
+  tag: Tag;
+  posts: PostSummary[];
 }

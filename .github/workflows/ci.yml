@@ -1,0 +1,115 @@
+name: CI
+
+on:
+  push:
+    branches: [dev, prod]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  api:
+    name: api (fastapi)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: fastapi
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # diff-cover compara com a branch base
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            fastapi/requirements.txt
+            fastapi/requirements-dev.txt
+
+      - name: Instalar dependências
+        run: pip install -r requirements-dev.txt
+
+      - name: Ruff (lint)
+        run: ruff check .
+
+      - name: Ruff (format)
+        run: ruff format --check .
+
+      - name: Mypy
+        run: mypy app tests
+
+      - name: Pytest
+        run: pytest --cov=app --cov-report=xml --cov-report=term
+
+      - name: Diff coverage (>= 80% no código novo)
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: diff-cover coverage.xml --compare-branch="origin/$BASE_REF" --fail-under=80
+
+      # dev → prod exige 90% no total, não só no diff.
+      - name: Cobertura total (>= 90% para prod)
+        if: github.ref == 'refs/heads/prod' || github.base_ref == 'prod'
+        run: coverage report --fail-under=90
+
+  web:
+    name: web (frontend)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # diff-cover compara com a branch base
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Vitest (com cobertura)
+        run: npm run test:coverage
+
+      - name: Diff coverage (>= 80% no código novo)
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: pipx run diff-cover==9.2.0 coverage/cobertura-coverage.xml --compare-branch="origin/$BASE_REF" --fail-under=80
+
+      - name: Cobertura total (>= 90% para prod)
+        if: github.ref == 'refs/heads/prod' || github.base_ref == 'prod'
+        run: npx vitest run --coverage --coverage.thresholds.lines=90 --coverage.thresholds.statements=90
+
+  cms:
+    name: cms (strapi)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: strapi
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      # Só funções puras do bootstrap/import: rodam sem instalar o Strapi.
+      - name: node --test
+        run: node --test --experimental-strip-types "src/**/*.test.ts"

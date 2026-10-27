@@ -1,59 +1,141 @@
-const API_URL = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+import { API_LOCALE } from "@/lib/i18n/routing";
+import type { Category } from "@/lib/categories";
+import type {
+  CollectionDetail,
+  Collection,
+  CV,
+  Paginated,
+  Post,
+  PostSummary,
+  Profile,
+  Publication,
+  Tag,
+  TagAggregation,
+  YoutubeVideo,
+} from "@/lib/types";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function fetchAPI<T = any>(endpoint: string, params?: Record<string, string>): Promise<T> {
-  const url = new URL(`${API_URL}/${endpoint}`);
-  if (params) {
-    Object.entries(params).forEach(([key, value]) => {
-      url.searchParams.set(key, value);
-    });
+const API_URL = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || "http://fastapi:8000";
+
+/**
+ * Cache tags revalidated by the FastAPI webhook (fastapi/app/routers/webhooks.py).
+ * Single locale, so no suffix. Keep both sides in sync.
+ */
+export const CACHE_TAGS = {
+  posts: "posts",
+  home: "home",
+  profile: "profile",
+  collections: "collections",
+  tags: "tags",
+  cv: "cv",
+  publications: "publications",
+  youtube: "youtube",
+} as const;
+
+export class NotFoundError extends Error {
+  constructor(path: string) {
+    super(`not found: ${path}`);
+    this.name = "NotFoundError";
   }
+}
 
-  const res = await fetch(url.toString(), { next: { revalidate: 300 } });
+async function get<T>(path: string, opts: { tags?: string[]; revalidate?: number } = {}): Promise<T> {
+  const res = await fetch(`${API_URL}${path}`, {
+    next: {
+      revalidate: opts.revalidate ?? 300,
+      tags: opts.tags,
+    },
+  });
   if (!res.ok) {
-    throw new Error(`API error: ${res.status} ${res.statusText}`);
+    if (res.status === 404) throw new NotFoundError(path);
+    throw new Error(`GET ${path} -> ${res.status} ${res.statusText}`);
   }
-  return res.json();
+  return res.json() as Promise<T>;
 }
 
-export async function getProfile(locale = "pt-BR") {
-  return fetchAPI("profile", { locale });
+async function getOrNull<T>(path: string, opts: Parameters<typeof get>[1] = {}): Promise<T | null> {
+  try {
+    return await get<T>(path, opts);
+  } catch (e) {
+    if (e instanceof NotFoundError) return null;
+    throw e;
+  }
 }
 
-export async function getExperiences(locale = "pt-BR") {
-  return fetchAPI("experiences", { locale });
+export function qs(params: Record<string, string | number | boolean | undefined | null>): string {
+  const entries = Object.entries(params).filter(([, v]) => v !== undefined && v !== null);
+  if (entries.length === 0) return "";
+  const s = new URLSearchParams();
+  for (const [k, v] of entries) s.set(k, String(v));
+  return `?${s.toString()}`;
 }
 
-export async function getEducation(locale = "pt-BR") {
-  return fetchAPI("education", { locale });
+// --- Profile ---
+export function getProfile(): Promise<Profile | null> {
+  return getOrNull<Profile>("/profile", { tags: [CACHE_TAGS.profile] });
 }
 
-export async function getSkills(locale = "pt-BR", category?: string) {
-  const params: Record<string, string> = { locale };
-  if (category) params.category = category;
-  return fetchAPI("skills", params);
+// --- Posts ---
+export interface ListPostsOptions {
+  page?: number;
+  pageSize?: number;
+  category?: Category;
+  tag?: string;
+  collection?: string;
+  featured?: boolean;
 }
 
-export async function getCertifications() {
-  return fetchAPI("certifications");
+export function listPosts(opts: ListPostsOptions = {}): Promise<Paginated<PostSummary>> {
+  const query = qs({
+    page: opts.page,
+    pageSize: opts.pageSize,
+    category: opts.category,
+    tag: opts.tag,
+    collection: opts.collection,
+    featured: opts.featured,
+  });
+  return get(`/posts${query}`, { tags: [CACHE_TAGS.posts, CACHE_TAGS.home] });
 }
 
-export async function getProjects(locale = "pt-BR", category?: string) {
-  const params: Record<string, string> = { locale };
-  if (category) params.category = category;
-  return fetchAPI("projects", params);
+export function getPost(slug: string): Promise<Post | null> {
+  return getOrNull<Post>(`/posts/${encodeURIComponent(slug)}`, { tags: [CACHE_TAGS.posts] });
 }
 
-export async function getPosts(locale = "pt-BR", page = 1, pageSize = 10, featured?: boolean) {
-  const params: Record<string, string> = { locale, page: String(page), pageSize: String(pageSize) };
-  if (featured !== undefined) params.featured = String(featured);
-  return fetchAPI("posts", params);
+// --- Collections ---
+export function listCollections(): Promise<Collection[]> {
+  return get("/collections", { tags: [CACHE_TAGS.collections] });
 }
 
-export async function getPostBySlug(slug: string, locale = "pt-BR") {
-  return fetchAPI(`posts/${slug}`, { locale });
+export function getCollection(slug: string): Promise<CollectionDetail | null> {
+  return getOrNull<CollectionDetail>(`/collections/${encodeURIComponent(slug)}`, {
+    tags: [CACHE_TAGS.collections, CACHE_TAGS.posts],
+  });
 }
 
-export async function getPublications(locale = "pt-BR") {
-  return fetchAPI("publications", { locale });
+// --- Tags ---
+export function listTags(): Promise<Tag[]> {
+  return get("/tags", { tags: [CACHE_TAGS.tags] });
+}
+
+export function getTagAggregation(slug: string): Promise<TagAggregation | null> {
+  return getOrNull<TagAggregation>(`/tags/${encodeURIComponent(slug)}`, {
+    tags: [CACHE_TAGS.tags, CACHE_TAGS.posts],
+  });
+}
+
+// --- YouTube (empty list when no channel is configured or the feed is down) ---
+export async function getLatestVideos(limit = 6): Promise<YoutubeVideo[]> {
+  const videos = await getOrNull<YoutubeVideo[]>(`/youtube/latest${qs({ limit })}`, {
+    tags: [CACHE_TAGS.youtube],
+    revalidate: 900,
+  });
+  return videos ?? [];
+}
+
+// --- /sobre: CV and publications are still localized in Strapi ---
+export function getCV(): Promise<CV> {
+  return get<CV>(`/cv${qs({ locale: API_LOCALE })}`, { tags: [CACHE_TAGS.cv] });
+}
+
+export function listPublications(): Promise<Publication[]> {
+  return get(`/publications${qs({ locale: API_LOCALE })}`, { tags: [CACHE_TAGS.publications] });
 }

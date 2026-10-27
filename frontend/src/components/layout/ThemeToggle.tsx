@@ -1,24 +1,28 @@
 "use client";
 
-import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import { FaSun, FaMoon } from "react-icons/fa";
+import { useTheme } from "next-themes";
+import { useTranslations } from "next-intl";
+import { FaMoon, FaSun } from "react-icons/fa6";
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const t = useTranslations("theme");
 
   useEffect(() => setMounted(true), []);
 
-  if (!mounted) return <div className="h-5 w-5" />;
+  const isDark = resolvedTheme === "dark";
 
   return (
     <button
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="text-lg text-muted transition-colors hover:text-primary"
-      aria-label="Toggle theme"
+      type="button"
+      aria-label={t("toggle")}
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+      className="flex h-8 w-8 items-center justify-center rounded-full text-sm text-[color:var(--color-muted)] transition-colors hover:bg-[color:var(--color-surface)] hover:text-[color:var(--color-fg)]"
     >
-      {theme === "dark" ? <FaSun /> : <FaMoon />}
+      {/* Placeholder keeps the button from resizing between SSR and hydration. */}
+      {mounted ? isDark ? <FaSun aria-hidden /> : <FaMoon aria-hidden /> : <span className="block h-4 w-4" />}
     </button>
   );
 }

@@ -1,0 +1,102 @@
+{
+  "nav": {
+    "home": "Início",
+    "archive": "Arquivo",
+    "travel": "Viagens",
+    "projects": "Projetos",
+    "about": "Sobre"
+  },
+  "home": {
+    "recent": "Mais recentes",
+    "recent_all": "Ver o arquivo",
+    "follow_instagram": "Instagram",
+    "follow_youtube": "YouTube",
+    "now": "Agora",
+    "videos": "Vídeos",
+    "videos_all": "Ver o canal",
+    "collections": "Coleções"
+  },
+  "publications": {
+    "title": "Publicações",
+    "empty": "Nenhuma publicação disponível.",
+    "read": "Ler publicação"
+  },
+  "about": {
+    "title": "Sobre",
+    "experience": "Experiência",
+    "education": "Formação",
+    "certifications": "Certificações",
+    "download_cv": "Baixar CV",
+    "present": "Presente"
+  },
+  "tags": {
+    "title": "Tag",
+    "empty": "Nada com essa tag por enquanto."
+  },
+  "footer": {
+    "rights": "Feito com atenção por Lucas Albini."
+  },
+  "theme": {
+    "toggle": "Alternar tema"
+  },
+  "meta": {
+    "site_title": "Lucas Albini",
+    "site_description": "Viagens, projetos, ideias e o que mais eu viver, na versão completa."
+  },
+  "not_found": {
+    "title": "Página não encontrada",
+    "description": "O que você procura não está aqui.",
+    "home": "Voltar para o início"
+  },
+  "post": {
+    "reading_time": "{minutes} min de leitura",
+    "related": "Leia também",
+    "view_on_instagram": "Ver no Instagram",
+    "watch_on_youtube": "Ver no YouTube",
+    "youtube_video": "Vídeo do YouTube",
+    "download": "Baixar",
+    "callout": {
+      "note": "Nota",
+      "tip": "Dica",
+      "warning": "Atenção"
+    }
+  },
+  "categories": {
+    "travel": "Viagem",
+    "project": "Projeto",
+    "idea": "Ideia",
+    "life": "Vida",
+    "work": "Trabalho"
+  },
+  "categories_plural": {
+    "travel": "Viagens",
+    "project": "Projetos",
+    "idea": "Ideias",
+    "life": "Vida",
+    "work": "Trabalho"
+  },
+  "archive": {
+    "title": "Arquivo",
+    "all": "Tudo",
+    "categories": "Categorias",
+    "empty": "Nada publicado aqui ainda."
+  },
+  "collection": {
+    "label": "Coleção",
+    "empty": "Esta coleção ainda não tem posts públicos."
+  },
+  "places": {
+    "directions": "Como chegar",
+    "website": "Site",
+    "kind": {
+      "restaurant": "Restaurante",
+      "bar": "Bar",
+      "cafe": "Café",
+      "lodging": "Hospedagem",
+      "attraction": "Atração",
+      "nature": "Natureza",
+      "city": "Cidade",
+      "other": "Lugar"
+    }
+  }
+}

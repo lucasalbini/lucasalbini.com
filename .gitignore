@@ -46,11 +46,15 @@ postgres_data/
 # Strapi
 strapi/.tmp/
 strapi/.cache/
+strapi/.strapi/
 strapi/build/
 strapi/dist/
 strapi/node_modules/
 strapi/.env
 strapi/.strapi-updater.json
+strapi/types/generated/
+strapi/public/uploads/*
+!strapi/public/uploads/.gitkeep
 
 # Frontend
 frontend/node_modules/
@@ -60,3 +64,12 @@ frontend/out/
 # Misc
 *.log
 .claude/
+
+# Test / coverage artifacts
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+frontend/coverage/

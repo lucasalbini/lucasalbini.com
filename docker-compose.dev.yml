@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:16-alpine
+    image: pgvector/pgvector:pg16
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -8,6 +8,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
     ports:
       - "5432:5432"
     healthcheck:
@@ -30,6 +31,7 @@ services:
     volumes:
       - ./strapi:/opt/app
       - /opt/app/node_modules
+      - strapi_uploads:/opt/app/public/uploads
     environment:
       DATABASE_CLIENT: postgres
       DATABASE_HOST: postgres
@@ -44,7 +46,10 @@ services:
       ADMIN_JWT_SECRET: ${STRAPI_ADMIN_JWT_SECRET}
       TRANSFER_TOKEN_SALT: ${STRAPI_TRANSFER_TOKEN_SALT}
       JWT_SECRET: ${STRAPI_JWT_SECRET}
+      # Signs the revalidation webhook the bootstrap creates (strapi/src/index.ts).
+      STRAPI_WEBHOOK_SECRET: ${STRAPI_WEBHOOK_SECRET:-}
       NODE_ENV: development
+      IMPORT_LEGACY: ${IMPORT_LEGACY:-0}
 
   fastapi:
     build:
@@ -63,6 +68,11 @@ services:
       FASTAPI_HOST: ${FASTAPI_HOST}
       FASTAPI_PORT: ${FASTAPI_PORT}
       CACHE_TTL: ${CACHE_TTL}
+      NEXT_URL: ${NEXT_URL:-http://frontend:3000}
+      REVALIDATE_SECRET: ${REVALIDATE_SECRET:-}
+      STRAPI_WEBHOOK_SECRET: ${STRAPI_WEBHOOK_SECRET:-}
+      CONTACT_MAX_PER_HOUR: ${CONTACT_MAX_PER_HOUR:-5}
+      DEFAULT_LOCALE: ${DEFAULT_LOCALE:-pt-BR}
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
   frontend:
@@ -80,9 +90,14 @@ services:
       - /app/node_modules
       - /app/.next
     environment:
-      NEXT_PUBLIC_API_URL: http://fastapi:8000
-      NEXT_PUBLIC_SITE_URL: http://localhost:3000
-      NEXT_PUBLIC_STRAPI_URL: http://strapi:1337
+      # Server-side (Node in the frontend container) uses the internal hostname.
+      API_URL: http://fastapi:8000
+      # Client-side (browser) hits the same URLs via nginx.
+      NEXT_PUBLIC_API_URL: http://localhost/api
+      NEXT_PUBLIC_SITE_URL: http://localhost
+      # Strapi uploads: browser resolves /uploads/* directly via nginx (served from volume).
+      NEXT_PUBLIC_STRAPI_URL: http://localhost
+      REVALIDATE_SECRET: ${REVALIDATE_SECRET:-}
 
   nginx:
     build:
@@ -95,6 +110,9 @@ services:
       - frontend
       - fastapi
       - strapi
+    volumes:
+      - strapi_uploads:/var/www/uploads:ro
 
 volumes:
   postgres_data:
+  strapi_uploads:

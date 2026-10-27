@@ -1,14 +1,26 @@
-interface SectionHeadingProps {
+import { Link } from "@/lib/i18n/routing";
+
+interface Props {
   title: string;
-  subtitle?: string;
+  linkHref?: React.ComponentProps<typeof Link>["href"];
+  linkLabel?: string;
 }
 
-export function SectionHeading({ title, subtitle }: SectionHeadingProps) {
+/** Mono label + hairline + optional "see all" link. The rule is what separates
+ *  sections now that cards no longer carry borders. */
+export function SectionHeading({ title, linkHref, linkLabel }: Props) {
   return (
-    <div className="mb-12 text-center">
-      <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">{title}</h2>
-      {subtitle && <p className="mt-3 text-muted">{subtitle}</p>}
-      <div className="mx-auto mt-4 h-1 w-20 rounded bg-primary" />
+    <div className="mb-8 flex items-center gap-4">
+      <h2 className="label-mono shrink-0">{title}</h2>
+      <span className="rule flex-1" aria-hidden />
+      {linkHref && linkLabel && (
+        <Link
+          href={linkHref}
+          className="shrink-0 font-mono text-[11px] uppercase tracking-[0.12em] no-underline hover:underline"
+        >
+          {linkLabel} →
+        </Link>
+      )}
     </div>
   );
 }

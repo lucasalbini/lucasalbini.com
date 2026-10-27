@@ -1,28 +1,27 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { ThemeProvider } from "@/providers/ThemeProvider";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const jetbrains = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  title: "Lucas Albini - Tech Lead em IA",
-  description:
-    "Tech Lead com experiência em IA Generativa, Computer Vision e Machine Learning. 4x AWS Certified.",
-  openGraph: {
-    title: "Lucas Albini - Tech Lead em IA",
-    description:
-      "Tech Lead com experiência em IA Generativa, Computer Vision e Machine Learning.",
-    type: "website",
-  },
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost"),
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt" suppressHydrationWarning>
-      <body className={inter.className}>
-        <ThemeProvider>{children}</ThemeProvider>
-      </body>
+    <html lang="pt-BR" suppressHydrationWarning className={`${inter.variable} ${jetbrains.variable}`}>
+      <body>{children}</body>
     </html>
   );
 }

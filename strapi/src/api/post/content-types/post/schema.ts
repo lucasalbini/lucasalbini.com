@@ -4,68 +4,86 @@ export default {
   "info": {
     "singularName": "post",
     "pluralName": "posts",
-    "displayName": "Post"
+    "displayName": "Post",
+    "description": "The full version of anything Lucas lived or made: travel, project, idea, life, work. Body is a list of blocks."
   },
   "options": {
     "draftAndPublish": true
   },
-  "pluginOptions": {
-    "i18n": {
-      "localized": true
-    }
-  },
   "attributes": {
     "title": {
       "type": "string",
-      "required": true,
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
+      "required": true
     },
     "slug": {
       "type": "uid",
-      "targetField": "title"
+      "targetField": "title",
+      "required": true
     },
-    "content": {
-      "type": "richtext",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "excerpt": {
+    "summary": {
       "type": "text",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
+      "required": true,
+      "maxLength": 300
     },
-    "featured_image": {
+    "cover": {
       "type": "media",
       "multiple": false,
-      "allowedTypes": [
-        "images"
-      ]
+      "allowedTypes": ["images"]
     },
-    "author": {
+    "category": {
+      "type": "enumeration",
+      "enum": ["travel", "project", "idea", "life", "work"],
+      "required": true
+    },
+    "visibility": {
+      "type": "enumeration",
+      "enum": ["public", "unlisted", "private"],
+      "default": "public",
+      "required": true
+    },
+    "date": {
+      "type": "date",
+      "required": true
+    },
+    "instagram_url": {
       "type": "string"
     },
-    "categories": {
-      "type": "json"
+    "youtube_url": {
+      "type": "string"
+    },
+    "body": {
+      "type": "dynamiczone",
+      "components": [
+        "blocks.text",
+        "blocks.image",
+        "blocks.gallery",
+        "blocks.youtube",
+        "blocks.instagram",
+        "blocks.places",
+        "blocks.download",
+        "blocks.link",
+        "blocks.callout"
+      ]
+    },
+    "collection": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::collection.collection",
+      "inversedBy": "posts"
     },
     "tags": {
-      "type": "json"
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "posts"
     },
     "featured": {
       "type": "boolean",
       "default": false
     },
-    "reading_time": {
-      "type": "integer"
+    "featured_order": {
+      "type": "integer",
+      "default": 0
     }
   }
 } as const;
