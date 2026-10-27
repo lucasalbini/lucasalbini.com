@@ -7,11 +7,14 @@
     "about": "Sobre"
   },
   "home": {
-    "cta_cv": "Baixar CV",
-    "cta_contact": "Contato",
     "recent": "Mais recentes",
     "recent_all": "Ver o arquivo",
-    "cta_archive": "Ver o arquivo"
+    "follow_instagram": "Instagram",
+    "follow_youtube": "YouTube",
+    "now": "Agora",
+    "videos": "Vídeos",
+    "videos_all": "Ver o canal",
+    "collections": "Coleções"
   },
   "publications": {
     "title": "Publicações",
