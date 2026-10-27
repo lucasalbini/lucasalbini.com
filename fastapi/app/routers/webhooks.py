@@ -54,10 +54,11 @@ async def strapi_webhook(request: Request, x_webhook_secret: str | None = Header
 
     payload = await request.json()
     event = payload.get("event", "")
-    model = payload.get("model", "")
-    log.info("strapi webhook event=%s model=%s", event, model)
+    # Strapi v5 sends `model` as the singular name ("post") and the full UID in `uid`.
+    uid = payload.get("uid") or payload.get("model", "")
+    log.info("strapi webhook event=%s uid=%s", event, uid)
 
-    invalidation = INVALIDATIONS.get(model)
+    invalidation = INVALIDATIONS.get(uid)
     if not invalidation:
         return None
 
