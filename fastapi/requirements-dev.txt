@@ -6,4 +6,5 @@ respx==0.21.1
 ruff==0.7.4
 mypy==1.13.0
 types-cachetools==5.5.0.20240820
+types-defusedxml==0.7.0.20240218
 diff-cover==9.2.0
