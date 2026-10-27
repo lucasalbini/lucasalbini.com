@@ -6,7 +6,7 @@ import { Container } from "@/components/layout/Container";
 import { PostBody } from "@/components/post/PostBody";
 import { ItchEmbed } from "@/components/embeds/ItchEmbed";
 import { TranslationNotice } from "@/components/post/TranslationNotice";
-import { getProject, getTranslations as apiGetTranslations } from "@/lib/api";
+import { getProject } from "@/lib/api";
 import { mediaUrl, absoluteUrl } from "@/lib/format";
 import { alternates } from "@/lib/metadata";
 
