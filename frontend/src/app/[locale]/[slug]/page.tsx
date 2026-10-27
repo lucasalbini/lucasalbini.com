@@ -1,12 +1,14 @@
 import { notFound } from "next/navigation";
-import { setRequestLocale, getTranslations } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
 import type { Locale } from "@/lib/i18n/routing";
 import { Container } from "@/components/layout/Container";
-import { PostBody } from "@/components/post/PostBody";
+import { PostBlocks } from "@/components/post/blocks/BlockRenderer";
+import { PostHeader } from "@/components/post/PostHeader";
+import { MediaFigure } from "@/components/post/blocks/MediaFigure";
 import { AuthorBio } from "@/components/post/AuthorBio";
 import { RelatedPosts } from "@/components/post/RelatedPosts";
 import { getPost, getProfile, listPosts } from "@/lib/api";
-import { formatDate, absoluteUrl } from "@/lib/format";
+import { absoluteUrl } from "@/lib/format";
 import { pageMetadata } from "@/lib/metadata";
 
 type Params = Promise<{ locale: Locale; slug: string }>;
@@ -38,29 +40,17 @@ export default async function PostPage({ params }: { params: Params }) {
   const { locale, slug } = await params;
   setRequestLocale(locale);
 
-  const [post, profile, tPost, tCategories] = await Promise.all([
-    getPost(slug),
-    getProfile(),
-    getTranslations("post"),
-    getTranslations("categories"),
-  ]);
+  const [post, profile] = await Promise.all([getPost(slug), getProfile()]);
   if (!post) notFound();
   const related = await listPosts({ category: post.category, pageSize: 10 });
 
   return (
     <Container size="reading" className="py-12">
-      <header className="mb-8">
-        <p className="label-mono">{tCategories(post.category)}</p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[color:var(--color-fg)]">{post.title}</h1>
-        <div className="mt-3 flex items-center gap-3 font-mono text-xs text-[color:var(--color-muted)]">
-          {post.date && <time dateTime={post.date}>{formatDate(post.date, "pt")}</time>}
-          {post.reading_time_minutes && <span>· {tPost("reading_time", { minutes: post.reading_time_minutes })}</span>}
-        </div>
-        <p className="mt-4 text-[color:var(--color-muted)]">{post.summary}</p>
-      </header>
+      <PostHeader post={post} />
+      {post.cover && <MediaFigure media={post.cover} layout="wide" sizes="(max-width: 1024px) 100vw, 64rem" />}
 
       <article className="prose-reading">
-        <PostBody blocks={post.body.flatMap((b) => (b.type === "text" ? b.body : []))} />
+        <PostBlocks blocks={post.body} />
       </article>
 
       <AuthorBio profile={profile} />
