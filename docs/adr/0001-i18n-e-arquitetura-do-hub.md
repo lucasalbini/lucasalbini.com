@@ -1,8 +1,8 @@
 # ADR-0001: Reorganização do site como hub pessoal bilíngue
 
-- **Status:** Aceito
+- **Status:** Aceito; parcialmente substituído pelo [ADR-0002](0002-casa-central-de-conteudo.md) (público, i18n, home e modelo de conteúdo)
 - **Data:** 2026-07-28
-- **Última atualização:** 2026-07-28 (registro inicial)
+- **Última atualização:** 2026-10-27 (marcado como parcialmente substituído pelo ADR-0002)
 - **Autor:** Lucas Albini
 
 ## 1. Contexto e Problema
