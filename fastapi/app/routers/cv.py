@@ -7,6 +7,7 @@ import asyncio
 from fastapi import APIRouter, Query
 
 from app.config import settings
+from app.routers.profile import POPULATE as PROFILE_POPULATE
 from app.schemas.certification import to_certification
 from app.schemas.cv import CV
 from app.schemas.education import to_education
@@ -20,17 +21,8 @@ router = APIRouter(prefix="/cv", tags=["cv"])
 
 @router.get("", response_model=CV)
 async def get_cv(locale: str = Query(default=settings.default_locale)):
-    profile_task = fetch(
-        "profile",
-        locale=locale,
-        populate={
-            "avatar": True,
-            "cv_pdf": True,
-            "social_links": True,
-            "localizations": {"fields": ["locale"]},
-        },
-        allow_missing=True,
-    )
+    # Profile is no longer localized (ADR-0002); the CV collections below still are.
+    profile_task = fetch("profile", populate=PROFILE_POPULATE, allow_missing=True)
     experiences_task = fetch(
         "experiences",
         locale=locale,

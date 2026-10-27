@@ -7,7 +7,6 @@ class Tag(BaseDTO):
     document_id: str
     label: str
     slug: str
-    locale: str
 
 
 def to_tag(raw: dict) -> Tag:
@@ -15,5 +14,4 @@ def to_tag(raw: dict) -> Tag:
         document_id=raw.get("documentId", ""),
         label=raw.get("label", ""),
         slug=raw.get("slug", ""),
-        locale=raw.get("locale", ""),
     )

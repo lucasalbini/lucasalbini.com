@@ -5,13 +5,14 @@ Configure in Strapi Admin: Settings → Webhooks → new webhook
   Headers: X-Webhook-Secret: <STRAPI_WEBHOOK_SECRET>  (if set)
   Events:  entry.publish, entry.unpublish, entry.update, entry.delete
 
-We drop the affected cache slice locally, then ask Next to revalidate the
-matching tags per locale.
+We drop the affected cache slices locally, then ask Next to revalidate the matching
+tags. Single locale (ADR-0002), so tags carry no locale suffix.
 """
 
 from __future__ import annotations
 
 import logging
+from typing import NamedTuple
 
 from fastapi import APIRouter, Header, HTTPException, Request
 
@@ -22,30 +23,27 @@ from app.services.strapi_client import invalidate
 router = APIRouter(prefix="/hooks", tags=["webhooks"])
 log = logging.getLogger(__name__)
 
-MODEL_TO_ENDPOINT = {
-    "api::post.post": "posts",
-    "api::project.project": "projects",
-    "api::profile.profile": "profile",
-    "api::lab.lab": "labs",
-    "api::tag.tag": "tags",
-    "api::experience.experience": "experiences",
-    "api::education.education": "educations",
-    "api::certification.certification": "certifications",
-    "api::publication.publication": "publications",
-    "api::skill.skill": "skills",
-}
 
-MODEL_TO_TAG_PREFIX = {
-    "api::post.post": "posts",
-    "api::project.project": "projects",
-    "api::profile.profile": "profile",
-    "api::lab.lab": "lab",
-    "api::tag.tag": "tags",
-    "api::experience.experience": "cv",
-    "api::education.education": "cv",
-    "api::certification.certification": "cv",
-    "api::skill.skill": "cv",
-    "api::publication.publication": "publications",
+class Invalidation(NamedTuple):
+    cache_prefixes: tuple[str, ...]  # Strapi endpoints cached by strapi_client
+    next_tags: tuple[str, ...]  # tags used by the Next fetches
+
+
+# Places, collections and tags are populated inside posts, so editing them must also
+# drop the cached posts.
+INVALIDATIONS: dict[str, Invalidation] = {
+    "api::post.post": Invalidation(("posts",), ("posts", "home")),
+    "api::place.place": Invalidation(("places", "posts"), ("posts",)),
+    "api::collection.collection": Invalidation(("collections", "posts"), ("collections", "posts", "home")),
+    "api::tag.tag": Invalidation(("tags", "posts"), ("tags", "posts")),
+    "api::profile.profile": Invalidation(("profile",), ("profile", "home")),
+    "api::project.project": Invalidation(("projects",), ("projects",)),
+    "api::lab.lab": Invalidation(("labs",), ("lab",)),
+    "api::experience.experience": Invalidation(("experiences",), ("cv",)),
+    "api::education.education": Invalidation(("educations",), ("cv",)),
+    "api::certification.certification": Invalidation(("certifications",), ("cv",)),
+    "api::skill.skill": Invalidation(("skills",), ("cv",)),
+    "api::publication.publication": Invalidation(("publications",), ("publications",)),
 }
 
 
@@ -57,28 +55,14 @@ async def strapi_webhook(request: Request, x_webhook_secret: str | None = Header
     payload = await request.json()
     event = payload.get("event", "")
     model = payload.get("model", "")
-    entry = payload.get("entry", {}) or {}
-    locale = entry.get("locale") or "*"
+    log.info("strapi webhook event=%s model=%s", event, model)
 
-    log.info("strapi webhook event=%s model=%s locale=%s", event, model, locale)
+    invalidation = INVALIDATIONS.get(model)
+    if not invalidation:
+        return None
 
-    endpoint = MODEL_TO_ENDPOINT.get(model)
-    if endpoint:
-        dropped = invalidate(prefix=endpoint)
-        log.info("cache invalidated: %s (%d entries)", endpoint, dropped)
-
-    tag_prefix = MODEL_TO_TAG_PREFIX.get(model)
-    tags: list[str] = []
-    if tag_prefix:
-        if locale == "*":
-            tags = [f"{tag_prefix}:{loc}" for loc in settings.supported_locales]
-        else:
-            tags = [f"{tag_prefix}:{locale}"]
-        # Home shows featured — always revalidate home too on content changes.
-        if tag_prefix in {"posts", "projects", "lab"}:
-            for loc in settings.supported_locales:
-                tags.append(f"home:{loc}")
-
-    if tags:
-        await call_next_revalidate(tags)
+    for prefix in invalidation.cache_prefixes:
+        dropped = invalidate(prefix=prefix)
+        log.info("cache invalidated: %s (%d entries)", prefix, dropped)
+    await call_next_revalidate(list(invalidation.next_tags))
     return None

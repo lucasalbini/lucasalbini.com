@@ -1,30 +1,26 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException
 
-from app.config import settings
+from app.routers.posts import SUMMARY_POPULATE
 from app.schemas.common import BaseDTO
-from app.schemas.lab import Lab, to_lab
-from app.schemas.post import Post, to_post
-from app.schemas.project import Project, to_project
+from app.schemas.post import PostSummary, to_post_summary
 from app.schemas.tag import Tag, to_tag
 from app.services.strapi_client import fetch
+from app.services.visibility import LISTED, visibility_filter
 
 router = APIRouter(prefix="/tags", tags=["tags"])
 
 
 class TagAggregation(BaseDTO):
     tag: Tag
-    posts: list[Post] = []
-    projects: list[Project] = []
-    lab: list[Lab] = []
+    posts: list[PostSummary] = []
 
 
 @router.get("", response_model=list[Tag])
-async def list_tags(locale: str = Query(default=settings.default_locale)):
+async def list_tags():
     raw = await fetch(
         "tags",
-        locale=locale,
         sort=["label:asc"],
         pagination={"page": 1, "pageSize": 200},
     )
@@ -32,47 +28,25 @@ async def list_tags(locale: str = Query(default=settings.default_locale)):
 
 
 @router.get("/{slug}", response_model=TagAggregation)
-async def tag_aggregate(slug: str, locale: str = Query(default=settings.default_locale)):
-    """Aggregate everything with this tag across posts, projects and lab notes.
-    Powers /tags/[tag] on the frontend.
-    """
+async def tag_aggregate(slug: str):
+    """Every public post with this tag. Powers /tags/[tag] on the frontend."""
     tags_raw = await fetch(
         "tags",
-        locale=locale,
         filters={"filters[slug][$eq]": slug},
         pagination={"page": 1, "pageSize": 1},
     )
     tag_items = tags_raw.get("data") or []
     if not tag_items:
         raise HTTPException(status_code=404, detail="tag not found")
-    tag = to_tag(tag_items[0])
 
     posts_raw = await fetch(
         "posts",
-        locale=locale,
-        populate={"cover": True, "tags": True, "localizations": {"fields": ["locale", "slug"]}},
-        filters={"filters[tags][slug][$eq]": slug},
-        sort=["publishedAt:desc"],
-        pagination={"page": 1, "pageSize": 50},
-    )
-    projects_raw = await fetch(
-        "projects",
-        locale=locale,
-        populate={"cover": True, "tags": True, "stack": True, "localizations": {"fields": ["locale", "slug"]}},
-        filters={"filters[tags][slug][$eq]": slug},
-        sort=["year:desc"],
-        pagination={"page": 1, "pageSize": 50},
-    )
-    lab_raw = await fetch(
-        "labs",
-        populate={"tags": True},
-        filters={"filters[tags][slug][$eq]": slug},
+        populate=SUMMARY_POPULATE,
+        filters={"filters[tags][slug][$eq]": slug, **visibility_filter(LISTED)},
         sort=["date:desc"],
-        pagination={"page": 1, "pageSize": 50},
+        pagination={"page": 1, "pageSize": 100},
     )
     return TagAggregation(
-        tag=tag,
-        posts=[to_post(p) for p in (posts_raw.get("data") or [])],
-        projects=[to_project(p) for p in (projects_raw.get("data") or [])],
-        lab=[to_lab(n) for n in (lab_raw.get("data") or [])],
+        tag=to_tag(tag_items[0]),
+        posts=[to_post_summary(p) for p in (posts_raw.get("data") or [])],
     )

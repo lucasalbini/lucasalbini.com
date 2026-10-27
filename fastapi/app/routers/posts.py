@@ -1,58 +1,68 @@
 from __future__ import annotations
 
+from typing import Annotated, Any
+
 from fastapi import APIRouter, HTTPException, Query
 
-from app.config import settings
+from app.schemas.blocks import body_populate
 from app.schemas.common import Paginated, Pagination
-from app.schemas.post import Post, to_post
+from app.schemas.post import Category, Post, PostSummary, to_post, to_post_summary
 from app.services.strapi_client import fetch
+from app.services.visibility import LISTED, REACHABLE, visibility_filter
 
 router = APIRouter(prefix="/posts", tags=["posts"])
 
-POPULATE = {
+SUMMARY_POPULATE: dict[str, Any] = {
     "cover": True,
     "tags": True,
-    "localizations": {"fields": ["locale", "slug"]},
+    "collection": {"fields": ["title", "slug"]},
 }
 
+DETAIL_POPULATE: dict[str, Any] = {**SUMMARY_POPULATE, "body": body_populate()}
 
-@router.get("", response_model=Paginated[Post])
+
+@router.get("", response_model=Paginated[PostSummary])
 async def list_posts(
-    locale: str = Query(default=settings.default_locale),
     page: int = Query(default=1, ge=1),
     page_size: int = Query(default=10, ge=1, le=100, alias="pageSize"),
-    featured: bool | None = Query(default=None),
+    category: Annotated[Category | None, Query()] = None,
     tag: str | None = Query(default=None),
+    collection: str | None = Query(default=None),
+    featured: bool | None = Query(default=None),
 ):
-    filters: dict[str, str] = {}
-    if featured is not None:
-        filters["filters[featured][$eq]"] = str(featured).lower()
+    filters = visibility_filter(LISTED)
+    if category:
+        filters["filters[category][$eq]"] = category
     if tag:
         filters["filters[tags][slug][$eq]"] = tag
+    if collection:
+        filters["filters[collection][slug][$eq]"] = collection
+    if featured is not None:
+        filters["filters[featured][$eq]"] = str(featured).lower()
 
-    sort = ["featured:desc", "featured_order:asc", "publishedAt:desc"] if featured else ["publishedAt:desc"]
+    sort = ["date:desc", "publishedAt:desc"]
+    if featured:
+        sort = ["featured_order:asc", *sort]
 
     raw = await fetch(
         "posts",
-        locale=locale,
-        populate=POPULATE,
+        populate=SUMMARY_POPULATE,
         filters=filters,
         sort=sort,
         pagination={"page": page, "pageSize": page_size},
     )
-    return Paginated[Post](
-        data=[to_post(p) for p in (raw.get("data") or [])],
+    return Paginated[PostSummary](
+        data=[to_post_summary(p) for p in (raw.get("data") or [])],
         pagination=Pagination.model_validate(raw.get("meta", {}).get("pagination", {})),
     )
 
 
 @router.get("/{slug}", response_model=Post)
-async def get_post_by_slug(slug: str, locale: str = Query(default=settings.default_locale)):
+async def get_post_by_slug(slug: str):
     raw = await fetch(
         "posts",
-        locale=locale,
-        populate=POPULATE,
-        filters={"filters[slug][$eq]": slug},
+        populate=DETAIL_POPULATE,
+        filters={"filters[slug][$eq]": slug, **visibility_filter(REACHABLE)},
         pagination={"page": 1, "pageSize": 1},
     )
     items = raw.get("data") or []
