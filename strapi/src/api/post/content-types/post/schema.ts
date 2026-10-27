@@ -5,61 +5,71 @@ export default {
     "singularName": "post",
     "pluralName": "posts",
     "displayName": "Post",
-    "description": "Editorial posts. Localized per locale (title/slug/summary/body). Cover, tags, featured are shared."
+    "description": "The full version of anything Lucas lived or made: travel, project, idea, life, work. Body is a list of blocks."
   },
   "options": {
     "draftAndPublish": true
   },
-  "pluginOptions": {
-    "i18n": {
-      "localized": true
-    }
-  },
   "attributes": {
     "title": {
       "type": "string",
-      "required": true,
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
+      "required": true
     },
     "slug": {
       "type": "uid",
       "targetField": "title",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
+      "required": true
     },
     "summary": {
       "type": "text",
       "required": true,
-      "maxLength": 200,
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "body": {
-      "type": "blocks",
-      "required": true,
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
+      "maxLength": 300
     },
     "cover": {
       "type": "media",
       "multiple": false,
-      "required": true,
-      "allowedTypes": [
-        "images"
+      "allowedTypes": ["images"]
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": ["travel", "project", "idea", "life", "work"],
+      "required": true
+    },
+    "visibility": {
+      "type": "enumeration",
+      "enum": ["public", "unlisted", "private"],
+      "default": "public",
+      "required": true
+    },
+    "date": {
+      "type": "date",
+      "required": true
+    },
+    "instagram_url": {
+      "type": "string"
+    },
+    "youtube_url": {
+      "type": "string"
+    },
+    "body": {
+      "type": "dynamiczone",
+      "components": [
+        "blocks.text",
+        "blocks.image",
+        "blocks.gallery",
+        "blocks.youtube",
+        "blocks.instagram",
+        "blocks.places",
+        "blocks.download",
+        "blocks.link",
+        "blocks.callout"
       ]
+    },
+    "collection": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::collection.collection",
+      "inversedBy": "posts"
     },
     "tags": {
       "type": "relation",

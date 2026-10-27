@@ -29,6 +29,8 @@ const PUBLIC_READ_UIDS = [
   "api::profile.profile",
   "api::tag.tag",
   "api::lab.lab",
+  "api::place.place",
+  "api::collection.collection",
   "api::experience.experience",
   "api::education.education",
   "api::certification.certification",

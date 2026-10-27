@@ -5,34 +5,19 @@ export default {
     "singularName": "tag",
     "pluralName": "tags",
     "displayName": "Tag",
-    "description": "Cross-cutting taxonomy shared by posts, projects and lab notes. Label is localized so the slug renders per locale."
+    "description": "Cross-cutting taxonomy shared by posts, projects and lab notes. Portuguese only (ADR-0002)."
   },
   "options": {
     "draftAndPublish": false
   },
-  "pluginOptions": {
-    "i18n": {
-      "localized": true
-    }
-  },
   "attributes": {
     "label": {
       "type": "string",
-      "required": true,
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
+      "required": true
     },
     "slug": {
       "type": "uid",
-      "targetField": "label",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
+      "targetField": "label"
     },
     "posts": {
       "type": "relation",
