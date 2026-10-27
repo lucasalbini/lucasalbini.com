@@ -1,23 +1,25 @@
 from __future__ import annotations
-from typing import Any, Optional
+
+from typing import Any
+
 from app.schemas.common import BaseDTO, Media, extract_available_locales, normalize_media
 
 
 class SocialLink(BaseDTO):
     platform: str
     url: str
-    icon_name: Optional[str] = None
+    icon_name: str | None = None
 
 
 class Profile(BaseDTO):
     name: str
-    role: Optional[str] = None
-    company: Optional[str] = None
-    location: Optional[str] = None
-    short_bio: Optional[str] = None
+    role: str | None = None
+    company: str | None = None
+    location: str | None = None
+    short_bio: str | None = None
     long_bio: list = []
-    avatar: Optional[Media] = None
-    cv_pdf: Optional[Media] = None
+    avatar: Media | None = None
+    cv_pdf: Media | None = None
     social_links: list[SocialLink] = []
     locale: str
     available_locales: list[str] = []

@@ -1,16 +1,18 @@
 from __future__ import annotations
+
 from datetime import date
-from typing import Any, Optional
+from typing import Any
+
 from app.schemas.common import BaseDTO, Media, normalize_media
 
 
 class Certification(BaseDTO):
     document_id: str
     name: str
-    issuer: Optional[str] = None
-    issue_date: Optional[date] = None
-    credential_url: Optional[str] = None
-    badge_image: Optional[Media] = None
+    issuer: str | None = None
+    issue_date: date | None = None
+    credential_url: str | None = None
+    badge_image: Media | None = None
 
 
 def to_certification(raw: dict[str, Any]) -> Certification:

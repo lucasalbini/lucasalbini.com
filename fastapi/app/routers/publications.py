@@ -1,8 +1,10 @@
 from __future__ import annotations
+
 from fastapi import APIRouter, Query
-from app.services.strapi_client import fetch
-from app.schemas.publication import Publication, to_publication
+
 from app.config import settings
+from app.schemas.publication import Publication, to_publication
+from app.services.strapi_client import fetch
 
 router = APIRouter(prefix="/publications", tags=["publications"])
 

@@ -1,9 +1,11 @@
 from __future__ import annotations
+
 from fastapi import APIRouter, HTTPException, Query
-from app.services.strapi_client import fetch
+
+from app.config import settings
 from app.schemas.common import Paginated, Pagination
 from app.schemas.post import Post, to_post
-from app.config import settings
+from app.services.strapi_client import fetch
 
 router = APIRouter(prefix="/posts", tags=["posts"])
 

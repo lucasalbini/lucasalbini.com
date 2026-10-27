@@ -1,16 +1,18 @@
 from __future__ import annotations
-from typing import Any, Optional
+
+from typing import Any
+
 from app.schemas.common import BaseDTO, Media, normalize_media
 
 
 class Skill(BaseDTO):
     document_id: str
     name: str
-    icon_name: Optional[str] = None
-    summary: Optional[str] = None
+    icon_name: str | None = None
+    summary: str | None = None
     category: str
-    url: Optional[str] = None
-    icon: Optional[Media] = None
+    url: str | None = None
+    icon: Media | None = None
     locale: str
 
 

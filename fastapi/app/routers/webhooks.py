@@ -10,11 +10,14 @@ matching tags per locale.
 """
 
 from __future__ import annotations
+
 import logging
+
 from fastapi import APIRouter, Header, HTTPException, Request
-from app.services.strapi_client import invalidate
-from app.services.revalidate import call_next_revalidate
+
 from app.config import settings
+from app.services.revalidate import call_next_revalidate
+from app.services.strapi_client import invalidate
 
 router = APIRouter(prefix="/hooks", tags=["webhooks"])
 log = logging.getLogger(__name__)

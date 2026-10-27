@@ -1,9 +1,11 @@
 from __future__ import annotations
+
 from fastapi import APIRouter, HTTPException, Query
-from app.services.strapi_client import fetch
+
+from app.config import settings
 from app.schemas.common import Paginated, Pagination
 from app.schemas.project import Project, to_project
-from app.config import settings
+from app.services.strapi_client import fetch
 
 router = APIRouter(prefix="/projects", tags=["projects"])
 
@@ -35,11 +37,7 @@ async def list_projects(
     if tag:
         filters["filters[tags][slug][$eq]"] = tag
 
-    sort = (
-        ["featured:desc", "featured_order:asc", "year:desc"]
-        if featured
-        else ["year:desc", "updatedAt:desc"]
-    )
+    sort = ["featured:desc", "featured_order:asc", "year:desc"] if featured else ["year:desc", "updatedAt:desc"]
 
     raw = await fetch(
         "projects",

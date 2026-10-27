@@ -7,7 +7,8 @@ map 1:1. We only reshape when the frontend contract calls for it (e.g. renaming
 
 from __future__ import annotations
 
-from typing import Any, Generic, Optional, TypeVar
+from typing import Any, Generic, TypeVar
+
 from pydantic import BaseModel, ConfigDict, Field
 
 T = TypeVar("T")
@@ -19,10 +20,10 @@ class BaseDTO(BaseModel):
 
 class Media(BaseDTO):
     url: str
-    alternative_text: Optional[str] = Field(default=None, alias="alternativeText")
-    width: Optional[int] = None
-    height: Optional[int] = None
-    mime: Optional[str] = None
+    alternative_text: str | None = Field(default=None, alias="alternativeText")
+    width: int | None = None
+    height: int | None = None
+    mime: str | None = None
 
 
 class Pagination(BaseDTO):
@@ -50,7 +51,7 @@ def extract_available_locales(entry: dict[str, Any], current_locale: str) -> lis
     return sorted(codes)
 
 
-def normalize_media(raw: Any) -> Optional[Media]:
+def normalize_media(raw: Any) -> Media | None:
     if not raw:
         return None
     if isinstance(raw, list):

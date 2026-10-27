@@ -1,16 +1,19 @@
 """Aggregate endpoint for the /about page: single payload with everything needed."""
 
 from __future__ import annotations
+
 import asyncio
+
 from fastapi import APIRouter, Query
-from app.services.strapi_client import fetch
-from app.schemas.cv import CV
-from app.schemas.profile import to_profile
-from app.schemas.experience import to_experience
-from app.schemas.education import to_education
-from app.schemas.certification import to_certification
-from app.schemas.skill import to_skill
+
 from app.config import settings
+from app.schemas.certification import to_certification
+from app.schemas.cv import CV
+from app.schemas.education import to_education
+from app.schemas.experience import to_experience
+from app.schemas.profile import to_profile
+from app.schemas.skill import to_skill
+from app.services.strapi_client import fetch
 
 router = APIRouter(prefix="/cv", tags=["cv"])
 

@@ -1,18 +1,21 @@
 from __future__ import annotations
+
 from datetime import date
 from typing import Any, Optional
+
 from app.schemas.common import BaseDTO, extract_available_locales
 
 
 class Publication(BaseDTO):
     document_id: str
     title: str
-    journal: Optional[str] = None
-    authors: Optional[str] = None
-    date: Optional[date] = None
-    url: Optional[str] = None
-    doi: Optional[str] = None
-    abstract: Optional[str] = None
+    journal: str | None = None
+    authors: str | None = None
+    # Field name shadows `datetime.date`; `date | None` would fail to evaluate here.
+    date: Optional[date] = None  # noqa: UP007
+    url: str | None = None
+    doi: str | None = None
+    abstract: str | None = None
     locale: str
     available_locales: list[str] = []
 

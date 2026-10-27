@@ -1,8 +1,10 @@
 from __future__ import annotations
-from typing import Any, Optional
+
+from typing import Any
+
 from app.schemas.common import BaseDTO, Media, extract_available_locales, normalize_media
-from app.schemas.tag import Tag, to_tag
 from app.schemas.skill import Skill, to_skill
+from app.schemas.tag import Tag, to_tag
 
 
 class Project(BaseDTO):
@@ -11,15 +13,15 @@ class Project(BaseDTO):
     slug: str
     summary: str
     body: list = []
-    cover: Optional[Media] = None
+    cover: Media | None = None
     status: str
     kind: str
     stack: list[Skill] = []
     tags: list[Tag] = []
-    repo_url: Optional[str] = None
-    demo_url: Optional[str] = None
-    itch_embed_url: Optional[str] = None
-    year: Optional[int] = None
+    repo_url: str | None = None
+    demo_url: str | None = None
+    itch_embed_url: str | None = None
+    year: int | None = None
     featured: bool = False
     featured_order: int = 0
     locale: str
