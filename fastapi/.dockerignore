@@ -1,0 +1,10 @@
+# Only the app and its requirements belong in the image.
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+tests/
