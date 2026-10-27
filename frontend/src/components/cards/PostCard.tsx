@@ -78,7 +78,7 @@ export function FeaturedPostCard({ post }: { post: PostSummary }) {
         <h3 className="mt-3 text-2xl font-semibold leading-tight text-[color:var(--color-fg)] transition-colors group-hover:text-[color:var(--color-accent)] sm:text-3xl">
           {post.title}
         </h3>
-        <p className="mt-3 max-w-[58ch] leading-relaxed text-[color:var(--color-muted)]">{post.summary}</p>
+        <p className="mt-3 max-w-[58ch] leading-relaxed text-[color:var(--color-muted)] lg:text-lg">{post.summary}</p>
       </div>
     </Link>
   );
@@ -92,10 +92,10 @@ export function PostCard({ post }: { post: PostSummary }) {
       <Cover post={post} aspect="aspect-[16/9]" sizes="(max-width: 768px) 100vw, 45vw" />
       <div className="flex flex-1 flex-col pt-4">
         <Meta post={post} />
-        <h3 className="mt-2 text-lg font-semibold leading-snug text-[color:var(--color-fg)] transition-colors group-hover:text-[color:var(--color-accent)]">
+        <h3 className="mt-2 text-lg font-semibold leading-snug text-[color:var(--color-fg)] transition-colors group-hover:text-[color:var(--color-accent)] lg:text-xl">
           {post.title}
         </h3>
-        <p className="mt-2 flex-1 text-sm leading-relaxed text-[color:var(--color-muted)]">{post.summary}</p>
+        <p className="mt-2 flex-1 text-sm leading-relaxed text-[color:var(--color-muted)] lg:text-base">{post.summary}</p>
       </div>
     </Link>
   );

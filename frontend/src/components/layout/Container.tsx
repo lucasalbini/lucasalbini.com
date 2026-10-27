@@ -2,7 +2,7 @@ import clsx from "clsx";
 
 /**
  * Container widths (tuned for the new denser hub layout):
- *  - reading  → 70ch  (long-form: /blog/[slug], /projects/[slug], /about right column)
+ *  - reading  → 46rem (long-form posts: ~70ch at the 20px desktop body size)
  *  - default  → 3xl   (narrow single-column sections)
  *  - wide     → 6xl   (grids on /blog, /projects, /publications)
  *  - full     → 7xl   (home hero, side-by-side layouts)
@@ -20,7 +20,7 @@ export function Container({
 }) {
   const sizeClass =
     size === "reading"
-      ? "max-w-[70ch]"
+      ? "max-w-[46rem]"
       : size === "wide"
       ? "max-w-6xl"
       : size === "full"

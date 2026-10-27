@@ -173,8 +173,11 @@
     color: #0f1e17;
   }
 
+  /* Body text grows with the viewport (17px on phones, 20px on wide screens) so it holds its
+     own next to wide images on desktop. */
   .prose-reading {
     max-width: 70ch;
+    font-size: clamp(1.0625rem, 0.95rem + 0.35vw, 1.25rem);
     line-height: 1.7;
   }
   .prose-reading h1, .prose-reading h2, .prose-reading h3 {
@@ -182,8 +185,8 @@
     letter-spacing: -0.015em;
     color: var(--color-fg);
   }
-  .prose-reading h2 { font-size: 1.5rem; font-weight: 600; margin-top: 2.5rem; margin-bottom: 1rem; }
-  .prose-reading h3 { font-size: 1.25rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; }
+  .prose-reading h2 { font-size: clamp(1.5rem, 1.2rem + 0.8vw, 2rem); font-weight: 600; margin-top: 2.5rem; margin-bottom: 1rem; }
+  .prose-reading h3 { font-size: clamp(1.25rem, 1.1rem + 0.4vw, 1.5rem); font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; }
   .prose-reading p { margin-bottom: 1.25rem; }
   .prose-reading ul, .prose-reading ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
   .prose-reading ul { list-style: disc; }
@@ -213,7 +216,7 @@
   }
   /* Blocks that break out of the 70ch reading column, centred on the viewport. */
   .bleed-wide {
-    width: min(64rem, calc(100vw - 2.5rem));
+    width: min(56rem, calc(100vw - 2.5rem));
     margin-left: 50%;
     transform: translateX(-50%);
   }

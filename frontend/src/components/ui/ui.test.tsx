@@ -10,7 +10,7 @@ vi.mock("@/lib/i18n/routing", async (io) => (await import("@/test/routing-mock")
 
 describe("Container", () => {
   it.each([
-    ["reading", "max-w-[70ch]"],
+    ["reading", "max-w-[46rem]"],
     ["wide", "max-w-6xl"],
     ["full", "max-w-7xl"],
     ["default", "max-w-3xl"],
