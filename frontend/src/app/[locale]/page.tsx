@@ -3,8 +3,10 @@ import type { Locale } from "@/lib/i18n/routing";
 import { Container } from "@/components/layout/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Hero } from "@/components/home/Hero";
-import { FeaturedPostCard, PostRow } from "@/components/cards/PostCard";
-import { getProfile, listPosts } from "@/lib/api";
+import { CollectionsList, NowSection, VideoGrid } from "@/components/home/HomeSections";
+import { FeaturedPostCard, PostCard } from "@/components/cards/PostCard";
+import { getLatestVideos, getProfile, listCollections, listPosts } from "@/lib/api";
+import { findSocialLink, pickHomePosts } from "@/lib/home";
 import { pageMetadata } from "@/lib/metadata";
 
 export async function generateMetadata() {
@@ -16,29 +18,38 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const [profile, recent, tHome] = await Promise.all([
+  const [profile, featured, recent, videos, collections, t] = await Promise.all([
     getProfile(),
-    listPosts({ pageSize: 6 }),
+    listPosts({ featured: true, pageSize: 3 }),
+    listPosts({ pageSize: 7 }),
+    getLatestVideos(3),
+    listCollections().catch(() => []),
     getTranslations("home"),
   ]);
-  const [lead, ...rest] = recent.data;
+  const { lead, rest } = pickHomePosts(featured.data, recent.data);
+  const youtube = findSocialLink(profile?.social_links ?? [], "youtube");
 
   return (
     <Container size="wide">
       <Hero profile={profile} />
+      <NowSection text={profile?.now ?? null} />
+
       {lead && (
         <section className="pb-20 sm:pb-24">
-          <SectionHeading title={tHome("recent")} linkHref="/archive" linkLabel={tHome("recent_all")} />
+          <SectionHeading title={t("recent")} linkHref="/archive" linkLabel={t("recent_all")} />
           <FeaturedPostCard post={lead} />
           {rest.length > 0 && (
-            <ul className="mt-10 divide-y divide-[color:var(--color-border)] border-t border-[color:var(--color-border)]">
+            <div className="mt-14 grid gap-12 sm:grid-cols-2 sm:gap-x-10 lg:grid-cols-3">
               {rest.map((p) => (
-                <PostRow key={p.document_id} post={p} />
+                <PostCard key={p.document_id} post={p} />
               ))}
-            </ul>
+            </div>
           )}
         </section>
       )}
+
+      <VideoGrid videos={videos} channelUrl={youtube?.url ?? null} />
+      <CollectionsList collections={collections} />
     </Container>
   );
 }
