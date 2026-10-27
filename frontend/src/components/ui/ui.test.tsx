@@ -11,8 +11,8 @@ vi.mock("@/lib/i18n/routing", async (io) => (await import("@/test/routing-mock")
 describe("Container", () => {
   it.each([
     ["reading", "max-w-[46rem]"],
-    ["wide", "max-w-6xl"],
-    ["full", "max-w-7xl"],
+    ["wide", "max-w-5xl"],
+    ["full", "max-w-5xl"],
     ["default", "max-w-3xl"],
   ] as const)("%s width uses %s", (size, cls) => {
     expect(dom(render(<Container size={size}>x</Container>)).querySelector("div")?.className).toContain(cls);

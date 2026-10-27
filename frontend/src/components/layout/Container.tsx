@@ -1,11 +1,12 @@
 import clsx from "clsx";
 
 /**
- * Container widths (tuned for the new denser hub layout):
- *  - reading  → 46rem (long-form posts: ~70ch at the 20px desktop body size)
- *  - default  → 3xl   (narrow single-column sections)
- *  - wide     → 6xl   (grids on /blog, /projects, /publications)
- *  - full     → 7xl   (home hero, side-by-side layouts)
+ * Container widths. Every page, the header and the footer use `wide`, so all of them share
+ * one left edge on desktop.
+ *  - wide     → 5xl   (the site grid)
+ *  - reading  → 46rem (short single-column pages, e.g. 404)
+ *  - default  → 3xl
+ *  - full     → 5xl   (alias of wide; kept so callers don't drift to another width)
  */
 export function Container({
   children,
@@ -21,10 +22,8 @@ export function Container({
   const sizeClass =
     size === "reading"
       ? "max-w-[46rem]"
-      : size === "wide"
-      ? "max-w-6xl"
-      : size === "full"
-      ? "max-w-7xl"
+      : size === "wide" || size === "full"
+      ? "max-w-5xl"
       : "max-w-3xl";
   const El = Tag as React.ElementType;
   return (

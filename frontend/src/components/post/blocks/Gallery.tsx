@@ -2,11 +2,11 @@ import Image from "next/image";
 import type { GalleryBlock } from "@/lib/types";
 import { mediaUrl } from "@/lib/format";
 
-/** Square-cropped grid; each photo links to the full image. Wider than the text column. */
+/** Square-cropped grid; each photo links to the full image. */
 export function Gallery({ block }: { block: GalleryBlock }) {
   const columns = block.images.length === 2 || block.images.length === 4 ? "sm:grid-cols-2" : "sm:grid-cols-3";
   return (
-    <figure className="bleed-wide my-10">
+    <figure className="my-10">
       <ul className={`!m-0 grid !list-none grid-cols-2 gap-2 !p-0 ${columns}`}>
         {block.images.map((img) => (
           <li key={img.url} className="relative aspect-square overflow-hidden rounded bg-[color:var(--color-surface)]">

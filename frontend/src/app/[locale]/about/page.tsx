@@ -40,7 +40,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   }, {});
 
   return (
-    <Container size="full" className="py-12">
+    <Container size="wide" className="py-12">
       {profile && (
         <header className="mb-16 grid gap-8 md:grid-cols-[auto_1fr] md:items-start">
           {profile.avatar?.url && (

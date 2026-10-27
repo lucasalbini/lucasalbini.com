@@ -45,7 +45,11 @@ Todos os content-types e DTOs usam **inglês**. Enums também: `category: travel
 - O post mostra os links para a versão no Instagram e no YouTube quando existem.
 
 ### Direção visual
-- Coluna única, largura de leitura 65-75ch, centralizada. Sem sidebar. Imagens `wide`/`full` podem sair da coluna.
+- Uma grade só: header, páginas e rodapé usam `Container size="wide"` (max-w-5xl), com a mesma margem esquerda no desktop. Nada de colunas estreitas centralizadas.
+- Post no desktop (`lg`): coluna de informações fixa à esquerda (`PostMeta`) e conteúdo à direita. No celular, tudo numa coluna, com as informações sob o título.
+- Mídia (imagem, galeria, mapa, vídeo) nunca é mais larga que o texto. Única exceção: `layout: full` vai de ponta a ponta no celular.
+- Listas (home, arquivo, tags, coleções): card de destaque e depois grade de cards iguais (3 colunas no desktop).
+- Corpo do texto de 17px (celular) a 20px (desktop).
 - Duas famílias tipográficas: uma para texto, uma monoespaçada.
 - Uma cor de destaque (link + tag ativa). Resto: preto, branco, dois cinzas.
 - Separação por espaço vertical, não por bordas/caixas.

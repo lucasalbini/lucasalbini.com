@@ -49,11 +49,17 @@ describe("BlockRenderer", () => {
 });
 
 describe("image and gallery", () => {
-  it("breaks wide images out of the reading column", () => {
+  it("keeps wide images as wide as the text, never wider", () => {
     const figure = html({ type: "image", image: IMG, caption: "Vista da baía", layout: "wide" }).querySelector("figure");
 
-    expect(figure?.className).toContain("bleed-wide");
+    expect(figure?.className).not.toMatch(/bleed/);
     expect(figure?.querySelector("figcaption")?.textContent).toBe("Vista da baía");
+  });
+
+  it("lets full images run edge to edge (on phones only, per the CSS)", () => {
+    const figure = html({ type: "image", image: IMG, caption: null, layout: "full" }).querySelector("figure");
+
+    expect(figure?.className).toContain("bleed-full");
   });
 
   it("keeps column images inside the text width", () => {
