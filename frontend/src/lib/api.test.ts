@@ -1,5 +1,18 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { getCV, getLatestVideos, getPost, getProfile, listPosts, NotFoundError, qs } from "@/lib/api";
+import {
+  getCollection,
+  getCV,
+  getLatestVideos,
+  getPost,
+  getProfile,
+  getTagAggregation,
+  listCollections,
+  listPosts,
+  listPublications,
+  listTags,
+  NotFoundError,
+  qs,
+} from "@/lib/api";
 
 function mockFetch(status: number, body: unknown = {}) {
   const fn = vi.fn(async () => new Response(JSON.stringify(body), { status }));
@@ -94,4 +107,28 @@ describe("qs", () => {
 
 it("NotFoundError names the missing path", () => {
   expect(new NotFoundError("/x").message).toBe("not found: /x");
+});
+
+describe("collections, tags and publications", () => {
+  it.each([
+    ["listCollections", () => listCollections(), "/collections"],
+    ["getCollection", () => getCollection("viagens"), "/collections/viagens"],
+    ["listTags", () => listTags(), "/tags"],
+    ["getTagAggregation", () => getTagAggregation("amazonia"), "/tags/amazonia"],
+    ["listPublications", () => listPublications(), "/publications"],
+  ])("%s calls %s", async (_, call, path) => {
+    const fetch = mockFetch(200, []);
+
+    await call();
+
+    expect(requested(fetch).url.pathname).toBe(path);
+  });
+
+  it("a collection page refreshes when posts change too", async () => {
+    const fetch = mockFetch(200, {});
+
+    await getCollection("viagens");
+
+    expect(requested(fetch).init.next?.tags).toEqual(["collections", "posts"]);
+  });
 });
