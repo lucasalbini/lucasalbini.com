@@ -5,66 +5,31 @@ export default {
     "singularName": "profile",
     "pluralName": "profiles",
     "displayName": "Profile",
-    "description": "Personal profile. short_bio is 2-3 lines for the hero; long_bio is used on the /about page."
+    "description": "Personal profile. short_bio is 2-3 lines for the hero; long_bio is used on /sobre; now is what Lucas is living right now; youtube_channel_id feeds the latest-videos section."
   },
   "options": {
     "draftAndPublish": true
   },
-  "pluginOptions": {
-    "i18n": {
-      "localized": true
-    }
-  },
   "attributes": {
     "name": {
       "type": "string",
-      "required": true,
-      "pluginOptions": {
-        "i18n": {
-          "localized": false
-        }
-      }
+      "required": true
     },
     "role": {
-      "type": "string",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
+      "type": "string"
     },
     "company": {
-      "type": "string",
-      "pluginOptions": {
-        "i18n": {
-          "localized": false
-        }
-      }
+      "type": "string"
     },
     "location": {
-      "type": "string",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
+      "type": "string"
     },
     "short_bio": {
       "type": "text",
-      "maxLength": 300,
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
+      "maxLength": 300
     },
     "long_bio": {
-      "type": "blocks",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
+      "type": "blocks"
     },
     "avatar": {
       "type": "media",
@@ -78,12 +43,15 @@ export default {
       "multiple": false,
       "allowedTypes": [
         "files"
-      ],
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
+      ]
+    },
+    "now": {
+      "type": "text",
+      "maxLength": 500
+    },
+    "youtube_channel_id": {
+      "type": "string",
+      "regex": "^UC[\\w-]{22}$"
     },
     "social_links": {
       "type": "component",
