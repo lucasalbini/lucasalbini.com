@@ -5,7 +5,7 @@ export default {
     "singularName": "tag",
     "pluralName": "tags",
     "displayName": "Tag",
-    "description": "Cross-cutting taxonomy shared by posts, projects and lab notes. Portuguese only (ADR-0002)."
+    "description": "Cross-cutting taxonomy for posts. Portuguese only (ADR-0002)."
   },
   "options": {
     "draftAndPublish": false
@@ -23,18 +23,6 @@ export default {
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::post.post",
-      "mappedBy": "tags"
-    },
-    "projects": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::project.project",
-      "mappedBy": "tags"
-    },
-    "lab_notes": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::lab.lab",
       "mappedBy": "tags"
     }
   }

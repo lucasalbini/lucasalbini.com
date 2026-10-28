@@ -1,10 +1,4 @@
-from app.schemas.common import extract_available_locales, normalize_media, normalize_media_list
-
-
-def test_available_locales_include_the_current_one_and_its_translations() -> None:
-    entry = {"localizations": [{"locale": "en"}, {"locale": None}]}
-
-    assert extract_available_locales(entry, "pt-BR") == ["en", "pt-BR"]
+from app.schemas.common import normalize_media, normalize_media_list
 
 
 def test_media_list_field_takes_the_first_item() -> None:

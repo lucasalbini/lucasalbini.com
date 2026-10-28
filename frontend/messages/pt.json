@@ -16,18 +16,9 @@
     "videos_all": "Ver o canal",
     "collections": "Coleções"
   },
-  "publications": {
-    "title": "Publicações",
-    "empty": "Nenhuma publicação disponível.",
-    "read": "Ler publicação"
-  },
   "about": {
     "title": "Sobre",
-    "experience": "Experiência",
-    "education": "Formação",
-    "certifications": "Certificações",
-    "download_cv": "Baixar CV",
-    "present": "Presente"
+    "download_cv": "Baixar CV"
   },
   "tags": {
     "title": "Tag",

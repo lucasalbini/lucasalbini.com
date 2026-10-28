@@ -80,8 +80,6 @@ docker compose -f docker-compose.dev.yml exec -T postgres pg_dump -U strapi -d s
 - `collection` — title, slug, description, cover. Posts de uma coleção são ordenados por `date` crescente.
 - `profile` (single) — name, role, location, short_bio, long_bio, now, avatar, cv_pdf, social_links, youtube_channel_id
 - `tag` — label, slug
-- `experience`, `education`, `certification`, `publication`, `skill` — alimentam `/sobre`; ainda localizados (só pt-BR é usado)
-- `project`, `lab` — legados, fora do frontend. Remoção depende de migrar o conteúdo (ADR-0002, D2).
 
 ## Variáveis de ambiente
 Ver `.env.example`. As chaves críticas do Strapi (APP_KEYS, JWT_SECRET, ADMIN_JWT_SECRET, API_TOKEN_SALT, TRANSFER_TOKEN_SALT) precisam existir antes do primeiro `up` — senão o container não sobe.

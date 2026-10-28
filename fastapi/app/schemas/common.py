@@ -41,19 +41,6 @@ class Paginated(BaseModel, Generic[T]):
     pagination: Pagination
 
 
-def extract_available_locales(entry: dict[str, Any], current_locale: str) -> list[str]:
-    """Given a Strapi v5 entry with `localizations` populated, return the full set of
-    locale codes in which this document exists (published or not, per publicationState=live).
-    Always includes the current locale.
-    """
-    codes: set[str] = {current_locale}
-    for loc in entry.get("localizations", []) or []:
-        code = loc.get("locale")
-        if code:
-            codes.add(code)
-    return sorted(codes)
-
-
 def normalize_media(raw: Any) -> Media | None:
     if not raw:
         return None
