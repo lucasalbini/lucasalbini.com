@@ -2,7 +2,7 @@
 
 - **Status:** Proposto
 - **Data:** 2026-10-27
-- **Última atualização:** 2026-10-27 (registro inicial)
+- **Última atualização:** 2026-10-28 (D1 resolvida: `/admin` restrito à Tailnet no Caddy)
 - **Autor:** Lucas Albini
 
 Substitui do ADR-0001 as decisões de público (§1), i18n (RF01–RF05, §4.1, §4.2), home curada como vitrine profissional (§4.7) e a separação post/projeto/lab. Continuam valendo: FastAPI como camada de agregação (§4.4), nginx servindo `/uploads` do volume, Strapi isolado, pgvector, nomes de campo e enums em inglês (§4.3).
@@ -238,7 +238,7 @@ Rotas estáticas vencem `[slug]` no App Router. Um post com slug igual a uma rot
 - `private` nunca sai da FastAPI; coberto por teste de regressão em listagem, detalhe, busca e tag.
 - Os embeds de terceiros (YouTube nocookie, Instagram) carregam scripts externos só nas páginas que os usam.
 - O RSS do YouTube é XML externo: parse com `defusedxml` e falha silenciosa (lista vazia).
-- O acesso ao painel `/admin` em produção continua restrito por IP no Caddy. O IP residencial mudou e o painel está inacessível; a troca por túnel SSH fica em issue própria.
+- O acesso ao painel `/admin` em produção é feito exclusivamente via Tailscale (`http://100.116.16.90/admin/` ou `http://vps-hostinger.tail4e77a8.ts.net/admin/`), filtrado por `client_ip 100.64.0.0/10` no `edge-caddy` (`/srv/edge/sites/lucasalbini.caddy`). No domínio público (`lucasalbini.com`), `/admin` e rotas administrativas retornam 404.
 
 ## 8. Estratégia de Evolução
 
@@ -263,7 +263,7 @@ Rotas estáticas vencem `[slug]` no App Router. Um post com slug igual a uma rot
 
 | # | Decisão | Opções | Prazo |
 |---|---|---|---|
-| D1 | Acesso ao `/admin` em produção | IP no Caddy / túnel SSH / Tailscale | Antes de publicar o primeiro post |
+| D1 ✅ | Acesso ao `/admin` em produção | Resolvido (#17): Tailscale (`100.64.0.0/10`) no Caddy (`http://100.116.16.90/admin/`) | 2026-10-28 |
 | D2 | Destino do conteúdo de `project` e `lab` | Migrar para `post` / descartar | Antes de remover os content-types |
 | D3 | Comentários | Nenhum / Giscus / próprio | Fora do escopo por decisão do Lucas |
 | D4 | Ferramenta de PDF para coleção | Paged.js / CSS de impressão / LaTeX | Quando a primeira coleção estiver madura |
