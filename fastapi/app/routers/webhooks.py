@@ -37,13 +37,6 @@ INVALIDATIONS: dict[str, Invalidation] = {
     "api::collection.collection": Invalidation(("collections", "posts"), ("collections", "posts", "home")),
     "api::tag.tag": Invalidation(("tags", "posts"), ("tags", "posts")),
     "api::profile.profile": Invalidation(("profile",), ("profile", "home")),
-    "api::project.project": Invalidation(("projects",), ("projects",)),
-    "api::lab.lab": Invalidation(("labs",), ("lab",)),
-    "api::experience.experience": Invalidation(("experiences",), ("cv",)),
-    "api::education.education": Invalidation(("educations",), ("cv",)),
-    "api::certification.certification": Invalidation(("certifications",), ("cv",)),
-    "api::skill.skill": Invalidation(("skills",), ("cv",)),
-    "api::publication.publication": Invalidation(("publications",), ("publications",)),
 }
 
 

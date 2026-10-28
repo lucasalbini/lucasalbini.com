@@ -1,14 +1,11 @@
-import { API_LOCALE } from "@/lib/i18n/routing";
 import type { Category } from "@/lib/categories";
 import type {
   CollectionDetail,
   Collection,
-  CV,
   Paginated,
   Post,
   PostSummary,
   Profile,
-  Publication,
   Tag,
   TagAggregation,
   YoutubeVideo,
@@ -26,8 +23,6 @@ export const CACHE_TAGS = {
   profile: "profile",
   collections: "collections",
   tags: "tags",
-  cv: "cv",
-  publications: "publications",
   youtube: "youtube",
 } as const;
 
@@ -129,13 +124,4 @@ export async function getLatestVideos(limit = 6): Promise<YoutubeVideo[]> {
     revalidate: 900,
   });
   return videos ?? [];
-}
-
-// --- /sobre: CV and publications are still localized in Strapi ---
-export function getCV(): Promise<CV> {
-  return get<CV>(`/cv${qs({ locale: API_LOCALE })}`, { tags: [CACHE_TAGS.cv] });
-}
-
-export function listPublications(): Promise<Publication[]> {
-  return get(`/publications${qs({ locale: API_LOCALE })}`, { tags: [CACHE_TAGS.publications] });
 }

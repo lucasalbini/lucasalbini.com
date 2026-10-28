@@ -113,18 +113,18 @@ class TestInvalidate:
     @respx.mock
     async def test_prefix_drops_only_matching_endpoint(self) -> None:
         posts = respx.get(STRAPI_POSTS).mock(return_value=httpx.Response(200, json={"data": []}))
-        projects = respx.get(f"{settings.strapi_base_url}/api/projects").mock(
+        collections = respx.get(f"{settings.strapi_base_url}/api/collections").mock(
             return_value=httpx.Response(200, json={"data": []})
         )
         await fetch("posts", locale="pt-BR")
-        await fetch("projects", locale="pt-BR")
+        await fetch("collections", locale="pt-BR")
 
         dropped = invalidate("posts")
         await fetch("posts", locale="pt-BR")
-        await fetch("projects", locale="pt-BR")
+        await fetch("collections", locale="pt-BR")
 
         assert dropped == 1
-        assert (posts.call_count, projects.call_count) == (2, 1)
+        assert (posts.call_count, collections.call_count) == (2, 1)
 
     @respx.mock
     async def test_prefix_does_not_match_longer_endpoint_names(self) -> None:

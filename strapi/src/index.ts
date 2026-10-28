@@ -27,17 +27,10 @@ const REQUIRED_LOCALES: Array<{ code: string; name: string; isDefault: boolean }
 
 const PUBLIC_READ_UIDS = [
   "api::post.post",
-  "api::project.project",
   "api::profile.profile",
   "api::tag.tag",
-  "api::lab.lab",
   "api::place.place",
   "api::collection.collection",
-  "api::experience.experience",
-  "api::education.education",
-  "api::certification.certification",
-  "api::publication.publication",
-  "api::skill.skill",
 ];
 
 async function ensureLocales(strapi: Core.Strapi) {

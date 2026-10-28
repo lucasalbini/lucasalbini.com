@@ -2,7 +2,7 @@
 
 - **Status:** Proposto
 - **Data:** 2026-10-27
-- **Última atualização:** 2026-10-28 (D1 resolvida: `/admin` restrito à Tailnet no Caddy)
+- **Última atualização:** 2026-10-28 (D1 e D2 resolvidas: `/admin` via Tailscale; remoção dos 7 content-types legados)
 - **Autor:** Lucas Albini
 
 Substitui do ADR-0001 as decisões de público (§1), i18n (RF01–RF05, §4.1, §4.2), home curada como vitrine profissional (§4.7) e a separação post/projeto/lab. Continuam valendo: FastAPI como camada de agregação (§4.4), nginx servindo `/uploads` do volume, Strapi isolado, pgvector, nomes de campo e enums em inglês (§4.3).
@@ -264,7 +264,7 @@ Rotas estáticas vencem `[slug]` no App Router. Um post com slug igual a uma rot
 | # | Decisão | Opções | Prazo |
 |---|---|---|---|
 | D1 ✅ | Acesso ao `/admin` em produção | Resolvido (#17): Tailscale (`100.64.0.0/10`) no Caddy (`http://100.116.16.90/admin/`) | 2026-10-28 |
-| D2 | Destino do conteúdo de `project` e `lab` | Migrar para `post` / descartar | Antes de remover os content-types |
+| D2 ✅ | Destino do conteúdo de `project`, `lab` e tipos de currículo | Resolvido (#19): tabelas vazias descartadas; removidos `project`, `lab`, `experience`, `education`, `certification`, `publication` e `skill`; `/sobre` usa apenas `profile` | 2026-10-28 |
 | D3 | Comentários | Nenhum / Giscus / próprio | Fora do escopo por decisão do Lucas |
 | D4 | Ferramenta de PDF para coleção | Paged.js / CSS de impressão / LaTeX | Quando a primeira coleção estiver madura |
 

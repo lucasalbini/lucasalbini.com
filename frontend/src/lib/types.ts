@@ -41,17 +41,6 @@ export interface Tag {
   slug: string;
 }
 
-export interface Skill {
-  document_id: string;
-  name: string;
-  icon_name?: string | null;
-  summary?: string | null;
-  category: string;
-  url?: string | null;
-  icon?: Media | null;
-  locale: string;
-}
-
 export type Visibility = "public" | "unlisted" | "private";
 
 export interface CollectionRef {
@@ -158,67 +147,6 @@ export interface Profile {
   avatar: Media | null;
   cv_pdf: Media | null;
   social_links: SocialLink[];
-}
-
-export interface Publication {
-  document_id: string;
-  title: string;
-  journal: string | null;
-  authors: string | null;
-  date: string | null;
-  url: string | null;
-  doi: string | null;
-  abstract: string | null;
-  locale: string;
-  available_locales: string[];
-}
-
-export interface Responsibility { description: string }
-export interface Position {
-  designation: string;
-  start_date: string;
-  end_date: string | null;
-  is_current: boolean;
-  responsibilities: Responsibility[];
-}
-export interface Experience {
-  document_id: string;
-  company_name: string;
-  company_url: string | null;
-  company_location: string | null;
-  company_logo: Media | null;
-  order: number | null;
-  positions: Position[];
-  locale: string;
-}
-
-export interface Education {
-  document_id: string;
-  institution: string;
-  degree: string | null;
-  field_of_study: string | null;
-  start_date: string | null;
-  end_date: string | null;
-  description: string | null;
-  logo: Media | null;
-  locale: string;
-}
-
-export interface Certification {
-  document_id: string;
-  name: string;
-  issuer: string | null;
-  issue_date: string | null;
-  credential_url: string | null;
-  badge_image: Media | null;
-}
-
-export interface CV {
-  profile: Profile | null;
-  experiences: Experience[];
-  education: Education[];
-  certifications: Certification[];
-  skills: Skill[];
 }
 
 export interface Paginated<T> {

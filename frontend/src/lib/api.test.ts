@@ -1,14 +1,12 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   getCollection,
-  getCV,
   getLatestVideos,
   getPost,
   getProfile,
   getTagAggregation,
   listCollections,
   listPosts,
-  listPublications,
   listTags,
   NotFoundError,
   qs,
@@ -80,14 +78,6 @@ describe("other endpoints", () => {
     expect(requested(fetch).url.search).toBe("");
   });
 
-  it("still asks for the CV in pt-BR, since those entries stay localized in Strapi", async () => {
-    const fetch = mockFetch(200, {});
-
-    await getCV();
-
-    expect(requested(fetch).url.searchParams.get("locale")).toBe("pt-BR");
-  });
-
   it("treats a missing YouTube endpoint as no videos", async () => {
     mockFetch(404);
 
@@ -109,13 +99,12 @@ it("NotFoundError names the missing path", () => {
   expect(new NotFoundError("/x").message).toBe("not found: /x");
 });
 
-describe("collections, tags and publications", () => {
+describe("collections and tags", () => {
   it.each([
     ["listCollections", () => listCollections(), "/collections"],
     ["getCollection", () => getCollection("viagens"), "/collections/viagens"],
     ["listTags", () => listTags(), "/tags"],
     ["getTagAggregation", () => getTagAggregation("amazonia"), "/tags/amazonia"],
-    ["listPublications", () => listPublications(), "/publications"],
   ])("%s calls %s", async (_, call, path) => {
     const fetch = mockFetch(200, []);
 
