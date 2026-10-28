@@ -22,25 +22,25 @@ export async function GET(_req: Request, { params }: { params: Promise<{ slug: s
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "80px 90px",
-          background: "#0a0a0a",
-          color: "#ededed",
+          background: "#131811",
+          color: "#ECE9E1",
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ fontSize: 28, color: "#9ca3af", letterSpacing: 2, textTransform: "uppercase" }}>
+        <div style={{ fontSize: 28, color: "#9CA894", letterSpacing: 2, textTransform: "uppercase" }}>
           lucasalbini.com
         </div>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ display: "flex", fontSize: 72, fontWeight: 700, lineHeight: 1.1 }}>{title}</div>
           {summary && (
-            <div style={{ marginTop: 24, fontSize: 30, color: "#9ca3af", lineHeight: 1.4 }}>
+            <div style={{ marginTop: 24, fontSize: 30, color: "#9CA894", lineHeight: 1.4 }}>
               {summary}
             </div>
           )}
         </div>
-        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 22, color: "#9ca3af" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 22, color: "#9CA894" }}>
           <span>Lucas Albini</span>
-          <span style={{ color: "#00D4AA" }}>{date}</span>
+          <span style={{ color: "#D97757" }}>{date}</span>
         </div>
       </div>
     ),
