@@ -3,21 +3,22 @@
 @theme {
   --font-sans: var(--font-inter);
   --font-mono: var(--font-jetbrains-mono);
+  --font-serif: var(--font-newsreader);
 
-  /* Cream & Sand palette (light) — carried over from the previous design */
-  --color-bg: #FAF6EF;
-  --color-bg-alt: #EFF3E8;
-  --color-bg-deep: #F0ECE3;
-  --color-surface: #E4EBD9;
-  --color-fg: #1A2E22;
-  --color-muted: #5E7058;
-  --color-border: #C8D4BC;
+  /* Terra & Musgo — Split-Complementary palette (Light: Warm Sand & Olive; Dark: Deep Moss & Solar Terracotta) */
+  --color-bg: #F6F2EB;
+  --color-bg-alt: #EFEAE0;
+  --color-bg-deep: #EAE4D9;
+  --color-surface: #EAE4D9;
+  --color-fg: #1B2218;
+  --color-muted: #5C6656;
+  --color-border: #D5CEBF;
 
-  /* Jade (primary tech accent) + Terracotta (warm CTA / links) */
-  --color-primary: #00D4AA;
-  --color-primary-dark: #00B892;
-  --color-accent: #D4734A;
-  --color-accent-hover: #B85A35;
+  /* Moss leaf (tags / subtle markers) + Terracotta (links / primary actions) */
+  --color-primary: #4E632C;
+  --color-primary-dark: #3D4F22;
+  --color-accent: #B55031;
+  --color-accent-hover: #963F24;
 }
 
 @variant dark (&:where(.dark, .dark *));
@@ -25,34 +26,33 @@
 @layer base {
   :root {
     color-scheme: light;
-    --color-bg: #FAF6EF;
-    --color-bg-alt: #EFF3E8;
-    --color-bg-deep: #F0ECE3;
-    --color-surface: #E4EBD9;
-    --color-fg: #1A2E22;
-    --color-muted: #5E7058;
-    --color-border: #C8D4BC;
-    --color-primary: #00D4AA;
-    --color-primary-dark: #00B892;
-    --color-accent: #D4734A;
-    --color-accent-hover: #B85A35;
+    --color-bg: #F6F2EB;
+    --color-bg-alt: #EFEAE0;
+    --color-bg-deep: #EAE4D9;
+    --color-surface: #EAE4D9;
+    --color-fg: #1B2218;
+    --color-muted: #5C6656;
+    --color-border: #D5CEBF;
+    --color-primary: #4E632C;
+    --color-primary-dark: #3D4F22;
+    --color-accent: #B55031;
+    --color-accent-hover: #963F24;
   }
 
   .dark {
     color-scheme: dark;
-    /* Forest & Clay (dark) */
-    --color-bg-deep: #080F0B;
-    --color-bg: #0F1E17;
-    --color-bg-alt: #1A3328;
-    --color-surface: #162E24;
-    --color-fg: #EDE4D3;
-    --color-muted: #8B9B80;
-    --color-border: #2A3E32;
-    /* Slightly brighter jade + terracotta on dark for contrast */
-    --color-primary: #16E5BB;
-    --color-primary-dark: #00D4AA;
-    --color-accent: #E58A66;
-    --color-accent-hover: #D4734A;
+    /* Deep Moss Green base (103°) + Solar Terracotta split-complement (15°) */
+    --color-bg-deep: #0D110C;
+    --color-bg: #131811;
+    --color-bg-alt: #181F15;
+    --color-surface: #1C2419;
+    --color-fg: #ECE9E1;
+    --color-muted: #9CA894;
+    --color-border: #2B3626;
+    --color-primary: #94A863;
+    --color-primary-dark: #7A8E4D;
+    --color-accent: #D97757;
+    --color-accent-hover: #E58E71;
   }
 
   html {
@@ -72,7 +72,7 @@
     color: var(--color-fg);
     font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
-    transition: background-color 0.3s, color 0.3s;
+    transition: background-color 0.25s, color 0.25s;
   }
 
   code, kbd, pre, samp {
@@ -91,27 +91,28 @@
   }
 
   ::selection {
-    background: var(--color-primary);
-    color: #0F1E17;
+    background: color-mix(in oklab, var(--color-accent) 26%, var(--color-surface));
+    color: var(--color-fg);
   }
 
   *:focus-visible {
-    outline: 2px solid var(--color-primary);
+    outline: 2px solid var(--color-accent);
     outline-offset: 3px;
     border-radius: 2px;
-  }
-  .dark *:focus-visible {
-    box-shadow: 0 0 12px color-mix(in oklab, var(--color-primary) 40%, transparent);
   }
 }
 
 @layer utilities {
-  /* Fluid display size for the home h1. Caps below the 70ch reading measure so
-     the name never wraps awkwardly on a laptop. */
+  /* Editorial serif display for the hero name and post titles. */
+  .font-editorial {
+    font-family: var(--font-serif), Georgia, Cambria, "Times New Roman", Times, serif;
+  }
+
   .text-display {
+    font-family: var(--font-serif), Georgia, Cambria, "Times New Roman", Times, serif;
     font-size: clamp(2.5rem, 6vw, 4.25rem);
-    line-height: 1.03;
-    letter-spacing: -0.035em;
+    line-height: 1.04;
+    letter-spacing: -0.025em;
   }
 
   /* Hairline used by SectionHeading in place of card borders. */
@@ -120,7 +121,7 @@
     background: var(--color-border);
   }
 
-  /* Mono eyebrow/meta label. Repeated verbatim in six places before. */
+  /* Mono eyebrow/meta label. */
   .label-mono {
     font-family: var(--font-mono), ui-monospace, monospace;
     font-size: 0.6875rem;
@@ -142,10 +143,7 @@
 }
 
 @layer components {
-  /* Solid CTA. Terracotta is light enough that white-on-accent fails WCAG AA
-     (3.3:1 light, 2.1:1 dark), so each theme picks the readable pairing:
-     the darker terracotta with white text on light, the lighter one with
-     near-black text on dark. */
+  /* Solid CTA paired to WCAG AA contrast in both Sand light and Moss dark modes. */
   .btn-primary {
     display: inline-flex;
     align-items: center;
@@ -154,39 +152,49 @@
     padding: 0.625rem 1.25rem;
     font-size: 0.875rem;
     font-weight: 500;
-    background: #b85a35;
+    background: #B55031;
     color: #ffffff;
     text-decoration: none;
     transition: background-color 0.15s;
   }
   .btn-primary:hover {
-    background: #9c4529;
+    background: #963F24;
     color: #ffffff;
     text-decoration: none;
   }
   .dark .btn-primary {
-    background: #e58a66;
-    color: #0f1e17;
+    background: #D97757;
+    color: #131811;
   }
   .dark .btn-primary:hover {
-    background: #f0a183;
-    color: #0f1e17;
+    background: #E58E71;
+    color: #131811;
   }
 
-  /* Body text grows with the viewport (17px on phones, 20px on wide screens) so it holds its
-     own next to wide images on desktop. */
+  /* Body text grows with the viewport (17px on phones, 20px on wide screens). */
   .prose-reading {
     max-width: 100%;
     font-size: clamp(1.0625rem, 0.95rem + 0.35vw, 1.25rem);
-    line-height: 1.7;
+    line-height: 1.72;
   }
   .prose-reading h1, .prose-reading h2, .prose-reading h3 {
     line-height: 1.2;
     letter-spacing: -0.015em;
     color: var(--color-fg);
   }
-  .prose-reading h2 { font-size: clamp(1.5rem, 1.2rem + 0.8vw, 2rem); font-weight: 600; margin-top: 2.5rem; margin-bottom: 1rem; }
-  .prose-reading h3 { font-size: clamp(1.25rem, 1.1rem + 0.4vw, 1.5rem); font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; }
+  .prose-reading h2 {
+    font-family: var(--font-serif), Georgia, serif;
+    font-size: clamp(1.6rem, 1.3rem + 0.8vw, 2.1rem);
+    font-weight: 600;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  .prose-reading h3 {
+    font-size: clamp(1.25rem, 1.1rem + 0.4vw, 1.5rem);
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
   .prose-reading p { margin-bottom: 1.25rem; }
   .prose-reading ul, .prose-reading ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
   .prose-reading ul { list-style: disc; }
@@ -194,10 +202,11 @@
   .prose-reading li { margin-bottom: 0.375rem; }
   .prose-reading code:not(pre code) {
     padding: 0.125rem 0.35rem;
-    background: color-mix(in oklab, var(--color-primary) 15%, transparent);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
     color: var(--color-fg);
     border-radius: 4px;
-    font-size: 0.9em;
+    font-size: 0.88em;
   }
   .prose-reading pre {
     padding: 1rem;
@@ -208,14 +217,14 @@
     margin-bottom: 1.5rem;
   }
   .prose-reading blockquote {
+    font-family: var(--font-serif), Georgia, serif;
     border-left: 3px solid var(--color-primary);
-    padding-left: 1rem;
+    padding-left: 1.125rem;
     color: var(--color-muted);
-    margin: 1.25rem 0;
+    margin: 1.5rem 0;
     font-style: italic;
+    font-size: 1.08em;
   }
-  /* Media never gets wider than the text column. The one exception: `full` images run
-     edge to edge on phones, where the column already spans the screen minus the gutter. */
   @media (max-width: 1023px) {
     .bleed-full {
       width: 100vw;

@@ -13,8 +13,6 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@tsparticles/react": "^3.0.0",
-    "@tsparticles/slim": "^3.9.1",
     "clsx": "^2.1.1",
     "leaflet": "^1.9.4",
     "next": "^15.1.0",
