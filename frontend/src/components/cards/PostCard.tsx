@@ -9,7 +9,7 @@ import { formatShortDate, mediaUrl } from "@/lib/format";
 function Cover({ post, aspect, sizes }: { post: PostSummary; aspect: string; sizes: string }) {
   return (
     <div
-      className={`relative w-full overflow-hidden rounded-lg bg-[color:var(--color-surface)] ${aspect}`}
+      className={`relative w-full overflow-hidden rounded-md bg-[color:var(--color-surface)] ring-1 ring-inset ring-black/6 dark:ring-white/8 ${aspect}`}
     >
       {post.cover?.url ? (
         <Image
@@ -75,7 +75,7 @@ export function FeaturedPostCard({ post }: { post: PostSummary }) {
       <Cover post={post} aspect="aspect-[4/3]" sizes="(max-width: 768px) 100vw, 340px" />
       <div>
         <Meta post={post} />
-        <h3 className="mt-3 text-2xl font-semibold leading-tight text-[color:var(--color-fg)] transition-colors group-hover:text-[color:var(--color-accent)] sm:text-3xl">
+        <h3 className="font-editorial mt-3 text-2xl font-semibold leading-tight text-[color:var(--color-fg)] transition-colors group-hover:text-[color:var(--color-accent)] sm:text-3xl">
           {post.title}
         </h3>
         <p className="mt-3 max-w-[58ch] leading-relaxed text-[color:var(--color-muted)] lg:text-lg">{post.summary}</p>

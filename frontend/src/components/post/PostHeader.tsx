@@ -33,7 +33,7 @@ export function PostHeader({ post }: { post: Post }) {
           </>
         )}
       </p>
-      <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[color:var(--color-fg)] sm:text-4xl lg:mt-0 lg:text-5xl">{post.title}</h1>
+      <h1 className="font-editorial mt-2 text-3xl font-semibold tracking-tight text-[color:var(--color-fg)] sm:text-4xl lg:mt-0 lg:text-5xl">{post.title}</h1>
       <p className="mt-4 text-lg text-[color:var(--color-muted)] lg:text-xl">{post.summary}</p>
       <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-xs text-[color:var(--color-muted)] lg:hidden">
         {post.date && <time dateTime={post.date}>{formatDate(post.date, "pt")}</time>}
